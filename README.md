@@ -93,6 +93,10 @@ Every strike has a height, and your guard has to match it:
 overheads. **Standing block** stops mids, highs and overheads but loses to low
 sweeps. Blocked hits still chip 20% of the damage.
 
+Every connected hit — guarded or clean — briefly freezes both fighters (impact
+freeze, longer on a clean hit) and shoves them apart, with knockback sliding to
+a stop. Fighters also can't stand inside each other.
+
 - **Charge** fills the KI bar; the AI charges too when it has space.
 - **Energy attack** costs the fighter's listed KI and fires their signature move.
 - **Shadow clone** sends two clones at the opponent (cost varies by fighter).

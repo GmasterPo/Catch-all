@@ -477,6 +477,7 @@ class Fighter{
   this.speed=this.def.speed;
   this.grounded=true;this.blocking=false;
   this.crouching=false;this.attackHeight="mid";
+  this.hitstop=0;
   this.invulnerable=0;this.cooldown=0;
   this.attackType=null;this.attackFrame=0;this.attackHit=false;
   this.walkPhase=0;
@@ -486,6 +487,8 @@ class Fighter{
  }
  update(input,enemy){
   if(this.health<=0)return;
+  // Impact freeze: both fighters hold their pose while the spark plays.
+  if(this.hitstop>0){this.hitstop--;return;}
   const c=this.controls;
   this.facing=enemy.x>this.x?1:-1;
 
@@ -508,10 +511,10 @@ class Fighter{
   }
 
   if(this.blocking){
-   this.vx=0;
+   this.vx*=.72;
    this.animation.play(this.crouching?"blockCrouch":"block");
   }else if(this.crouching){
-   this.vx=0;
+   this.vx*=.72;
    this.animation.play("crouch");
   }else{
    let moving=false;
@@ -547,6 +550,9 @@ class Fighter{
     this.y=GROUND;this.vy=0;this.grounded=true;
    }
   }
+  // knockback slides to a stop instead of running forever
+  this.vx*=this.grounded?.84:.99;
+  if(Math.abs(this.vx)<.06)this.vx=0;
   this.x=Math.max(0,Math.min(W-this.width,this.x));
  }
  attack(type){
@@ -910,7 +916,8 @@ class SpecialMoves{
   f.x=Math.max(0,Math.min(W-f.width,f.x-f.facing*90));
   f.invulnerable=35;f.cooldown=25;
  }
- update(ctx,f1,f2){
+ // Simulation: keep projectile logic inside the fixed-step update.
+ step(f1,f2){
   this.projectiles.forEach(p=>{
    p.x+=p.vx;
    if(p.vy)p.y+=p.vy;
@@ -921,12 +928,17 @@ class SpecialMoves{
       p.y>target.y-target.height-hh&&p.y<target.y+hh){
     const level=p.level||"mid";
     if(!(level==="high"&&target.crouching)){
-     target.takeDamage(p.damage,resolveBlock(target,level));
+     const blocked=resolveBlock(target,level);
+     target.takeDamage(p.damage,blocked);
+     const dir=Math.sign(p.vx)||1;
+     target.vx=dir*(blocked?2.2:3.4);
+     const stop=blocked?4:6;
+     target.hitstop=Math.max(target.hitstop,stop);
+     p.owner.hitstop=Math.max(p.owner.hitstop,blocked?3:5);
     }
     p.life=0;
     this.particles.emit(p.x,p.y,p.color||"#45caff",20);
    }
-   drawProjectile(ctx,p);
   });
   this.projectiles=this.projectiles.filter(p=>p.life>0&&p.x>-80&&p.x<W+80);
 
@@ -934,14 +946,23 @@ class SpecialMoves{
    c.life--;
    const target=c.owner===f1?f2:f1;
    if(!c.hit&&Math.abs(c.x-target.x)<65&&c.life<55){
-    target.takeDamage(c.damage,resolveBlock(target,"mid"));c.hit=true;
+    const blocked=resolveBlock(target,"mid");
+    target.takeDamage(c.damage,blocked);c.hit=true;
+    target.vx=(target.x>c.owner.x?1:-1)*(blocked?1.8:3);
+    target.hitstop=Math.max(target.hitstop,blocked?3:5);
    }
+  });
+  this.clones=this.clones.filter(c=>c.life>0);
+ }
+
+ draw(ctx){
+  this.projectiles.forEach(p=>drawProjectile(ctx,p));
+  this.clones.forEach(c=>{
    ctx.globalAlpha=Math.min(.6,c.life/50);
    ctx.fillStyle="#79bfff";
    ctx.fillRect(c.x,c.y-100,48,100);
    ctx.globalAlpha=1;
   });
-  this.clones=this.clones.filter(c=>c.life>0);
  }
 }
 
@@ -959,6 +980,7 @@ class Combat{
  constructor(particles){this.particles=particles}
  update(f,enemy){
   if(!f.attackType)return;
+  if(f.hitstop>0||enemy.hitstop>0)return;
   const distance=Math.abs(f.x-enemy.x);
   f.attackFrame++;
   if(f.attackFrame>=2&&f.attackFrame<=6&&
@@ -974,6 +996,12 @@ class Combat{
     }else{
      const blocked=resolveBlock(enemy,height);
      enemy.takeDamage(damage,blocked);
+     const dir=Math.sign(enemy.x-f.x)||f.facing;
+     enemy.vx=dir*(blocked?3:3.8);
+     f.vx=-dir*(blocked?1.2:.6);
+     const stop=blocked?4:7;
+     f.hitstop=Math.max(f.hitstop,stop);
+     enemy.hitstop=Math.max(enemy.hitstop,stop);
      this.particles.emit(enemy.x+20,enemy.y-52,blocked?"#9fd0ff":"#ffdb65",blocked?6:12);
     }
    }
@@ -1371,6 +1399,18 @@ class Game{
   for(let x=0;x<W;x+=55)c.fillRect(x,460+(x%3)*12,20,3);
  }
 
+ // Fighters cannot occupy the same spot; knockback slides them apart.
+ separateFighters(){
+  const min=44;
+  const dx=this.p2.x-this.p1.x;
+  if(Math.abs(dx)<min){
+   const dir=dx>=0?1:-1;
+   const push=(min-Math.abs(dx))/2;
+   this.p1.x=Math.max(0,Math.min(W-this.p1.width,this.p1.x-push*dir));
+   this.p2.x=Math.max(0,Math.min(W-this.p2.width,this.p2.x+push*dir));
+  }
+ }
+
  controls(){
   for(const [f,e] of [[this.p1,this.p2],[this.p2,this.p1]]){
    const c=f.controls;
@@ -1401,6 +1441,8 @@ class Game{
     this.p1.update(this.input,this.p2);
     this.p2.update(this.ai||this.input,this.p1);
     this.controls();
+    this.specials.step(this.p1,this.p2);
+    this.separateFighters();
     this.particles.update();
     if(this.msgTimer>0){
      this.msgTimer-=dt;
@@ -1435,7 +1477,7 @@ class Game{
   this.background();
   this.particles.draw(c);
   this.p1.draw(c);this.p2.draw(c);
-  this.specials.update(c,this.p1,this.p2);
+  this.specials.draw(c);
   if(this.matchState==="roundEnd"||this.matchState==="matchEnd"){
    c.fillStyle="rgba(0,0,0,.45)";
    c.fillRect(0,0,W,H);
