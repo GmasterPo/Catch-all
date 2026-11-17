@@ -65,6 +65,13 @@ canvas{
  border-top:1px solid #2a3350;padding-top:7px;margin-top:4px
 }
 #message{font-size:22px;color:#ffd65c;min-height:34px;margin:8px;letter-spacing:1px}
+.result-bar{display:flex;justify-content:center;padding:0 0 12px}
+.result-bar button{
+ padding:6px 16px;font-size:10px;letter-spacing:1px;font-family:inherit;font-weight:bold;
+ background:#1d2233;border:2px solid #58617a;color:#c9d4e8;cursor:pointer
+}
+.result-bar button:hover{background:#2a3350;border-color:#8ea0c4}
+.result-bar button.muted{background:#151a26;border-color:#454e64;color:#78839a}
 .hidden{display:none!important}
 
 /* character select */
@@ -164,6 +171,9 @@ canvas{
   <div class="controls-foot">M &mdash; MUTE / UNMUTE SOUND (ANY TIME)</div>
  </div>
  <div id="message">ROUND 1 - FIGHT!</div>
+ <div id="resultBar" class="result-bar hidden">
+  <button id="resultMute" aria-pressed="false" title="Toggle sound">SOUND ON</button>
+ </div>
 </div>
 </main>
 
@@ -1326,7 +1336,9 @@ class Game{
    muteBtn:document.getElementById("muteBtn"),
    volume:document.getElementById("volume"),
    audioHint:document.getElementById("audioHint"),
-   audioToast:document.getElementById("audioToast")
+   audioToast:document.getElementById("audioToast"),
+   resultBar:document.getElementById("resultBar"),
+   resultMute:document.getElementById("resultMute")
   };
 
   this.buildRoster();
@@ -1340,6 +1352,10 @@ class Game{
 
  bindAudioControls(){
   this.el.muteBtn.addEventListener("click",()=>{
+   this.sound.setMuted(!this.sound.muted);
+   this.syncAudio();
+  });
+  this.el.resultMute.addEventListener("click",()=>{
    this.sound.setMuted(!this.sound.muted);
    this.syncAudio();
   });
@@ -1357,9 +1373,13 @@ class Game{
  }
  syncAudio(){
   const muted=this.sound.muted;
-  this.el.muteBtn.textContent=muted?"MUTED":"SOUND ON";
+  const label=muted?"MUTED":"SOUND ON";
+  this.el.muteBtn.textContent=label;
   this.el.muteBtn.classList.toggle("muted",muted);
   this.el.muteBtn.setAttribute("aria-pressed",muted?"true":"false");
+  this.el.resultMute.textContent=label;
+  this.el.resultMute.classList.toggle("muted",muted);
+  this.el.resultMute.setAttribute("aria-pressed",muted?"true":"false");
   this.el.volume.value=Math.round(this.sound.volume*100);
   if(muted){this.hideAudioHint();this.hideAudioToast()}
  }
@@ -1483,6 +1503,7 @@ class Game{
   this.el.subtitle.textContent=(this.mode==="arcade"?"ARCADE":"2P VERSUS")+" - CHOOSE YOUR FIGHTER";
   this.el.select.classList.remove("hidden");
   this.el.playArea.classList.add("hidden");
+  this.el.resultBar.classList.add("hidden");
   this.syncSelectUI();
  }
 
@@ -1513,6 +1534,7 @@ class Game{
   this.input.clear();
   this.time=99;
   this.matchState="intro";
+  this.el.resultBar.classList.add("hidden");
   this.stateTimer=1200;
   this.lastRoundWinner=-1;
   this.setMessage("ROUND "+this.round+" - FIGHT!");
@@ -1581,6 +1603,7 @@ class Game{
 
  finishMatch(){
   this.matchState="matchEnd";
+  this.el.resultBar.classList.remove("hidden");
   this.playerWon=this.wins[0]>=WINS_NEEDED;
   if(this.mode==="arcade"){
    if(this.playerWon){
