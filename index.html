@@ -1338,6 +1338,12 @@ class Game{
    this.sound.setMuted(!this.sound.muted);
    this.syncAudio();
   });
+  // M toggles sound anywhere: select screen, pause-free fight, results.
+  window.addEventListener("keydown",e=>{
+   if(e.repeat||(e.key!=="m"&&e.key!=="M"))return;
+   this.sound.setMuted(!this.sound.muted);
+   this.syncAudio();
+  });
   this.el.volume.addEventListener("input",()=>{
    this.sound.setVolume(Number(this.el.volume.value)/100);
    this.syncAudio();

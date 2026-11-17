@@ -116,6 +116,8 @@ Browsers block audio until the player interacts, so the engine wakes on the firs
 key press or click. Every strike gets a small random pitch offset so repeat hits
 don't sound identical.
 
+Press **M** at any time — select screen or mid-fight — to mute or unmute.
+
 The top bar has a **SOUND ON / MUTED** toggle and a volume slider; both apply
 immediately, including to sounds already ringing out, and both are remembered in
 local storage so the game reopens at your last setting.
