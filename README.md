@@ -97,6 +97,11 @@ Every connected hit — guarded or clean — briefly freezes both fighters (impa
 freeze, longer on a clean hit) and shoves them apart, with knockback sliding to
 a stop. Fighters also can't stand inside each other.
 
+Clean hits also shake the camera and flash the screen, both scaled to the damage
+dealt, and bloom a bright burst of light at the point of contact. Guarded hits
+get a shorter, cool-tinted version of the same feedback, and a knockout slams the
+camera hardest.
+
 - **Charge** fills the KI bar; the AI charges too when it has space.
 - **Energy attack** costs the fighter's listed KI and fires their signature move.
 - **Shadow clone** sends two clones at the opponent (cost varies by fighter).
