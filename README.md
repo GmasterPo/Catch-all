@@ -116,6 +116,9 @@ Browsers block audio until the player interacts, so the engine wakes on the firs
 key press or click. Every strike gets a small random pitch offset so repeat hits
 don't sound identical.
 
+The top bar has a **SOUND ON / MUTED** toggle and a volume slider; both apply
+immediately, including to sounds already ringing out.
+
 - **Charge** fills the KI bar; the AI charges too when it has space.
 - **Energy attack** costs the fighter's listed KI and fires their signature move.
 - **Shadow clone** sends two clones at the opponent (cost varies by fighter).

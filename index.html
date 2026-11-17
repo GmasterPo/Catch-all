@@ -23,6 +23,9 @@ h1{color:#e7b74c;font-size:36px;text-shadow:3px 3px #8b1515;margin:5px}
 }
 .modebar button:hover{background:#2a3350;border-color:#8ea0c4}
 .modebar button.active{background:#9e2020;border-color:#e9b94d;color:#fff}
+.modebar button.muted{background:#151a26;border-color:#454e64;color:#78839a}
+.audiobar{display:inline-flex;align-items:center;gap:6px;margin-left:6px}
+.audiobar input[type=range]{width:84px;height:16px;accent-color:#e7b74c;cursor:pointer}
 .hud{display:grid;grid-template-columns:1fr 78px 1fr;gap:12px;align-items:center}
 .name{text-align:left;margin-bottom:5px;font-weight:bold;font-size:13px}
 .right .name{text-align:right}
@@ -96,6 +99,10 @@ canvas{
  <button id="modeArcade" class="active">ARCADE</button>
  <button id="modeVs">2P VERSUS</button>
  <button id="restart">RESTART</button>
+ <span class="audiobar">
+  <button id="muteBtn" aria-pressed="false" title="Toggle sound">SOUND ON</button>
+  <input id="volume" type="range" min="0" max="100" value="40" aria-label="Sound volume">
+ </span>
 </div>
 
 <section id="selectScreen" class="select">
@@ -774,7 +781,21 @@ class Fighter{
 // PARTICLES
 // PROCEDURAL AUDIO — synthesized at runtime, no sound files
 class Sound{
- constructor(){this.ctx=null;this.master=null;this.enabled=true;this._noise=null}
+ constructor(){
+  this.ctx=null;this.master=null;this.enabled=true;this._noise=null;
+  this.volume=.4;this.muted=false;
+ }
+ applyGain(){
+  if(this.master)this.master.gain.value=this.muted?0:this.volume;
+ }
+ setVolume(v){
+  this.volume=Math.max(0,Math.min(1,v));
+  this.applyGain();
+ }
+ setMuted(m){
+  this.muted=!!m;
+  this.applyGain();
+ }
  ensure(){
   if(!this.ctx){
    const AC=window.AudioContext||window.webkitAudioContext;
@@ -782,7 +803,7 @@ class Sound{
    try{
     this.ctx=new AC();
     this.master=this.ctx.createGain();
-    this.master.gain.value=.4;
+    this.master.gain.value=this.muted?0:this.volume;
     this.master.connect(this.ctx.destination);
    }catch(e){this.enabled=false;return false}
   }
@@ -1266,14 +1287,36 @@ class Game{
    special2:document.getElementById("special2"),
    timer:document.getElementById("timer"),
    modeArcade:document.getElementById("modeArcade"),
-   modeVs:document.getElementById("modeVs")
+   modeVs:document.getElementById("modeVs"),
+   muteBtn:document.getElementById("muteBtn"),
+   volume:document.getElementById("volume")
   };
 
   this.buildRoster();
   this.bindEvents();
+  this.bindAudioControls();
   this.openSelect();
   this.last=0;
   requestAnimationFrame(t=>this.loop(t));
+ }
+
+ bindAudioControls(){
+  this.el.muteBtn.addEventListener("click",()=>{
+   this.sound.setMuted(!this.sound.muted);
+   this.syncAudio();
+  });
+  this.el.volume.addEventListener("input",()=>{
+   this.sound.setVolume(Number(this.el.volume.value)/100);
+   this.syncAudio();
+  });
+  this.syncAudio();
+ }
+ syncAudio(){
+  const muted=this.sound.muted;
+  this.el.muteBtn.textContent=muted?"MUTED":"SOUND ON";
+  this.el.muteBtn.classList.toggle("muted",muted);
+  this.el.muteBtn.setAttribute("aria-pressed",muted?"true":"false");
+  this.el.volume.value=Math.round(this.sound.volume*100);
  }
 
  // --- character select ---------------------------------------------------
