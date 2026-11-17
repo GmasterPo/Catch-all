@@ -77,6 +77,18 @@ python3 -m http.server 3000
 
 Numpad 1/2/4/5/6/7 work the same as the number-row keys for Player 2.
 
+Any time during a fight, `P` or `Esc` pauses and `M` mutes.
+
+## Pause
+
+Pausing stops the fixed-step simulation completely: fighters, projectiles,
+particles, the round clock and the AI all hold their exact state, so resuming
+picks up mid-swing with the timer untouched. The stage dims and a panel offers
+**RESUME** and a **SOUND ON / MUTED** button for touch players. Held keys are
+dropped when pausing and resuming, so you never come back to a fighter already
+walking. Pause is available during the round intro and the fight, but not on the
+results screen.
+
 ## Attack heights and guarding
 
 Every strike has a height, and your guard has to match it:

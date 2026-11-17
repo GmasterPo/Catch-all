@@ -53,10 +53,28 @@ h1{color:#e7b74c;font-size:36px;text-shadow:3px 3px #8b1515;margin:5px}
 #timer{font-size:32px;color:#f5d35d;font-weight:bold;line-height:1}
 #round-tag{font-size:10px;color:#9aa6bd;letter-spacing:1px;margin-top:3px}
 canvas{
- width:100%;height:auto;display:block;margin-top:10px;
+ width:100%;height:auto;display:block;
  border:4px solid #777;background:#25213b;
  image-rendering:pixelated;cursor:pointer
 }
+.stage{position:relative;margin-top:10px}
+.pause{
+ position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+ background:rgba(7,9,15,.68);z-index:5
+}
+.pause-panel{
+ background:#141926;border:2px solid #e7b74c;padding:22px 30px;text-align:center;
+ box-shadow:0 12px 44px rgba(0,0,0,.65)
+}
+.pause-title{font-size:22px;letter-spacing:6px;color:#f5d35d;margin-bottom:6px}
+.pause-keys{font-size:10px;letter-spacing:1px;color:#93a2bd;margin-bottom:14px}
+.pause-actions{display:flex;gap:8px;justify-content:center}
+.pause-actions button{
+ padding:7px 16px;font-size:10px;letter-spacing:1px;font-family:inherit;font-weight:bold;
+ background:#1d2233;border:2px solid #58617a;color:#c9d4e8;cursor:pointer
+}
+.pause-actions button:hover{background:#2a3350;border-color:#8ea0c4}
+.pause-actions button.muted{background:#151a26;border-color:#454e64;color:#78839a}
 .controls{display:flex;justify-content:space-between;gap:12px;
  flex-wrap:wrap;text-align:left;font-size:11px;line-height:1.8;padding:12px 0}
 .controls b{display:block;color:#e7b74c}
@@ -153,7 +171,19 @@ canvas{
   </div>
  </div>
 
- <canvas id="game" width="960" height="540"></canvas>
+ <div class="stage">
+  <canvas id="game" width="960" height="540"></canvas>
+  <div id="pauseOverlay" class="pause hidden">
+   <div class="pause-panel">
+    <div class="pause-title">PAUSED</div>
+    <div class="pause-keys">P OR ESC TO RESUME</div>
+    <div class="pause-actions">
+     <button id="resumeBtn">RESUME</button>
+     <button id="pauseMute" aria-pressed="false" title="Toggle sound">SOUND ON</button>
+    </div>
+   </div>
+  </div>
+ </div>
 
  <div class="controls">
   <div>
@@ -168,7 +198,7 @@ canvas{
   1 Punch | 2 Kick | 4 Energy Attack<br>
   5 Charge | 6 Shadow Clone | 7 Substitution
   </div>
-  <div class="controls-foot">M &mdash; MUTE / UNMUTE SOUND (ANY TIME)</div>
+  <div class="controls-foot">P / ESC &mdash; PAUSE &nbsp;|&nbsp; M &mdash; MUTE / UNMUTE SOUND (ANY TIME)</div>
  </div>
  <div id="message">ROUND 1 - FIGHT!</div>
  <div id="resultBar" class="result-bar hidden">
@@ -1338,12 +1368,16 @@ class Game{
    audioHint:document.getElementById("audioHint"),
    audioToast:document.getElementById("audioToast"),
    resultBar:document.getElementById("resultBar"),
-   resultMute:document.getElementById("resultMute")
+   resultMute:document.getElementById("resultMute"),
+   pauseOverlay:document.getElementById("pauseOverlay"),
+   resumeBtn:document.getElementById("resumeBtn"),
+   pauseMute:document.getElementById("pauseMute")
   };
 
   this.buildRoster();
   this.bindEvents();
   this.bindAudioControls();
+  this.bindPauseControls();
   this.openSelect();
   this.showAudioHint();
   this.last=0;
@@ -1380,6 +1414,9 @@ class Game{
   this.el.resultMute.textContent=label;
   this.el.resultMute.classList.toggle("muted",muted);
   this.el.resultMute.setAttribute("aria-pressed",muted?"true":"false");
+  this.el.pauseMute.textContent=label;
+  this.el.pauseMute.classList.toggle("muted",muted);
+  this.el.pauseMute.setAttribute("aria-pressed",muted?"true":"false");
   this.el.volume.value=Math.round(this.sound.volume*100);
   if(muted){this.hideAudioHint();this.hideAudioToast()}
  }
@@ -1415,6 +1452,33 @@ class Game{
   if(ctx.state==="running")done();
   else ctx.resume().then(done,()=>{});
  }
+ // --- pause ----------------------------------------------------------------
+ bindPauseControls(){
+  this.el.resumeBtn.addEventListener("click",()=>this.setPaused(false));
+  this.el.pauseMute.addEventListener("click",()=>{
+   this.sound.setMuted(!this.sound.muted);
+   this.syncAudio();
+  });
+  window.addEventListener("keydown",e=>{
+   if(e.repeat)return;
+   if(e.key==="p"||e.key==="P"||e.key==="Escape"){
+    e.preventDefault();
+    this.togglePause();
+   }
+  });
+ }
+ togglePause(){
+  if(this.screen!=="game")return;
+  if(this.paused){this.setPaused(false);return}
+  if(this.matchState!=="fight"&&this.matchState!=="intro")return;
+  this.setPaused(true);
+ }
+ setPaused(on){
+  this.paused=!!on;
+  this.el.pauseOverlay.classList.toggle("hidden",!this.paused);
+  this.input.clear();
+ }
+
  showAudioToast(text){
   const t=this.el.audioToast;
   if(!t)return;
@@ -1535,6 +1599,8 @@ class Game{
   this.time=99;
   this.matchState="intro";
   this.el.resultBar.classList.add("hidden");
+  this.paused=false;
+  this.el.pauseOverlay.classList.add("hidden");
   this.stateTimer=1200;
   this.lastRoundWinner=-1;
   this.setMessage("ROUND "+this.round+" - FIGHT!");
@@ -1823,9 +1889,15 @@ class Game{
  }
 
  loop(t){
+  const dt=Math.min(t-this.last,100);this.last=t;
+  // Paused: hold the last rendered frame and don't accumulate simulation time.
+  if(this.paused){
+   this.acc=0;
+   requestAnimationFrame(t=>this.loop(t));
+   return;
+  }
   // Fixed 60 Hz simulation so animation, cooldowns and the AI run at the same
   // speed on 60 Hz, 120 Hz and 144 Hz displays.
-  const dt=Math.min(t-this.last,100);this.last=t;
   this.acc=(this.acc||0)+dt;
   const step=1000/60;
   let guard=0;
