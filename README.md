@@ -122,7 +122,8 @@ local storage so the game reopens at your last setting.
 
 On the first load of a visit a small banner reads *click or press any key for
 sound*; it clears on the first input, after six seconds, and never appears when
-the game opens muted.
+the game opens muted. The gesture that unlocks audio is answered with a brief
+**SOUND ON** toast once the engine is actually running.
 
 - **Charge** fills the KI bar; the AI charges too when it has space.
 - **Energy attack** costs the fighter's listed KI and fires their signature move.

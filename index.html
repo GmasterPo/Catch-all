@@ -101,6 +101,7 @@ canvas{
 <body>
 <main id="game-container">
 <div id="audioHint" class="audio-hint hidden">CLICK OR PRESS ANY KEY FOR SOUND</div>
+<div id="audioToast" class="audio-hint hidden">SOUND ON</div>
 <h1>NINJA KOMBAT</h1>
 <div class="subtitle" id="subtitle">ARCADE FIGHTING CHAMPIONSHIP</div>
 
@@ -1276,7 +1277,11 @@ class Game{
   this.combat.onBlock=()=>this.sound.block();
   this.specials.onBlock=()=>this.sound.block();
   this.combat.onWhiff=()=>this.sound.whiff();
-  const unlock=()=>{this.sound.ensure();this.hideAudioHint()};
+  const unlock=()=>{
+   this.sound.ensure();
+   this.hideAudioHint();
+   this.confirmAudio();
+  };
   window.addEventListener("keydown",unlock);
   window.addEventListener("pointerdown",unlock);
   this.shake=0;this.flash=0;this.flashColor="#fff";
@@ -1315,7 +1320,8 @@ class Game{
    modeVs:document.getElementById("modeVs"),
    muteBtn:document.getElementById("muteBtn"),
    volume:document.getElementById("volume"),
-   audioHint:document.getElementById("audioHint")
+   audioHint:document.getElementById("audioHint"),
+   audioToast:document.getElementById("audioToast")
   };
 
   this.buildRoster();
@@ -1344,7 +1350,7 @@ class Game{
   this.el.muteBtn.classList.toggle("muted",muted);
   this.el.muteBtn.setAttribute("aria-pressed",muted?"true":"false");
   this.el.volume.value=Math.round(this.sound.volume*100);
-  if(muted)this.hideAudioHint();
+  if(muted){this.hideAudioHint();this.hideAudioToast()}
  }
  // Nudge players that sound needs a click, then get out of the way.
  showAudioHint(){
@@ -1352,7 +1358,8 @@ class Game{
   const h=this.el.audioHint;
   if(!h)return;
   h.classList.remove("hidden");
-  requestAnimationFrame(()=>h.classList.add("show"));
+  void h.offsetWidth;
+  h.classList.add("show");
   this.hintTimer=setTimeout(()=>this.hideAudioHint(),6000);
  }
  hideAudioHint(){
@@ -1361,6 +1368,42 @@ class Game{
   if(!h||h.classList.contains("hidden"))return;
   h.classList.remove("show");
   setTimeout(()=>h.classList.add("hidden"),300);
+ }
+ // Tell the player once that the audio engine actually came up.
+ confirmAudio(){
+  if(this.audioConfirmed||this.sound.muted)return;
+  const ctx=this.sound.ctx;
+  if(!ctx)return;
+  const done=()=>{
+   if(this.audioConfirmed||this.sound.muted)return;
+   if(ctx.state==="running"){
+    this.audioConfirmed=true;
+    this.showAudioToast("SOUND ON");
+   }
+  };
+  if(ctx.state==="running")done();
+  else ctx.resume().then(done,()=>{});
+ }
+ showAudioToast(text){
+  const t=this.el.audioToast;
+  if(!t)return;
+  this.hideAudioHint();
+  clearTimeout(this.toastTimer);
+  t.textContent=text;
+  t.classList.remove("hidden");
+  void t.offsetWidth;
+  t.classList.add("show");
+  this.toastTimer=setTimeout(()=>{
+   t.classList.remove("show");
+   this.toastTimer=setTimeout(()=>t.classList.add("hidden"),320);
+  },1100);
+ }
+ hideAudioToast(){
+  clearTimeout(this.toastTimer);
+  const t=this.el.audioToast;
+  if(!t)return;
+  t.classList.remove("show");
+  setTimeout(()=>t.classList.add("hidden"),320);
  }
 
  // --- character select ---------------------------------------------------
