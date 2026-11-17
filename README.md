@@ -7,17 +7,41 @@ procedurally on a canvas, so there are no external sprites, fonts or CDNs to loa
 
 ## Modes
 
-- **ARCADE** — single player. Beat five opponents in a row; each one reacts
-  faster, blocks more and spends energy more often than the last. Win a match to
-  advance, lose and the same opponent waits for a retry. Beat the fifth fighter
-  to become champion.
-- **2P VERSUS** — two players on one keyboard.
+- **ARCADE** — single player. Pick a fighter, then beat five opponents in a row;
+  each one reacts faster, blocks more and spends energy more often than the last.
+  Win a match to advance, lose and the same opponent waits for a retry. Beat the
+  fifth fighter to become champion.
+- **2P VERSUS** — two players on one keyboard, each choosing a fighter.
 
 Matches are **best of three rounds**: the first fighter to win two rounds takes
 the match. Rounds end on a knockout or when the 99-second timer expires (the
-fighter with more health wins); a draw replays the round. Round wins are shown
-as the two pips beside each name. After a match ends, press **Enter** (or click
-the arena) to advance.
+fighter with more health wins); a draw replays the round. Round wins show as the
+two pips beside each name. After a match ends, press **Enter** (or click the
+arena) to advance.
+
+## Roster
+
+Every fighter has its own speed, health, normal-attack damage/cooldown, reach and
+signature KI attack. The KI attack is listed under the energy bar in-game.
+
+| Fighter | Title | Speed | Health | Signature attack |
+| --- | --- | --- | --- | --- |
+| SHADOW WARRIOR | The Wanderer | 4.0 | 100 | **Shadow Bolt** (25 KI) — fast straight projectile |
+| KAGE THE WANDERER | Stone Stalker | 3.6 | 110 | **Earth Wave** (28 KI) — ground wave, jump over it |
+| MIRA STORMBLADE | Sky Duelist | 4.4 | 95 | **Storm Fan** (32 KI) — three-projectile fan |
+| ONI OF THE ASH | Cinder Brute | 3.4 | 115 | **Ash Cannon** (38 KI) — slow, heavy orb |
+| SORA SKYFANG | Gale Lancer | 4.7 | 92 | **Sky Lance** (30 KI) — very fast lance slash |
+| MASTER KURO | Twin Shadow | 3.9 | 100 | **Twin Shadows** (28 KI) — two clones strike |
+
+## Character select
+
+The game opens on the select screen. Every card shows a live preview of the
+fighter, their signature attack and SPD / PWR / VIT bars.
+
+- **Player 1:** `A` / `D` to move the cursor, `F` to confirm.
+- **Player 2 (versus):** `←` / `→` to move, `1` to confirm.
+- **Enter** confirms immediately (in versus it readies both players).
+- Clicking a card also selects it.
 
 ## Play
 
@@ -45,11 +69,11 @@ python3 -m http.server 3000
 Numpad 1/2/4/5/6/7 work the same as the number-row keys for Player 2.
 
 - **Charge** fills the KI bar; the AI charges too when it has space.
-- **Energy attack** costs 25 KI and fires a projectile.
-- **Shadow clone** costs 35 KI and sends two clones at the opponent.
-- **Substitution** costs 20 KI, dashes back and grants brief invulnerability.
+- **Energy attack** costs the fighter's listed KI and fires their signature move.
+- **Shadow clone** sends two clones at the opponent (cost varies by fighter).
+- **Substitution** dashes back and grants brief invulnerability.
 - Blocking cuts incoming damage to 20%.
-- **RESTART** resets the current match (same opponent, round 1).
+- **RESTART** replays the current match with the same fighters (round 1).
 
 ## Hosting on GitHub Pages
 

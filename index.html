@@ -12,7 +12,7 @@ body{
  font-family:monospace;display:flex;
  justify-content:center;padding:15px
 }
-#game-container{width:min(100%,1000px);text-align:center}
+#game-container{width:min(100%,1000px);text-align:center;position:relative}
 h1{color:#e7b74c;font-size:36px;text-shadow:3px 3px #8b1515;margin:5px}
 .subtitle{font-size:11px;letter-spacing:4px;margin-bottom:12px;min-height:14px}
 .modebar{display:flex;justify-content:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
@@ -37,6 +37,8 @@ h1{color:#e7b74c;font-size:36px;text-shadow:3px 3px #8b1515;margin:5px}
 .health-fill{height:100%;background:#28d64d;width:100%;transition:width .1s}
 .right .health-fill{margin-left:auto}
 .energy-fill{height:100%;background:#39bfff;width:50%}
+.sp{font-size:9px;color:#8ba0c0;margin-top:3px;letter-spacing:1px;min-height:12px}
+.right .sp{text-align:right}
 #timer{font-size:32px;color:#f5d35d;font-weight:bold;line-height:1}
 #round-tag{font-size:10px;color:#9aa6bd;letter-spacing:1px;margin-top:3px}
 canvas{
@@ -48,6 +50,41 @@ canvas{
  flex-wrap:wrap;text-align:left;font-size:11px;line-height:1.8;padding:12px 0}
 .controls b{display:block;color:#e7b74c}
 #message{font-size:22px;color:#ffd65c;min-height:34px;margin:8px;letter-spacing:1px}
+.hidden{display:none!important}
+
+/* character select */
+.select{background:#12141f;border:2px solid #3d4761;padding:16px 14px 12px;margin-bottom:12px}
+.select h2{margin:0;color:#e7b74c;font-size:18px;letter-spacing:3px}
+#selectHint{font-size:10px;letter-spacing:1px;color:#93a2bd;margin:8px 0 14px;min-height:12px}
+.roster{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.card{
+ position:relative;background:#191d2b;border:2px solid #3c455c;
+ padding:6px 5px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;
+ color:#dbe4f4;font-family:inherit;cursor:pointer;transition:transform .08s,box-shadow .08s
+}
+.card:hover{transform:translateY(-2px);border-color:#6d7b99}
+.card canvas{width:100%;height:auto;border:0;margin:0;background:transparent;cursor:pointer}
+.card .cname{font-size:9px;font-weight:bold;letter-spacing:.5px;line-height:1.25;min-height:23px;display:flex;align-items:center}
+.card .ctitle{font-size:8px;color:#7f8daa;letter-spacing:1px}
+.card .csp{font-size:8px;color:#e0b96a;letter-spacing:.5px;margin-top:1px}
+.card .statrow{display:flex;align-items:center;gap:4px;width:100%;font-size:7px;color:#8b99b5}
+.card .statrow em{display:block;height:3px;background:#5ac8f5}
+.card .statrow i{flex:1;height:3px;background:#2b3245;display:block}
+.card .tag{position:absolute;top:4px;font-size:8px;font-weight:bold;padding:1px 4px;display:none;letter-spacing:1px}
+.card .tag-p1{left:4px;background:#e7b74c;color:#241a05}
+.card .tag-p2{right:4px;background:#49b9ed;color:#04141c}
+.card.c1{box-shadow:0 0 0 3px #e7b74c;border-color:#e7b74c}
+.card.c2{outline:3px solid #49b9ed;outline-offset:-8px;border-color:#49b9ed}
+.card.c1 .tag-p1,.card.c2 .tag-p2{display:block}
+.card.r1{filter:brightness(1.15)}
+.card.r1.c1,.card.r2.c2{animation:ready .5s ease-in-out 1}
+@keyframes ready{50%{transform:scale(1.04)}}
+.select-foot{font-size:9px;color:#6f7c95;margin-top:12px;letter-spacing:1px}
+
+@media(max-width:760px){
+ .roster{grid-template-columns:repeat(3,1fr)}
+ .controls{display:none}
+}
 </style>
 </head>
 <body>
@@ -61,40 +98,51 @@ canvas{
  <button id="restart">RESTART</button>
 </div>
 
-<div class="hud">
- <div>
-  <div class="name"><span id="name1">SHADOW WARRIOR</span><span class="pips" id="wins1"><i></i><i></i></span></div>
-  <div class="health-track"><div id="health1" class="health-fill"></div></div>
-  <div class="energy-track"><div id="energy1" class="energy-fill"></div></div>
- </div>
- <div>
-  <div id="timer">99</div>
-  <div id="round-tag">ROUND 1</div>
- </div>
- <div class="right">
-  <div class="name"><span class="pips" id="wins2"><i></i><i></i></span><span id="name2">STORM NINJA</span></div>
-  <div class="health-track"><div id="health2" class="health-fill"></div></div>
-  <div class="energy-track"><div id="energy2" class="energy-fill"></div></div>
- </div>
-</div>
+<section id="selectScreen" class="select">
+ <h2>CHOOSE YOUR FIGHTER</h2>
+ <div id="selectHint"></div>
+ <div id="roster" class="roster"></div>
+ <div class="select-foot">EVERY FIGHTER HAS UNIQUE SPEED, HEALTH, NORMALS AND A SIGNATURE KI ATTACK</div>
+</section>
 
-<canvas id="game" width="960" height="540"></canvas>
+<div id="playArea" class="hidden">
+ <div class="hud">
+  <div>
+   <div class="name"><span id="name1">SHADOW WARRIOR</span><span class="pips" id="wins1"><i></i><i></i></span></div>
+   <div class="health-track"><div id="health1" class="health-fill"></div></div>
+   <div class="energy-track"><div id="energy1" class="energy-fill"></div></div>
+   <div class="sp" id="special1"></div>
+  </div>
+  <div>
+   <div id="timer">99</div>
+   <div id="round-tag">ROUND 1</div>
+  </div>
+  <div class="right">
+   <div class="name"><span class="pips" id="wins2"><i></i><i></i></span><span id="name2">STORM NINJA</span></div>
+   <div class="health-track"><div id="health2" class="health-fill"></div></div>
+   <div class="energy-track"><div id="energy2" class="energy-fill"></div></div>
+   <div class="sp" id="special2"></div>
+  </div>
+ </div>
 
-<div class="controls">
- <div>
- <b>PLAYER 1</b>
- A/D Move | W Jump | S Block<br>
- F Punch | G Kick | T Energy Attack<br>
- Y Charge | U Shadow Clone | I Substitution
+ <canvas id="game" width="960" height="540"></canvas>
+
+ <div class="controls">
+  <div>
+  <b>PLAYER 1</b>
+  A/D Move | W Jump | S Block<br>
+  F Punch | G Kick | T Energy Attack<br>
+  Y Charge | U Shadow Clone | I Substitution
+  </div>
+  <div>
+  <b>PLAYER 2</b>
+  Arrows Move | Down Block | Up Jump<br>
+  1 Punch | 2 Kick | 4 Energy Attack<br>
+  5 Charge | 6 Shadow Clone | 7 Substitution
+  </div>
  </div>
- <div>
- <b>PLAYER 2</b>
- Arrows Move | Down Block | Up Jump<br>
- 1 Punch | 2 Kick | 4 Energy Attack<br>
- 5 Charge | 6 Shadow Clone | 7 Substitution
- </div>
+ <div id="message">ROUND 1 - FIGHT!</div>
 </div>
-<div id="message">ROUND 1 - FIGHT!</div>
 </main>
 
 <script>
@@ -112,14 +160,54 @@ const COLORS={
  gold:{body:"#8a6a18",accent:"#ffe27a",hair:"#241a08"}
 };
 
-// Arcade ladder: each opponent is faster to react, blocks more and spends
-// energy more often than the last.
+// ROSTER — each fighter has its own speed, health, normals and signature
+// special. special.type drives SpecialMoves: bolt | wave | volley | cannon |
+// dash | clone.
+const ROSTER=[
+ {
+  id:"shadow",name:"SHADOW WARRIOR",title:"THE WANDERER",color:"blue",
+  speed:4,maxHealth:100,punchDmg:8,kickDmg:12,punchCd:18,kickCd:22,reach:100,
+  cloneCost:35,substituteCost:20,
+  special:{type:"bolt",name:"SHADOW BOLT",cost:25,damage:14,speed:11,size:1,color:"#39caff"}
+ },
+ {
+  id:"kage",name:"KAGE THE WANDERER",title:"STONE STALKER",color:"jade",
+  speed:3.6,maxHealth:110,punchDmg:9,kickDmg:13,punchCd:20,kickCd:24,reach:104,
+  cloneCost:35,substituteCost:22,
+  special:{type:"wave",name:"EARTH WAVE",cost:28,damage:16,speed:6,size:1.2,color:"#69f0b0"}
+ },
+ {
+  id:"mira",name:"MIRA STORMBLADE",title:"SKY DUELIST",color:"red",
+  speed:4.4,maxHealth:95,punchDmg:7,kickDmg:11,punchCd:16,kickCd:20,reach:96,
+  cloneCost:30,substituteCost:18,
+  special:{type:"volley",name:"STORM FAN",cost:32,damage:9,speed:10,size:.9,color:"#ffd27a"}
+ },
+ {
+  id:"oni",name:"ONI OF THE ASH",title:"CINDER BRUTE",color:"violet",
+  speed:3.4,maxHealth:115,punchDmg:10,kickDmg:15,punchCd:22,kickCd:26,reach:104,
+  cloneCost:40,substituteCost:24,
+  special:{type:"cannon",name:"ASH CANNON",cost:38,damage:24,speed:5,size:2.1,color:"#c98bff"}
+ },
+ {
+  id:"sora",name:"SORA SKYFANG",title:"GALE LANCER",color:"steel",
+  speed:4.7,maxHealth:92,punchDmg:7,kickDmg:10,punchCd:15,kickCd:19,reach:98,
+  cloneCost:32,substituteCost:16,
+  special:{type:"dash",name:"SKY LANCE",cost:30,damage:19,speed:15,size:1.1,color:"#a8c8e8"}
+ },
+ {
+  id:"kuro",name:"MASTER KURO",title:"TWIN SHADOW",color:"gold",
+  speed:3.9,maxHealth:100,punchDmg:9,kickDmg:13,punchCd:19,kickCd:23,reach:102,
+  cloneCost:32,substituteCost:18,
+  special:{type:"clone",name:"TWIN SHADOWS",cost:28,damage:10,speed:0,size:1,color:"#ffe27a"}
+ }
+];
+
 const ARCADE_LADDER=[
- {name:"KAGE THE WANDERER",color:"jade",level:1},
- {name:"MIRA STORMBLADE",color:"red",level:2},
- {name:"ONI OF THE ASH",color:"violet",level:3},
- {name:"SORA SKYFANG",color:"steel",level:4},
- {name:"MASTER KURO",color:"gold",level:5}
+ {id:"kage",level:1},
+ {id:"mira",level:2},
+ {id:"oni",level:3},
+ {id:"sora",level:4},
+ {id:"kuro",level:5}
 ];
 
 const P1_CONTROLS={
@@ -132,6 +220,8 @@ const P2_CONTROLS={
  block:"arrowdown",punch:"1",kick:"2",
  special:"4",charge:"5",clone:"6",substitute:"7"
 };
+
+const byId=id=>ROSTER.find(r=>r.id===id)||ROSTER[0];
 
 // INPUT
 class Input{
@@ -193,17 +283,21 @@ class Animation{
 
 // FIGHTER
 class Fighter{
- constructor(x,color,controls,name){
-  this.width=48;this.height=110;this.speed=4;
-  this.name=name||"FIGHTER";
-  this.color=COLORS[color]||COLORS.blue;
+ constructor(x,def,controls){
+  this.width=48;this.height=110;
+  this.def=def;
+  this.name=def.name;
+  this.color=COLORS[def.color]||COLORS.blue;
   this.controls=controls;
   this.animation=new Animation();
   this.resetRound(x,x<W/2?1:-1);
  }
  resetRound(x,facing){
   this.x=x;this.y=GROUND;this.vx=0;this.vy=0;this.facing=facing;
-  this.health=100;this.energy=50;
+  this.maxHealth=this.def.maxHealth;
+  this.health=this.def.maxHealth;
+  this.energy=50;
+  this.speed=this.def.speed;
   this.grounded=true;this.blocking=false;
   this.invulnerable=0;this.cooldown=0;
   this.attackType=null;this.attackFrame=0;this.attackHit=false;
@@ -266,7 +360,9 @@ class Fighter{
  attack(type){
   if(this.cooldown>0||this.animation.locked())return false;
   this.attackType=type;this.attackFrame=0;this.attackHit=false;
-  this.cooldown=type==="special"?35:18;
+  this.cooldown=type==="special"||type==="clone"
+   ? 34
+   : type==="punch"?this.def.punchCd:this.def.kickCd;
   this.animation.play(type==="punch"?"punch":type==="kick"?"kick":"special",true);
   return true;
  }
@@ -355,6 +451,43 @@ class Particles{
  }
 }
 
+function drawProjectile(ctx,p){
+  ctx.save();
+  ctx.globalAlpha=.95;
+  if(p.slash){
+   ctx.strokeStyle=p.color;
+   ctx.lineWidth=7;
+   ctx.lineCap="round";
+   ctx.beginPath();
+   ctx.arc(p.x,p.y,(p.h||22)*.7,-1.15,1.15);
+   ctx.stroke();
+   ctx.strokeStyle="rgba(255,255,255,.8)";
+   ctx.lineWidth=2;
+   ctx.beginPath();
+   ctx.arc(p.x,p.y,(p.h||22)*.7,-1.05,1.05);
+   ctx.stroke();
+  }else if(p.lift){
+   ctx.fillStyle=p.color;
+   ctx.beginPath();
+   ctx.ellipse(p.x,p.y,(p.w||40)/2,(p.h||18)/2,0,0,Math.PI*2);
+   ctx.fill();
+   ctx.fillStyle="rgba(255,255,255,.85)";
+   ctx.beginPath();
+   ctx.ellipse(p.x,p.y-3,(p.w||40)/4,(p.h||18)/5,0,0,Math.PI*2);
+   ctx.fill();
+  }else{
+   const g=ctx.createRadialGradient(p.x,p.y,2,p.x,p.y,(p.w||24)*.8);
+   g.addColorStop(0,"#ffffff");
+   g.addColorStop(.4,p.color||"#38bfff");
+   g.addColorStop(1,"rgba(0,0,0,0)");
+   ctx.fillStyle=g;
+   ctx.beginPath();
+   ctx.ellipse(p.x,p.y,(p.w||24)*.85,(p.h||16)*1.05,0,0,Math.PI*2);
+   ctx.fill();
+  }
+  ctx.restore();
+}
+
 // SPECIAL MOVES
 class SpecialMoves{
  constructor(particles){
@@ -364,30 +497,71 @@ class SpecialMoves{
  clear(){
   this.projectiles=[];this.clones=[];
  }
- energyAttack(f){
-  if(f.energy<25||!f.attack("special"))return;
-  f.energy-=25;
-  this.projectiles.push({
-   x:f.x+24,y:f.y-60,vx:f.facing*9,
-   owner:f,damage:14,life:100
-  });
-  this.particles.emit(f.x,f.y-50,"#39caff",25);
- }
- shadowClone(f){
-  if(f.energy<35||f.cooldown>0||f.animation.locked())return;
-  if(!f.attack("clone"))return;
-  f.energy-=35;
+ spawnClones(f,damage){
   for(let i=0;i<2;i++){
    this.clones.push({
     x:f.x-f.facing*(50+i*35),y:f.y,
-    owner:f,life:65,damage:8,hit:false
+    owner:f,life:65,damage,hit:false
    });
   }
   this.particles.emit(f.x,f.y-50,"#ddd",30);
  }
+ // The signature KI attack, dispatched by the fighter's special type.
+ special(f){
+  const sp=f.def.special;
+  if(f.energy<sp.cost)return;
+  if(!f.attack("special"))return;
+  f.energy-=sp.cost;
+  const baseY=f.y-60;
+  const size=sp.size||1;
+  if(sp.type==="clone"){
+   this.spawnClones(f,sp.damage);
+  }else if(sp.type==="wave"){
+   this.projectiles.push({
+    x:f.x+24,y:GROUND-10,vx:f.facing*sp.speed,
+    owner:f,damage:sp.damage,life:110,
+    w:44*size,h:18*size,lift:true,color:sp.color
+   });
+  }else if(sp.type==="cannon"){
+   this.projectiles.push({
+    x:f.x+42,y:baseY,vx:f.facing*sp.speed,
+    owner:f,damage:sp.damage,life:120,
+    w:46*size,h:36*size,color:sp.color
+   });
+  }else if(sp.type==="volley"){
+   for(let i=-1;i<=1;i++){
+    this.projectiles.push({
+     x:f.x+24,y:baseY+i*22,vx:f.facing*sp.speed,
+     owner:f,damage:sp.damage,life:90,vy:i*.55,
+     w:18*size,h:12*size,color:sp.color
+    });
+   }
+  }else if(sp.type==="dash"){
+   this.projectiles.push({
+    x:f.x+24,y:baseY,vx:f.facing*sp.speed,
+    owner:f,damage:sp.damage,life:24,
+    w:64,h:22,slash:true,color:sp.color
+   });
+  }else{
+   this.projectiles.push({
+    x:f.x+24,y:baseY,vx:f.facing*sp.speed,
+    owner:f,damage:sp.damage,life:100,
+    w:20*size,h:12*size,color:sp.color
+   });
+  }
+  this.particles.emit(f.x,f.y-50,sp.color,22);
+ }
+ shadowClone(f){
+  const cost=f.def.cloneCost;
+  if(f.energy<cost||f.cooldown>0||f.animation.locked())return;
+  if(!f.attack("clone"))return;
+  f.energy-=cost;
+  this.spawnClones(f,8);
+ }
  substitution(f){
-  if(f.energy<20||f.invulnerable>0||f.cooldown>0)return;
-  f.energy-=20;
+  const cost=f.def.substituteCost;
+  if(f.energy<cost||f.invulnerable>0||f.cooldown>0)return;
+  f.energy-=cost;
   f.animation.play("teleport",true);
   this.particles.emit(f.x,f.y-40,"#ddd",35);
   f.x=Math.max(0,Math.min(W-f.width,f.x-f.facing*90));
@@ -395,17 +569,19 @@ class SpecialMoves{
  }
  update(ctx,f1,f2){
   this.projectiles.forEach(p=>{
-   p.x+=p.vx;p.life--;
+   p.x+=p.vx;
+   if(p.vy)p.y+=p.vy;
+   p.life--;
    const target=p.owner===f1?f2:f1;
-   if(Math.abs(p.x-(target.x+24))<28&&
-      p.y>target.y-target.height&&p.y<target.y){
+   const hw=(p.w||24)/2,hh=(p.h||16)/2;
+   if(Math.abs(p.x-(target.x+24))<hw+18&&
+      p.y>target.y-target.height-hh&&p.y<target.y+hh){
     target.takeDamage(p.damage);p.life=0;
-    this.particles.emit(p.x,p.y,"#45caff",20);
+    this.particles.emit(p.x,p.y,p.color||"#45caff",20);
    }
-   ctx.fillStyle="#38bfff";ctx.fillRect(p.x-12,p.y-8,24,16);
-   ctx.fillStyle="white";ctx.fillRect(p.x-4,p.y-4,8,8);
+   drawProjectile(ctx,p);
   });
-  this.projectiles=this.projectiles.filter(p=>p.life>0&&p.x>0&&p.x<W);
+  this.projectiles=this.projectiles.filter(p=>p.life>0&&p.x>-80&&p.x<W+80);
 
   this.clones.forEach(c=>{
    c.life--;
@@ -430,9 +606,9 @@ class Combat{
   const distance=Math.abs(f.x-enemy.x);
   f.attackFrame++;
   if(f.attackFrame>=2&&f.attackFrame<=6&&
-     distance<100&&!f.attackHit){
-   const damage=f.attackType==="punch"?8:
-    f.attackType==="kick"?12:0;
+     distance<f.def.reach&&!f.attackHit){
+   const damage=f.attackType==="punch"?f.def.punchDmg:
+    f.attackType==="kick"?f.def.kickDmg:0;
    if(damage){
     enemy.takeDamage(damage);
     f.attackHit=true;
@@ -446,8 +622,6 @@ class Combat{
 }
 
 // AI OPPONENT
-// Produces the same down()/tap() interface the keyboard uses, so the AI
-// drives a normal Fighter through exactly the same rules as the player.
 class AIController{
  constructor(fighter,level,controls){
   this.f=fighter;this.level=level;this.controls=controls;
@@ -471,7 +645,6 @@ class AIController{
   const toward=dist>0?c.right:c.left;
   const away=dist>0?c.left:c.right;
 
-  // React to an incoming attack.
   const threat=(enemy.attackType||enemy.animation.state==="special")&&adist<170;
   if(threat){
    if(Math.random()<this.blockChance){this.held.add(c.block);return}
@@ -508,7 +681,7 @@ class AIController{
     if(f.grounded){this.pressed.add(c.jump);this.action="approach"}
     break;
    case "energy":
-    if(f.energy>=25&&adist<520)this.pressed.add(c.special);
+    if(f.energy>=f.def.special.cost&&adist<560)this.pressed.add(c.special);
     this.action="approach";
     break;
    case "attack":{
@@ -517,8 +690,8 @@ class AIController{
     const r=Math.random();
     if(r<.58)this.pressed.add(c.punch);
     else if(r<.88)this.pressed.add(c.kick);
-    else if(this.level>=3&&f.energy>=20)this.pressed.add(c.substitute);
-    else if(this.level>=4&&f.energy>=35)this.pressed.add(c.clone);
+    else if(this.level>=3&&f.energy>=f.def.substituteCost)this.pressed.add(c.substitute);
+    else if(this.level>=4&&f.energy>=f.def.cloneCost)this.pressed.add(c.clone);
     // Leave a real gap between attacks so early opponents are beatable.
     this.attackCd=Math.max(18,46-this.level*5)+Math.floor(Math.random()*14);
     this.timer=Math.max(6,18-this.level*2);
@@ -538,8 +711,12 @@ class Game{
   this.particles=new Particles();
   this.specials=new SpecialMoves(this.particles);
   this.combat=new Combat(this.particles);
+
   this.mode="arcade";
   this.ladderIndex=0;
+  this.picks=[0,2];        // roster indices: P1 / P2
+  this.ready=[false,false];
+  this.screen="select";
   this.playerWon=false;this.champion=false;
   this.round=1;this.wins=[0,0];
   this.matchState="intro";this.stateTimer=0;
@@ -549,6 +726,10 @@ class Game{
   this.el={
    message:document.getElementById("message"),
    subtitle:document.getElementById("subtitle"),
+   select:document.getElementById("selectScreen"),
+   selectHint:document.getElementById("selectHint"),
+   roster:document.getElementById("roster"),
+   playArea:document.getElementById("playArea"),
    name1:document.getElementById("name1"),
    name2:document.getElementById("name2"),
    wins1:document.getElementById("wins1"),
@@ -558,46 +739,105 @@ class Game{
    health2:document.getElementById("health2"),
    energy1:document.getElementById("energy1"),
    energy2:document.getElementById("energy2"),
+   special1:document.getElementById("special1"),
+   special2:document.getElementById("special2"),
    timer:document.getElementById("timer"),
    modeArcade:document.getElementById("modeArcade"),
    modeVs:document.getElementById("modeVs")
   };
 
-  this.el.modeArcade.addEventListener("click",()=>this.setMode("arcade"));
-  this.el.modeVs.addEventListener("click",()=>this.setMode("vs"));
-  document.getElementById("restart").addEventListener("click",()=>this.startMatch());
-  window.addEventListener("keydown",e=>{
-   if(e.key==="Enter"){e.preventDefault();this.advance()}
-  });
-  canvas.addEventListener("click",()=>this.advance());
-
-  this.startMatch();
+  this.buildRoster();
+  this.bindEvents();
+  this.openSelect();
   this.last=0;
   requestAnimationFrame(t=>this.loop(t));
  }
 
- setMode(mode){
-  if(this.mode===mode)return;
-  this.mode=mode;
-  this.ladderIndex=0;
-  this.el.modeArcade.classList.toggle("active",mode==="arcade");
-  this.el.modeVs.classList.toggle("active",mode==="vs");
-  this.startMatch();
+ // --- character select ---------------------------------------------------
+ buildRoster(){
+  const pct=(v,min,max)=>Math.round(Math.max(4,Math.min(100,(v-min)/(max-min)*100)));
+  ROSTER.forEach((def,idx)=>{
+   const card=document.createElement("button");
+   card.className="card";
+   card.innerHTML=
+    '<canvas width="120" height="140"></canvas>'+
+    '<span class="cname">'+def.name+'</span>'+
+    '<span class="ctitle">'+def.title+'</span>'+
+    '<span class="csp">'+def.special.name+" - "+def.special.cost+" KI</span>"+
+    '<span class="statrow">SPD<i><em style="width:'+pct(def.speed,3.2,4.8)+'%"></em></i></span>'+
+    '<span class="statrow">PWR<i><em style="width:'+pct(def.punchDmg+def.kickDmg,16,26)+'%"></em></i></span>'+
+    '<span class="statrow">VIT<i><em style="width:'+pct(def.maxHealth,88,120)+'%"></em></i></span>'+
+    '<span class="tag tag-p1">P1</span><span class="tag tag-p2">P2</span>';
+   card.addEventListener("click",()=>this.pickByClick(idx));
+   this.el.roster.appendChild(card);
+   // static preview of the fighter
+   const cv=card.querySelector("canvas");
+   const f=new Fighter(36,def,P1_CONTROLS);
+   f.y=132;f.facing=1;f.energy=0;
+   f.draw(cv.getContext("2d"));
+  });
  }
 
+ pickByClick(idx){
+  if(this.screen!=="select")return;
+  if(!this.ready[0])this.picks[0]=idx;
+  else if(this.mode==="vs"&&!this.ready[1])this.picks[1]=idx;
+  this.syncSelectUI();
+  if(!this.ready[0])this.confirm(0);
+ }
+
+ confirm(i){
+  if(this.screen!=="select")return;
+  if(i===1&&this.mode!=="vs")return;
+  if(this.ready[i])return;
+  this.ready[i]=true;
+  this.syncSelectUI();
+  if(this.ready[0]&&(this.mode==="arcade"||this.ready[1]))this.startMatch();
+ }
+
+ syncSelectUI(){
+  const cards=[...this.el.roster.children];
+  cards.forEach((card,i)=>{
+   card.classList.toggle("c1",i===this.picks[0]);
+   card.classList.toggle("c2",this.mode==="vs"&&i===this.picks[1]);
+   card.classList.toggle("r1",this.ready[0]&&i===this.picks[0]);
+   card.classList.toggle("r2",this.ready[1]&&i===this.picks[1]);
+  });
+  const p1=ROSTER[this.picks[0]];
+  let hint="P1 "+p1.name+(this.ready[0]?" - READY":"")+"   [A/D CHOOSE - F CONFIRM]";
+  if(this.mode==="arcade")hint+="   ENTER TO FIGHT";
+  else{
+   const p2=ROSTER[this.picks[1]];
+   hint+="      P2 "+p2.name+(this.ready[1]?" - READY":"")+"   [ARROWS CHOOSE - 1 CONFIRM]";
+  }
+  this.el.selectHint.textContent=hint;
+ }
+
+ openSelect(){
+  this.screen="select";
+  this.ready=[false,false];
+  this.el.subtitle.textContent=(this.mode==="arcade"?"ARCADE":"2P VERSUS")+" - CHOOSE YOUR FIGHTER";
+  this.el.select.classList.remove("hidden");
+  this.el.playArea.classList.add("hidden");
+  this.syncSelectUI();
+ }
+
+ // --- match flow ---------------------------------------------------------
  startMatch(){
+  const p1def=ROSTER[this.picks[0]];
+  const p2def=this.mode==="arcade"
+   ? byId(ARCADE_LADDER[this.ladderIndex].id)
+   : ROSTER[this.picks[1]];
+  this.screen="game";
+  this.el.select.classList.add("hidden");
+  this.el.playArea.classList.remove("hidden");
+  this.p1=new Fighter(180,p1def,P1_CONTROLS);
+  this.p2=new Fighter(730,p2def,P2_CONTROLS);
+  this.ai=this.mode==="arcade"
+   ? new AIController(this.p2,ARCADE_LADDER[this.ladderIndex].level,P2_CONTROLS)
+   : null;
   this.playerWon=false;this.champion=false;
   this.round=1;this.wins=[0,0];
-  const opp=this.mode==="arcade"
-   ? ARCADE_LADDER[this.ladderIndex]
-   : {name:"STORM NINJA",color:"red"};
-  const p1Name=this.mode==="arcade"?"SHADOW WARRIOR":"PLAYER 1";
-  this.p1=new Fighter(180,"blue",P1_CONTROLS,p1Name);
-  this.p2=new Fighter(730,opp.color,P2_CONTROLS,opp.name);
-  this.ai=this.mode==="arcade"
-   ? new AIController(this.p2,opp.level,P2_CONTROLS)
-   : null;
-  this.stageName=this.mode==="arcade"?"SHADOW DOJO":"NIGHT CLIFF";
   this.startRound();
  }
 
@@ -606,6 +846,7 @@ class Game{
   this.p2.resetRound(730,-1);
   this.particles.items=[];
   this.specials.clear();
+  this.input.clear();
   this.time=99;
   this.matchState="intro";
   this.stateTimer=1200;
@@ -618,6 +859,8 @@ class Game{
   this.el.name1.textContent=this.p1.name;
   this.el.name2.textContent=this.p2.name;
   this.el.roundTag.textContent="ROUND "+this.round;
+  this.el.special1.textContent=this.p1.def.special.name+" - "+this.p1.def.special.cost+" KI";
+  this.el.special2.textContent=this.p2.def.special.name+" - "+this.p2.def.special.cost+" KI";
   this.el.subtitle.textContent=this.mode==="arcade"
    ? "ARCADE - FIGHT "+(this.ladderIndex+1)+" OF "+ARCADE_LADDER.length
    : "2P VERSUS - FIRST TO "+WINS_NEEDED;
@@ -640,12 +883,8 @@ class Game{
   if(winner>=0)this.wins[winner]++;
   let msg;
   if(winner<0)msg="DRAW - ROUND REPLAYED";
-  else{
-   const who=winner===0?this.p1.name:this.p2.name;
-   msg=(timeUp?"TIME UP - ":"K.O. - ")+who+" TAKES ROUND "+this.round;
-  }
+  else msg=(timeUp?"TIME UP - ":"K.O. - ")+(winner===0?this.p1.name:this.p2.name)+" TAKES ROUND "+this.round;
   this.setMessage(msg);
-  this.particles.emit(winner===0?this.p2.x+20:this.p1.x+20,GROUND-60,"#ffdb65",30);
   this.syncHUD();
  }
 
@@ -665,27 +904,81 @@ class Game{
    if(this.playerWon){
     this.champion=this.ladderIndex>=ARCADE_LADDER.length-1;
     this.setMessage(this.champion
-     ? "CHAMPION! PRESS ENTER TO PLAY AGAIN"
+     ? "CHAMPION! PRESS ENTER TO CHOOSE AGAIN"
      : "YOU WIN! PRESS ENTER FOR THE NEXT FIGHT");
    }else{
     this.setMessage("GAME OVER - PRESS ENTER TO RETRY");
    }
   }else{
-   this.setMessage((this.playerWon?"PLAYER 1":"PLAYER 2")+
+   this.setMessage((this.playerWon?this.p1.name:this.p2.name)+
     " WINS THE MATCH - PRESS ENTER FOR A REMATCH");
   }
   this.syncHUD();
  }
 
  advance(){
-  if(this.matchState!=="matchEnd")return;
-  if(this.mode==="arcade"&&this.playerWon){
-   if(this.champion)this.ladderIndex=0;
-   else this.ladderIndex++;
+  if(this.screen!=="game"||this.matchState!=="matchEnd")return;
+  if(this.mode==="arcade"){
+   if(this.playerWon){
+    if(this.champion){this.ladderIndex=0;this.openSelect();return}
+    this.ladderIndex++;
+   }
   }
   this.startMatch();
  }
 
+ // --- mode / events ------------------------------------------------------
+ setMode(mode){
+  if(this.mode===mode){this.openSelect();return}
+  this.mode=mode;
+  this.ladderIndex=0;
+  this.el.modeArcade.classList.toggle("active",mode==="arcade");
+  this.el.modeVs.classList.toggle("active",mode==="vs");
+  this.openSelect();
+ }
+
+ bindEvents(){
+  this.el.modeArcade.addEventListener("click",()=>this.setMode("arcade"));
+  this.el.modeVs.addEventListener("click",()=>this.setMode("vs"));
+  document.getElementById("restart").addEventListener("click",()=>{
+   if(this.screen==="game")this.startMatch();
+  });
+  this.canvas.addEventListener("click",()=>this.advance());
+  window.addEventListener("keydown",e=>{
+   if(this.screen==="select"){
+    const k=e.key.toLowerCase();
+    if(k==="a"||k==="d"){
+     if(!this.ready[0]){
+      const step=k==="d"?1:-1;
+      this.picks[0]=(this.picks[0]+step+ROSTER.length)%ROSTER.length;
+      this.syncSelectUI();
+     }
+     e.preventDefault();
+     return;
+    }
+    if(this.mode==="vs"&&(k==="arrowleft"||k==="arrowright")){
+     if(!this.ready[1]){
+      const step=k==="arrowright"?1:-1;
+      this.picks[1]=(this.picks[1]+step+ROSTER.length)%ROSTER.length;
+      this.syncSelectUI();
+     }
+     e.preventDefault();
+     return;
+    }
+    if(k==="f")this.confirm(0);
+    else if(this.mode==="vs"&&k==="1")this.confirm(1);
+    else if(k==="enter"){
+     e.preventDefault();
+     if(this.mode==="vs"){this.confirm(0);this.confirm(1)}
+     else this.confirm(0);
+    }
+    return;
+   }
+   if(e.key==="Enter"){e.preventDefault();this.advance()}
+  });
+ }
+
+ // --- loop ---------------------------------------------------------------
  background(){
   const c=this.ctx;
   const sky=c.createLinearGradient(0,0,0,430);
@@ -715,7 +1008,7 @@ class Game{
    const input=f===this.p2&&this.ai?this.ai:this.input;
    if(input.tap(c.punch))f.attack("punch");
    if(input.tap(c.kick))f.attack("kick");
-   if(input.tap(c.special))this.specials.energyAttack(f);
+   if(input.tap(c.special))this.specials.special(f);
    if(input.tap(c.clone))this.specials.shadowClone(f);
    if(input.tap(c.substitute))this.specials.substitution(f);
    this.combat.update(f,e);
@@ -724,6 +1017,7 @@ class Game{
  }
 
  update(dt){
+  if(this.screen!=="game")return;
   switch(this.matchState){
    case "intro":
     this.stateTimer-=dt;
@@ -767,6 +1061,7 @@ class Game{
  }
 
  draw(){
+  if(this.screen!=="game"||!this.p1)return;
   const c=this.ctx;
   this.background();
   this.particles.draw(c);
@@ -782,8 +1077,9 @@ class Game{
  }
 
  hud(){
-  this.el.health1.style.width=this.p1.health+"%";
-  this.el.health2.style.width=this.p2.health+"%";
+  if(this.screen!=="game"||!this.p1)return;
+  this.el.health1.style.width=(this.p1.health/this.p1.maxHealth*100)+"%";
+  this.el.health2.style.width=(this.p2.health/this.p2.maxHealth*100)+"%";
   this.el.energy1.style.width=this.p1.energy+"%";
   this.el.energy2.style.width=this.p2.energy+"%";
   this.el.timer.textContent=Math.max(0,Math.ceil(this.time));
