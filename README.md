@@ -66,7 +66,8 @@ python3 -m http.server 3000
 | --- | --- | --- |
 | Move | `A` / `D` | `←` / `→` |
 | Jump | `W` | `↑` |
-| Block | `S` | `↓` |
+| Crouch | `S` | `↓` |
+| Block | `H` | `3` |
 | Punch | `F` | `1` |
 | Kick | `G` | `2` |
 | Energy attack | `T` | `4` |
@@ -75,6 +76,22 @@ python3 -m http.server 3000
 | Substitution | `I` | `7` |
 
 Numpad 1/2/4/5/6/7 work the same as the number-row keys for Player 2.
+
+## Attack heights and guarding
+
+Every strike has a height, and your guard has to match it:
+
+| Attack | Height | Effect |
+| --- | --- | --- |
+| Standing punch | Mid | Blockable standing or crouching |
+| Standing kick | High | **Whiffs on a crouching opponent**, blocked standing |
+| Crouch + punch / kick | Low | Hits through a standing guard; must be blocked crouching |
+| Air punch / kick | Overhead | Hits crouching fighters; must be blocked standing |
+| Kage's Earth Wave | Low | Low projectile, jump or crouch-block it |
+
+**Crouch-block** (hold block + crouch) stops lows and mids but loses to
+overheads. **Standing block** stops mids, highs and overheads but loses to low
+sweeps. Blocked hits still chip 20% of the damage.
 
 - **Charge** fills the KI bar; the AI charges too when it has space.
 - **Energy attack** costs the fighter's listed KI and fires their signature move.

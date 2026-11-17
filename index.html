@@ -130,13 +130,13 @@ canvas{
  <div class="controls">
   <div>
   <b>PLAYER 1</b>
-  A/D Move | W Jump | S Block<br>
+  A/D Move | W Jump | S Crouch | H Block<br>
   F Punch | G Kick | T Energy Attack<br>
   Y Charge | U Shadow Clone | I Substitution
   </div>
   <div>
   <b>PLAYER 2</b>
-  Arrows Move | Down Block | Up Jump<br>
+  Arrows Move | Up Jump | Down Crouch | 3 Block<br>
   1 Punch | 2 Kick | 4 Energy Attack<br>
   5 Charge | 6 Shadow Clone | 7 Substitution
   </div>
@@ -381,13 +381,13 @@ function drawGear(ctx,p,look,tx,tw,top,bottom,t){
 }
 
 const P1_CONTROLS={
- left:"a",right:"d",jump:"w",block:"s",
+ left:"a",right:"d",jump:"w",crouch:"s",block:"h",
  punch:"f",kick:"g",special:"t",charge:"y",
  clone:"u",substitute:"i"
 };
 const P2_CONTROLS={
  left:"arrowleft",right:"arrowright",jump:"arrowup",
- block:"arrowdown",punch:"1",kick:"2",
+ crouch:"arrowdown",block:"3",punch:"1",kick:"2",
  special:"4",charge:"5",clone:"6",substitute:"7"
 };
 
@@ -422,6 +422,8 @@ class Animation{
    punch:{frames:5,speed:4,loop:false},
    kick:{frames:6,speed:4,loop:false},
    block:{frames:2,speed:8,loop:true},
+   blockCrouch:{frames:2,speed:8,loop:true},
+   crouch:{frames:2,speed:10,loop:true},
    charge:{frames:6,speed:6,loop:true},
    special:{frames:9,speed:4,loop:false},
    clone:{frames:8,speed:5,loop:false},
@@ -474,6 +476,7 @@ class Fighter{
   this.energy=50;
   this.speed=this.def.speed;
   this.grounded=true;this.blocking=false;
+  this.crouching=false;this.attackHeight="mid";
   this.invulnerable=0;this.cooldown=0;
   this.attackType=null;this.attackFrame=0;this.attackHit=false;
   this.walkPhase=0;
@@ -489,16 +492,27 @@ class Fighter{
   if(this.invulnerable>0)this.invulnerable--;
   if(this.cooldown>0)this.cooldown--;
 
-  if(this.animation.locked()){
+  const locked=this.animation.locked();
+  if(!locked){
+   this.crouching=!!input.down(c.crouch)&&this.grounded;
+   this.blocking=!!input.down(c.block)&&this.grounded;
+  }else{
+   this.blocking=false;
+   if(this.animation.state!=="punch"&&this.animation.state!=="kick")this.crouching=false;
+  }
+
+  if(locked){
    this.animation.update();
    this.physics();
    return;
   }
 
-  this.blocking=input.down(c.block)&&this.grounded;
-
   if(this.blocking){
-   this.vx=0;this.animation.play("block");
+   this.vx=0;
+   this.animation.play(this.crouching?"blockCrouch":"block");
+  }else if(this.crouching){
+   this.vx=0;
+   this.animation.play("crouch");
   }else{
    let moving=false;
    if(input.down(c.left)){this.vx=-this.speed;moving=true}
@@ -506,7 +520,7 @@ class Fighter{
    if(!input.down(c.left)&&!input.down(c.right))this.vx*=.82;
 
    if(input.tap(c.jump)&&this.grounded){
-    this.vy=-13;this.grounded=false;
+    this.vy=-13;this.grounded=false;this.crouching=false;
     this.animation.play("jump",true);
    }
 
@@ -516,7 +530,7 @@ class Fighter{
    }else if(this.grounded)this.animation.play("idle");
   }
 
-  if(input.down(c.charge)){
+  if(input.down(c.charge)&&!this.crouching){
    this.energy=Math.min(100,this.energy+.35);
    this.animation.play("charge");
   }
@@ -541,12 +555,19 @@ class Fighter{
   this.cooldown=type==="special"||type==="clone"
    ? 34
    : type==="punch"?this.def.punchCd:this.def.kickCd;
+  // Attack height decides what can be blocked and what whiffs.
+  this.attackHeight=!this.grounded?"overhead":this.crouching?"low":(type==="kick"?"high":"mid");
   this.animation.play(type==="punch"?"punch":type==="kick"?"kick":"special",true);
   return true;
  }
- takeDamage(amount){
+ takeDamage(amount,blocked=false){
   if(this.invulnerable>0)return;
-  this.health=Math.max(0,this.health-(this.blocking?amount*.2:amount));
+  if(blocked){
+   this.health=Math.max(0,this.health-amount*.2);
+   this.invulnerable=8;
+   return;
+  }
+  this.health=Math.max(0,this.health-amount);
   this.invulnerable=12;
   this.animation.play("hit",true);
  }
@@ -559,6 +580,8 @@ class Fighter{
   const k=Math.min(frame,5);
   const breath=Math.sin(t*(look.breath||2.2));
   const walking=st==="walk";
+  const crouched=st==="crouch"||st==="blockCrouch"||((st==="punch"||st==="kick")&&this.crouching);
+  const drop=crouched?14:0;
   const wp=this.walkPhase||0;
   const bw=look.build;
 
@@ -575,6 +598,7 @@ class Fighter{
   if(st==="hit")lean-=5;
   if(st==="block")armUp+=8;
   if(st==="charge")armUp+=4;
+  armUp+=drop;
 
   // Walk cycle: stride, foot lift and body bounce differ per fighter.
   const stride=walking?Math.sin(wp)*(look.stride||5):0;
@@ -602,7 +626,7 @@ class Fighter{
    ctx.fillStyle="#17151c";
    ctx.fillRect(x-1,-15-lift,16,15);
    ctx.fillStyle=color;
-   ctx.fillRect(x,legTop,14,-legTop-15-lift);
+   ctx.fillRect(x,legTop+drop,14,-legTop-drop-15-lift);
   };
   drawLeg(legBack-stride*.7,liftB,shadeColor(p.body,.8));
   if(st!=="kick")drawLeg(legFront+stride*.7,liftF,p.body);
@@ -610,12 +634,12 @@ class Fighter{
   // Kick flourish — height and reach depend on the fighter.
   if(st==="kick"){
    const style=look.kickStyle||"front";
-   let y=-38,footY=-40,ext=18+k*5;
-   if(style==="low"){y=-26;footY=-28;ext=20+k*6}
-   else if(style==="high"){y=-58-k*3;footY=-60-k*3;ext=20+k*6}
-   else if(style==="stomp"){y=-58+k*7;footY=-60+k*7;ext=16+k*4}
-   else if(style==="spin"){y=-46+Math.sin(k*.9)*8;footY=-48+Math.sin(k*.9)*8;ext=22+k*5}
-   else if(style==="thrust"){y=-34;footY=-36;ext=13+k*8}
+   let y=-38+drop,footY=-40+drop,ext=18+k*5;
+   if(style==="low"){y=-26+drop;footY=-28+drop;ext=20+k*6}
+   else if(style==="high"){y=-58-k*3+drop;footY=-60-k*3+drop;ext=20+k*6}
+   else if(style==="stomp"){y=-58+k*7+drop;footY=-60+k*7+drop;ext=16+k*4}
+   else if(style==="spin"){y=-46+Math.sin(k*.9)*8+drop;footY=-48+Math.sin(k*.9)*8+drop;ext=22+k*5}
+   else if(style==="thrust"){y=-34+drop;footY=-36+drop;ext=13+k*8}
    ctx.fillStyle=p.body;
    ctx.fillRect(2,y,ext,12);
    ctx.fillStyle="#17151c";
@@ -638,19 +662,19 @@ class Fighter{
   // torso
   const tw=36*bw,tx=-tw/2+lean;
   ctx.fillStyle=p.body;
-  ctx.fillRect(tx,-82,tw,44);
+  ctx.fillRect(tx,-82+drop,tw,44);
   ctx.fillStyle="rgba(0,0,0,.16)";
-  ctx.fillRect(tx+tw*.56,-82,tw*.44,44);
+  ctx.fillRect(tx+tw*.56,-82+drop,tw*.44,44);
   ctx.fillStyle=p.accent;
-  ctx.fillRect(tx,-82,tw,2);
+  ctx.fillRect(tx,-82+drop,tw,2);
 
   // neck and belt
   ctx.fillStyle="#e9b38b";
-  ctx.fillRect(-4,-87,8,6);
+  ctx.fillRect(-4,-87+drop,8,6);
   ctx.fillStyle="#17151c";
-  ctx.fillRect(tx-1,-46,tw+2,7);
+  ctx.fillRect(tx-1,-46+drop,tw+2,7);
 
-  drawGear(ctx,p,look,tx,tw,-82,-38,t);
+  drawGear(ctx,p,look,tx,tw,-82+drop,-38+drop,t);
 
   // Attack arm parameters (flourish per fighter).
   let ext=0,dy=0,hand=8,both=false;
@@ -690,7 +714,7 @@ class Fighter{
 
   // head
   const hh=24*look.head,hw=27*look.head;
-  const hx=-hw/2+lean*.8,hy=-82-hh;
+  const hx=-hw/2+lean*.8,hy=-82+drop-hh;
   ctx.fillStyle="#e9b38b";
   ctx.fillRect(hx,hy,hw,hh);
   ctx.fillStyle="rgba(0,0,0,.12)";
@@ -723,12 +747,12 @@ class Fighter{
    ctx.fillRect(armX,-46+armUp,armW,6);
   }
 
-  if(st==="block"){
+  if(st==="block"||st==="blockCrouch"){
    ctx.fillStyle=p.body;
-   ctx.fillRect(-8,-100,13,36);
-   ctx.fillRect(10,-94,13,30);
+   ctx.fillRect(-8,-100+drop,13,36);
+   ctx.fillRect(10,-94+drop,13,30);
    ctx.fillStyle=p.accent;
-   ctx.fillRect(-8,-82,31,4);
+   ctx.fillRect(-8,-82+drop,31,4);
   }
 
   if(this.energy>=50){
@@ -838,33 +862,33 @@ class SpecialMoves{
   }else if(sp.type==="wave"){
    this.projectiles.push({
     x:f.x+24,y:GROUND-10,vx:f.facing*sp.speed,
-    owner:f,damage:sp.damage,life:110,
+    owner:f,damage:sp.damage,life:110,level:"low",
     w:44*size,h:18*size,lift:true,color:sp.color
    });
   }else if(sp.type==="cannon"){
    this.projectiles.push({
     x:f.x+42,y:baseY,vx:f.facing*sp.speed,
-    owner:f,damage:sp.damage,life:120,
+    owner:f,damage:sp.damage,life:120,level:"mid",
     w:46*size,h:36*size,color:sp.color
    });
   }else if(sp.type==="volley"){
    for(let i=-1;i<=1;i++){
     this.projectiles.push({
      x:f.x+24,y:baseY+i*22,vx:f.facing*sp.speed,
-     owner:f,damage:sp.damage,life:90,vy:i*.55,
+     owner:f,damage:sp.damage,life:90,vy:i*.55,level:"mid",
      w:18*size,h:12*size,color:sp.color
     });
    }
   }else if(sp.type==="dash"){
    this.projectiles.push({
     x:f.x+24,y:baseY,vx:f.facing*sp.speed,
-    owner:f,damage:sp.damage,life:24,
+    owner:f,damage:sp.damage,life:24,level:"mid",
     w:64,h:22,slash:true,color:sp.color
    });
   }else{
    this.projectiles.push({
     x:f.x+24,y:baseY,vx:f.facing*sp.speed,
-    owner:f,damage:sp.damage,life:100,
+    owner:f,damage:sp.damage,life:100,level:"mid",
     w:20*size,h:12*size,color:sp.color
    });
   }
@@ -895,7 +919,11 @@ class SpecialMoves{
    const hw=(p.w||24)/2,hh=(p.h||16)/2;
    if(Math.abs(p.x-(target.x+24))<hw+18&&
       p.y>target.y-target.height-hh&&p.y<target.y+hh){
-    target.takeDamage(p.damage);p.life=0;
+    const level=p.level||"mid";
+    if(!(level==="high"&&target.crouching)){
+     target.takeDamage(p.damage,resolveBlock(target,level));
+    }
+    p.life=0;
     this.particles.emit(p.x,p.y,p.color||"#45caff",20);
    }
    drawProjectile(ctx,p);
@@ -906,7 +934,7 @@ class SpecialMoves{
    c.life--;
    const target=c.owner===f1?f2:f1;
    if(!c.hit&&Math.abs(c.x-target.x)<65&&c.life<55){
-    target.takeDamage(c.damage);c.hit=true;
+    target.takeDamage(c.damage,resolveBlock(target,"mid"));c.hit=true;
    }
    ctx.globalAlpha=Math.min(.6,c.life/50);
    ctx.fillStyle="#79bfff";
@@ -918,6 +946,15 @@ class SpecialMoves{
 }
 
 // COMBAT
+// Blocking is stance-aware: lows need a crouching guard, highs pass over a
+// crouching opponent, and overheads beat crouch-blocking.
+function resolveBlock(target,height){
+ if(!target.blocking||!target.grounded)return false;
+ if(height==="low")return target.crouching;
+ if(height==="overhead")return !target.crouching;
+ return true;
+}
+
 class Combat{
  constructor(particles){this.particles=particles}
  update(f,enemy){
@@ -929,9 +966,16 @@ class Combat{
    const damage=f.attackType==="punch"?f.def.punchDmg:
     f.attackType==="kick"?f.def.kickDmg:0;
    if(damage){
-    enemy.takeDamage(damage);
+    const height=f.attackHeight||"mid";
     f.attackHit=true;
-    this.particles.emit(enemy.x+20,enemy.y-50,"#ffdb65",12);
+    if(height==="high"&&enemy.crouching){
+     // high strike sails over the crouching fighter
+     this.particles.emit(enemy.x+22,enemy.y-96,"#8fa0b8",5,1.4);
+    }else{
+     const blocked=resolveBlock(enemy,height);
+     enemy.takeDamage(damage,blocked);
+     this.particles.emit(enemy.x+20,enemy.y-52,blocked?"#9fd0ff":"#ffdb65",blocked?6:12);
+    }
    }
   }
   if(f.attackFrame>7){
@@ -966,7 +1010,11 @@ class AIController{
 
   const threat=(enemy.attackType||enemy.animation.state==="special")&&adist<170;
   if(threat){
-   if(Math.random()<this.blockChance){this.held.add(c.block);return}
+   if(Math.random()<this.blockChance){
+    this.held.add(c.block);
+    if(this.level>=2&&Math.random()<.35)this.held.add(c.crouch);
+    return;
+   }
    if(this.level>=3&&Math.random()<.03){this.pressed.add(c.jump);return}
   }
 
@@ -991,6 +1039,7 @@ class AIController{
     break;
    case "block":
     this.held.add(c.block);
+    if(this.level>=2&&Math.random()<.4)this.held.add(c.crouch);
     break;
    case "charge":
     if(f.energy<95)this.held.add(c.charge);
@@ -1007,7 +1056,8 @@ class AIController{
     if(adist>102){this.held.add(toward);break}
     if(this.attackCd>0)break;
     const r=Math.random();
-    if(r<.58)this.pressed.add(c.punch);
+    if(r<.26){this.held.add(c.crouch);this.pressed.add(c.kick)}
+    else if(r<.58)this.pressed.add(c.punch);
     else if(r<.88)this.pressed.add(c.kick);
     else if(this.level>=3&&f.energy>=f.def.substituteCost)this.pressed.add(c.substitute);
     else if(this.level>=4&&f.energy>=f.def.cloneCost)this.pressed.add(c.clone);
