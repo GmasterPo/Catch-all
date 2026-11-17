@@ -117,7 +117,8 @@ key press or click. Every strike gets a small random pitch offset so repeat hits
 don't sound identical.
 
 The top bar has a **SOUND ON / MUTED** toggle and a volume slider; both apply
-immediately, including to sounds already ringing out.
+immediately, including to sounds already ringing out, and both are remembered in
+local storage so the game reopens at your last setting.
 
 - **Charge** fills the KI bar; the AI charges too when it has space.
 - **Energy attack** costs the fighter's listed KI and fires their signature move.

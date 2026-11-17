@@ -784,6 +784,20 @@ class Sound{
  constructor(){
   this.ctx=null;this.master=null;this.enabled=true;this._noise=null;
   this.volume=.4;this.muted=false;
+  this.load();
+ }
+ load(){
+  try{
+   const v=localStorage.getItem("nk_volume");
+   if(v!==null){const n=Number(v);if(Number.isFinite(n))this.volume=Math.max(0,Math.min(1,n))}
+   this.muted=localStorage.getItem("nk_muted")==="1";
+  }catch(e){}
+ }
+ save(){
+  try{
+   localStorage.setItem("nk_volume",String(this.volume));
+   localStorage.setItem("nk_muted",this.muted?"1":"0");
+  }catch(e){}
  }
  applyGain(){
   if(this.master)this.master.gain.value=this.muted?0:this.volume;
@@ -791,10 +805,12 @@ class Sound{
  setVolume(v){
   this.volume=Math.max(0,Math.min(1,v));
   this.applyGain();
+  this.save();
  }
  setMuted(m){
   this.muted=!!m;
   this.applyGain();
+  this.save();
  }
  ensure(){
   if(!this.ctx){
