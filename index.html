@@ -26,6 +26,14 @@ h1{color:#e7b74c;font-size:36px;text-shadow:3px 3px #8b1515;margin:5px}
 .modebar button.muted{background:#151a26;border-color:#454e64;color:#78839a}
 .audiobar{display:inline-flex;align-items:center;gap:6px;margin-left:6px}
 .audiobar input[type=range]{width:84px;height:16px;accent-color:#e7b74c;cursor:pointer}
+.audio-hint{
+ position:fixed;left:50%;bottom:26px;transform:translate(-50%,10px);
+ background:#151a26;border:2px solid #e7b74c;color:#f5d35d;
+ font-size:11px;letter-spacing:2px;padding:9px 16px;z-index:20;
+ opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;text-align:center
+}
+.audio-hint.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:760px){.audio-hint{font-size:9px;letter-spacing:1px;bottom:16px}}
 .hud{display:grid;grid-template-columns:1fr 78px 1fr;gap:12px;align-items:center}
 .name{text-align:left;margin-bottom:5px;font-weight:bold;font-size:13px}
 .right .name{text-align:right}
@@ -92,6 +100,7 @@ canvas{
 </head>
 <body>
 <main id="game-container">
+<div id="audioHint" class="audio-hint hidden">CLICK OR PRESS ANY KEY FOR SOUND</div>
 <h1>NINJA KOMBAT</h1>
 <div class="subtitle" id="subtitle">ARCADE FIGHTING CHAMPIONSHIP</div>
 
@@ -1267,7 +1276,7 @@ class Game{
   this.combat.onBlock=()=>this.sound.block();
   this.specials.onBlock=()=>this.sound.block();
   this.combat.onWhiff=()=>this.sound.whiff();
-  const unlock=()=>this.sound.ensure();
+  const unlock=()=>{this.sound.ensure();this.hideAudioHint()};
   window.addEventListener("keydown",unlock);
   window.addEventListener("pointerdown",unlock);
   this.shake=0;this.flash=0;this.flashColor="#fff";
@@ -1305,13 +1314,15 @@ class Game{
    modeArcade:document.getElementById("modeArcade"),
    modeVs:document.getElementById("modeVs"),
    muteBtn:document.getElementById("muteBtn"),
-   volume:document.getElementById("volume")
+   volume:document.getElementById("volume"),
+   audioHint:document.getElementById("audioHint")
   };
 
   this.buildRoster();
   this.bindEvents();
   this.bindAudioControls();
   this.openSelect();
+  this.showAudioHint();
   this.last=0;
   requestAnimationFrame(t=>this.loop(t));
  }
@@ -1333,6 +1344,23 @@ class Game{
   this.el.muteBtn.classList.toggle("muted",muted);
   this.el.muteBtn.setAttribute("aria-pressed",muted?"true":"false");
   this.el.volume.value=Math.round(this.sound.volume*100);
+  if(muted)this.hideAudioHint();
+ }
+ // Nudge players that sound needs a click, then get out of the way.
+ showAudioHint(){
+  if(this.sound.muted||this.sound.ctx)return;
+  const h=this.el.audioHint;
+  if(!h)return;
+  h.classList.remove("hidden");
+  requestAnimationFrame(()=>h.classList.add("show"));
+  this.hintTimer=setTimeout(()=>this.hideAudioHint(),6000);
+ }
+ hideAudioHint(){
+  clearTimeout(this.hintTimer);
+  const h=this.el.audioHint;
+  if(!h||h.classList.contains("hidden"))return;
+  h.classList.remove("show");
+  setTimeout(()=>h.classList.add("hidden"),300);
  }
 
  // --- character select ---------------------------------------------------
