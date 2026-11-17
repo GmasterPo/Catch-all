@@ -23,6 +23,9 @@ arena) to advance.
 
 Every fighter has its own speed, health, normal-attack damage/cooldown, reach and
 signature KI attack. The KI attack is listed under the energy bar in-game.
+Each fighter also has a distinct silhouette, hairstyle, gear and idle stance
+(headband, topknot, ponytail, horned mane, braid, bald master with beard), drawn
+procedurally so the same look appears in the select previews and in battle.
 
 | Fighter | Title | Speed | Health | Signature attack |
 | --- | --- | --- | --- | --- |
