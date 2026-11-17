@@ -217,14 +217,28 @@ const DEFAULT_LOOK={
  hair:"band",stance:"guard",gear:"gi",breath:2.2,phase:0
 };
 const LOOKS={
- shadow:{height:1,build:1,head:1,arm:1,leg:1,hair:"band",hairColor:"#111522",stance:"guard",gear:"gi",breath:2.3,phase:0},
- kage:{height:1.04,build:1.2,head:1,arm:1.15,leg:1,hair:"topknot",hairColor:"#0d1411",stance:"wide",gear:"sash",breath:1.9,phase:1.4},
- mira:{height:1.07,build:.82,head:.95,arm:.88,leg:1.1,hair:"ponytail",hairColor:"#efe9e1",stance:"slim",gear:"wrap",breath:2.6,phase:2.2},
- oni:{height:1.13,build:1.4,head:1.14,arm:1.3,leg:1,hair:"mane",hairColor:"#2a0f18",stance:"hunch",gear:"plates",breath:1.6,phase:3.1},
- sora:{height:1.05,build:.9,head:.95,arm:.92,leg:1.06,hair:"braid",hairColor:"#dfe8f5",stance:"lunge",gear:"coat",breath:2.4,phase:4},
- kuro:{height:.95,build:1.04,head:1.04,arm:1,leg:.95,hair:"bald",hairColor:"#e8e4da",stance:"elder",gear:"robe",breath:1.7,phase:5}
+ shadow:{height:1,build:1,head:1,arm:1,leg:1,hair:"band",hairColor:"#111522",stance:"guard",gear:"gi",breath:2.3,phase:0,
+  walk:"step",stride:5,lift:3,cadence:.24,punchStyle:"straight",kickStyle:"front",specialPose:"blast",punchSpeed:4,kickSpeed:4,specialSpeed:4},
+ kage:{height:1.04,build:1.2,head:1,arm:1.15,leg:1,hair:"topknot",hairColor:"#0d1411",stance:"wide",gear:"sash",breath:1.9,phase:1.4,
+  walk:"strut",stride:7,lift:2.5,cadence:.16,punchStyle:"palm",kickStyle:"low",specialPose:"sweep",punchSpeed:5,kickSpeed:5,specialSpeed:5},
+ mira:{height:1.07,build:.82,head:.95,arm:.88,leg:1.1,hair:"ponytail",hairColor:"#efe9e1",stance:"slim",gear:"wrap",breath:2.6,phase:2.2,
+  walk:"glide",stride:4,lift:4,cadence:.3,punchStyle:"jab",kickStyle:"high",specialPose:"volley",punchSpeed:3,kickSpeed:3,specialSpeed:3},
+ oni:{height:1.13,build:1.4,head:1.14,arm:1.3,leg:1,hair:"mane",hairColor:"#2a0f18",stance:"hunch",gear:"plates",breath:1.6,phase:3.1,
+  walk:"stomp",stride:6,lift:5,cadence:.14,punchStyle:"hammer",kickStyle:"stomp",specialPose:"blast",punchSpeed:6,kickSpeed:6,specialSpeed:6},
+ sora:{height:1.05,build:.9,head:.95,arm:.92,leg:1.06,hair:"braid",hairColor:"#dfe8f5",stance:"lunge",gear:"coat",breath:2.4,phase:4,
+  walk:"glide",stride:6,lift:4,cadence:.28,punchStyle:"spin",kickStyle:"spin",specialPose:"slash",punchSpeed:3,kickSpeed:3,specialSpeed:3},
+ kuro:{height:.95,build:1.04,head:1.04,arm:1,leg:.95,hair:"bald",hairColor:"#e8e4da",stance:"elder",gear:"robe",breath:1.7,phase:5,
+  walk:"shuffle",stride:3,lift:1.5,cadence:.13,punchStyle:"palmShort",kickStyle:"thrust",specialPose:"seal",punchSpeed:5,kickSpeed:5,specialSpeed:5}
 };
 ROSTER.forEach(r=>{r.look=LOOKS[r.id]||DEFAULT_LOOK});
+
+function shadeColor(hex,k){
+ const n=parseInt(hex.slice(1),16);
+ const r=Math.round(((n>>16)&255)*k);
+ const g=Math.round(((n>>8)&255)*k);
+ const b=Math.round((n&255)*k);
+ return "rgb("+r+","+g+","+b+")";
+}
 
 function drawHair(ctx,p,look,hx,hy,hw,hh,t){
  const hair=look.hairColor||p.hair;
@@ -446,6 +460,11 @@ class Fighter{
   this.color=COLORS[def.color]||COLORS.blue;
   this.controls=controls;
   this.animation=new Animation();
+  const look=def.look||DEFAULT_LOOK;
+  const ad=this.animation.data;
+  ad.punch.speed=look.punchSpeed||4;
+  ad.kick.speed=look.kickSpeed||4;
+  ad.special.speed=look.specialSpeed||4;
   this.resetRound(x,x<W/2?1:-1);
  }
  resetRound(x,facing){
@@ -457,6 +476,7 @@ class Fighter{
   this.grounded=true;this.blocking=false;
   this.invulnerable=0;this.cooldown=0;
   this.attackType=null;this.attackFrame=0;this.attackHit=false;
+  this.walkPhase=0;
   this.animation.state="idle";
   this.animation.frame=0;
   this.animation.elapsed=0;
@@ -490,8 +510,10 @@ class Fighter{
     this.animation.play("jump",true);
    }
 
-   if(moving&&this.grounded)this.animation.play("walk");
-   else if(this.grounded)this.animation.play("idle");
+   if(moving&&this.grounded){
+    this.walkPhase+=((this.def.look&&this.def.look.cadence)||.2);
+    this.animation.play("walk");
+   }else if(this.grounded)this.animation.play("idle");
   }
 
   if(input.down(c.charge)){
@@ -533,9 +555,11 @@ class Fighter{
   const look=this.def.look||DEFAULT_LOOK;
   const t=performance.now()/1000+(look.phase||0);
   const st=this.animation.state;
-  const swing=["punch","kick","special"].includes(st)?this.animation.frame:0;
+  const frame=["punch","kick","special"].includes(st)?this.animation.frame:0;
+  const k=Math.min(frame,5);
   const breath=Math.sin(t*(look.breath||2.2));
-  const bob=st==="idle"?breath*1.3:0;
+  const walking=st==="walk";
+  const wp=this.walkPhase||0;
   const bw=look.build;
 
   // Idle stance: each fighter stands differently.
@@ -552,27 +576,63 @@ class Fighter{
   if(st==="block")armUp+=8;
   if(st==="charge")armUp+=4;
 
+  // Walk cycle: stride, foot lift and body bounce differ per fighter.
+  const stride=walking?Math.sin(wp)*(look.stride||5):0;
+  const liftF=walking?Math.max(0,Math.sin(wp))*(look.lift||3):0;
+  const liftB=walking?Math.max(0,-Math.sin(wp))*(look.lift||3):0;
+  const walkBob=walking
+   ?(look.walk==="stomp"?Math.abs(Math.cos(wp))*2.4
+    :look.walk==="shuffle"?Math.abs(Math.cos(wp))*.5
+    :Math.abs(Math.cos(wp))*1.4)
+   :0;
+  if(walking&&look.walk==="strut")lean+=Math.sin(wp)*2.2;
+  if(walking&&look.walk==="glide")lean+=Math.sin(wp*.5)*.8;
+
+  const bob=st==="idle"?breath*1.3:0;
+
   ctx.save();
   if(this.invulnerable>0&&this.invulnerable%4<2)ctx.globalAlpha=.4;
   ctx.translate(Math.round(this.x)+this.width/2,Math.round(this.y));
   ctx.scale(this.facing,1);
   ctx.scale(look.height,look.height);
-  ctx.translate(0,bob);
+  ctx.translate(0,bob-walkBob);
 
   // legs and boots
-  ctx.fillStyle="#17151c";
-  ctx.fillRect(legBack-1,-15,16,15);
-  if(st!=="kick")ctx.fillRect(legFront+1,-15,17,15);
-  ctx.fillStyle=p.body;
-  ctx.fillRect(legBack,legTop,14,-legTop-15);
-  if(st!=="kick")ctx.fillRect(legFront,legTop,14,-legTop-15);
-
-  if(st==="kick"){
-   const ext=18+swing*5;
-   ctx.fillStyle=p.body;
-   ctx.fillRect(2,-38+swing,ext,12);
+  const drawLeg=(x,lift,color)=>{
    ctx.fillStyle="#17151c";
-   ctx.fillRect(2+ext,-40+swing,12,16);
+   ctx.fillRect(x-1,-15-lift,16,15);
+   ctx.fillStyle=color;
+   ctx.fillRect(x,legTop,14,-legTop-15-lift);
+  };
+  drawLeg(legBack-stride*.7,liftB,shadeColor(p.body,.8));
+  if(st!=="kick")drawLeg(legFront+stride*.7,liftF,p.body);
+
+  // Kick flourish — height and reach depend on the fighter.
+  if(st==="kick"){
+   const style=look.kickStyle||"front";
+   let y=-38,footY=-40,ext=18+k*5;
+   if(style==="low"){y=-26;footY=-28;ext=20+k*6}
+   else if(style==="high"){y=-58-k*3;footY=-60-k*3;ext=20+k*6}
+   else if(style==="stomp"){y=-58+k*7;footY=-60+k*7;ext=16+k*4}
+   else if(style==="spin"){y=-46+Math.sin(k*.9)*8;footY=-48+Math.sin(k*.9)*8;ext=22+k*5}
+   else if(style==="thrust"){y=-34;footY=-36;ext=13+k*8}
+   ctx.fillStyle=p.body;
+   ctx.fillRect(2,y,ext,12);
+   ctx.fillStyle="#17151c";
+   ctx.fillRect(2+ext,footY,12,13);
+   if(style==="spin"){
+    ctx.strokeStyle=p.accent;
+    ctx.globalAlpha=.32;
+    ctx.lineWidth=4;
+    ctx.beginPath();
+    ctx.arc(4,y+8,12+k*8,-1.25,.75);
+    ctx.stroke();
+    ctx.globalAlpha=1;
+   }
+   if(style==="stomp"&&k>=4){
+    ctx.fillStyle="rgba(230,220,200,.25)";
+    ctx.fillRect(2+ext-2,-8,24,4);
+   }
   }
 
   // torso
@@ -592,12 +652,41 @@ class Fighter{
 
   drawGear(ctx,p,look,tx,tw,-82,-38,t);
 
-  // rear arm
+  // Attack arm parameters (flourish per fighter).
+  let ext=0,dy=0,hand=8,both=false;
+  if(st==="punch"){
+   const ps=look.punchStyle||"straight";
+   if(ps==="straight")ext=k*4;
+   else if(ps==="jab"){ext=k*6;dy=-3}
+   else if(ps==="palm"){ext=k*5;dy=-1;hand=11}
+   else if(ps==="palmShort"){ext=k*3;hand=11}
+   else if(ps==="hammer"){dy=-24+k*9;ext=k*3}
+   else if(ps==="spin"){dy=Math.sin(k*1.1)*9;ext=k*5}
+  }else if(st==="special"){
+   const sp=look.specialPose||"blast";
+   if(sp==="blast"){ext=6+k*4;dy=-2;both=true;hand=10}
+   else if(sp==="sweep"){ext=4+k*5;dy=8-k*2}
+   else if(sp==="volley"){ext=2+k*4;dy=-8}
+   else if(sp==="slash"){ext=k*6;dy=-10}
+   else if(sp==="seal"){ext=2+k*1;dy=-2;hand=10;both=true}
+  }
+  const attacking=ext>0;
   const armW=10*look.arm;
-  ctx.fillStyle=p.body;
-  ctx.fillRect(tx-armW+1,-76+armUp,armW,30);
-  ctx.fillStyle="#e9b38b";
-  ctx.fillRect(tx-armW+1,-49+armUp,armW,7);
+
+  // rear arm
+  if(both){
+   ctx.fillStyle=shadeColor(p.body,.86);
+   ctx.fillRect(tx-armW+1,-76+armUp,armW,16);
+   ctx.fillRect(tx-3,-60+armUp+dy,12+ext,9);
+   ctx.fillStyle="#e9b38b";
+   ctx.fillRect(tx+7+ext,-62+armUp+dy,hand,hand+2);
+  }else{
+   ctx.fillStyle=shadeColor(p.body,.86);
+   ctx.fillRect(tx-armW+1,-76+armUp,armW,16);
+   ctx.fillRect(tx-armW+1,-60+armUp,armW,14);
+   ctx.fillStyle="#e9b38b";
+   ctx.fillRect(tx-armW+1,-46+armUp,armW,6);
+  }
 
   // head
   const hh=24*look.head,hw=27*look.head;
@@ -611,14 +700,28 @@ class Fighter{
   ctx.fillRect(hx+hw*.8,hy+hh*.38,3,3);
   drawHair(ctx,p,look,hx,hy,hw,hh,t);
 
-  // front arm (extends on punch / special)
-  const extend=st==="punch"||st==="special";
-  const armX=tx+tw-2,armY=-76+armUp-(extend?2:0);
-  const armLen=armW+(extend?swing*4:0);
+  // front arm
+  const armX=tx+tw-2;
   ctx.fillStyle=p.body;
-  ctx.fillRect(armX,armY,armLen,30);
-  ctx.fillStyle="#e9b38b";
-  ctx.fillRect(armX+armLen-6,armY+27,8,8);
+  ctx.fillRect(armX,-76+armUp,armW,16);
+  if(attacking){
+   ctx.fillRect(armX+armW-3,-60+armUp+dy,12+ext,9);
+   ctx.fillStyle="#e9b38b";
+   ctx.fillRect(armX+armW+7+ext,-62+armUp+dy,hand,hand+2);
+   if(st==="punch"&&look.punchStyle==="spin"){
+    ctx.strokeStyle=p.accent;
+    ctx.globalAlpha=.3;
+    ctx.lineWidth=4;
+    ctx.beginPath();
+    ctx.arc(armX+armW,-60+armUp+dy,16+ext*.6,-.6,.8);
+    ctx.stroke();
+    ctx.globalAlpha=1;
+   }
+  }else{
+   ctx.fillRect(armX,-60+armUp,armW,14);
+   ctx.fillStyle="#e9b38b";
+   ctx.fillRect(armX,-46+armUp,armW,6);
+  }
 
   if(st==="block"){
    ctx.fillStyle=p.body;

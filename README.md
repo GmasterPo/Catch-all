@@ -26,6 +26,11 @@ signature KI attack. The KI attack is listed under the energy bar in-game.
 Each fighter also has a distinct silhouette, hairstyle, gear and idle stance
 (headband, topknot, ponytail, horned mane, braid, bald master with beard), drawn
 procedurally so the same look appears in the select previews and in battle.
+Walk cycles and attack flourishes match that character too: Kage struts with a
+palmed thrust and low sweep, Mira glides with fast jabs and high kicks, Oni
+stomps with a hammer blow and falling axe kick, Sora spins through strikes and
+kicks, Kuro shuffles with short palm strikes, and Shadow uses a straight
+punch and front kick.
 
 | Fighter | Title | Speed | Health | Signature attack |
 | --- | --- | --- | --- | --- |
