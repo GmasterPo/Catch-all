@@ -772,6 +772,86 @@ class Fighter{
 }
 
 // PARTICLES
+// PROCEDURAL AUDIO — synthesized at runtime, no sound files
+class Sound{
+ constructor(){this.ctx=null;this.master=null;this.enabled=true;this._noise=null}
+ ensure(){
+  if(!this.ctx){
+   const AC=window.AudioContext||window.webkitAudioContext;
+   if(!AC){this.enabled=false;return false}
+   try{
+    this.ctx=new AC();
+    this.master=this.ctx.createGain();
+    this.master.gain.value=.4;
+    this.master.connect(this.ctx.destination);
+   }catch(e){this.enabled=false;return false}
+  }
+  if(this.ctx.state==="suspended"){
+   try{this.ctx.resume().catch(()=>{})}catch(e){}
+  }
+  return true;
+ }
+ tone(freq,to,dur,type,peak){
+  const c=this.ctx,t=c.currentTime;
+  const o=c.createOscillator();
+  o.type=type;
+  o.frequency.setValueAtTime(freq,t);
+  o.frequency.exponentialRampToValueAtTime(Math.max(to,20),t+dur);
+  const g=c.createGain();
+  g.gain.setValueAtTime(.0001,t);
+  g.gain.exponentialRampToValueAtTime(Math.max(peak,.001),t+.006);
+  g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g).connect(this.master);
+  o.start(t);o.stop(t+dur+.02);
+ }
+ burst(dur,peak,type,from,to,q=1.1){
+  const c=this.ctx,t=c.currentTime;
+  const src=c.createBufferSource();
+  src.buffer=this.noiseBuffer();
+  const f=c.createBiquadFilter();
+  f.type=type;f.Q.value=q;
+  f.frequency.setValueAtTime(from,t);
+  f.frequency.exponentialRampToValueAtTime(Math.max(to,60),t+dur);
+  const g=c.createGain();
+  g.gain.setValueAtTime(.0001,t);
+  g.gain.exponentialRampToValueAtTime(Math.max(peak,.001),t+.004);
+  g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  src.connect(f).connect(g).connect(this.master);
+  src.start(t);src.stop(t+dur+.02);
+ }
+ noiseBuffer(){
+  if(!this._noise){
+   const c=this.ctx,len=Math.floor(c.sampleRate);
+   const b=c.createBuffer(1,len,c.sampleRate);
+   const d=b.getChannelData(0);
+   for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
+   this._noise=b;
+  }
+  return this._noise;
+ }
+ hit(damage){
+  if(!this.enabled||!this.ensure())return;
+  const p=Math.min(1,damage/22),j=.94+Math.random()*.12;
+  this.tone((150+40*p)*j,48,.15,"sine",.3+.22*p);
+  this.burst(.11,.16+.14*p,"lowpass",1900,320,1.4);
+ }
+ block(){
+  if(!this.enabled||!this.ensure())return;
+  this.tone(1250,780,.055,"square",.07);
+  this.burst(.07,.1,"highpass",3200,2400,2);
+ }
+ whiff(){
+  if(!this.enabled||!this.ensure())return;
+  this.burst(.15,.07,"bandpass",1100,260,3.5);
+ }
+ ko(){
+  if(!this.enabled||!this.ensure())return;
+  this.tone(220,42,.75,"sawtooth",.22);
+  this.tone(90,40,.5,"sine",.3);
+  this.burst(.75,.3,"lowpass",1500,110,1);
+ }
+}
+
 class Particles{
  constructor(){this.items=[];this.flashes=[]}
  impact(x,y,color,scale=1){
@@ -955,6 +1035,7 @@ class SpecialMoves{
      target.takeDamage(p.damage,blocked);
      this.particles.impact(target.x+18,target.y-58,blocked?"#bfe6ff":"#fff0c4",blocked?.5:.9);
      if(this.onImpact)this.onImpact(p.damage,blocked);
+     if(blocked){if(this.onBlock)this.onBlock(p.damage)}else if(this.onHit)this.onHit(p.damage);
      const dir=Math.sign(p.vx)||1;
      target.vx=dir*(blocked?2.2:3.4);
      const stop=blocked?4:6;
@@ -975,6 +1056,7 @@ class SpecialMoves{
     target.takeDamage(c.damage,blocked);c.hit=true;
     this.particles.impact(target.x+18,target.y-58,blocked?"#bfe6ff":"#fff0c4",blocked?.5:.8);
     if(this.onImpact)this.onImpact(c.damage,blocked);
+    if(blocked){if(this.onBlock)this.onBlock(c.damage)}else if(this.onHit)this.onHit(c.damage);
     target.vx=(target.x>c.owner.x?1:-1)*(blocked?1.8:3);
     target.hitstop=Math.max(target.hitstop,blocked?3:5);
    }
@@ -1017,14 +1099,16 @@ class Combat{
    if(damage){
     const height=f.attackHeight||"mid";
     f.attackHit=true;
-    if(height==="high"&&enemy.crouching){
+         if(height==="high"&&enemy.crouching){
      // high strike sails over the crouching fighter
      this.particles.emit(enemy.x+22,enemy.y-96,"#8fa0b8",5,1.4);
+     if(this.onWhiff)this.onWhiff();
     }else{
      const blocked=resolveBlock(enemy,height);
      enemy.takeDamage(damage,blocked);
      this.particles.impact(enemy.x+20,enemy.y-52,blocked?"#bfe6ff":"#fff0c4",blocked?.55:1);
      if(this.onImpact)this.onImpact(damage,blocked);
+     if(blocked){if(this.onBlock)this.onBlock(damage)}else if(this.onHit)this.onHit(damage);
      const dir=Math.sign(enemy.x-f.x)||f.facing;
      enemy.vx=dir*(blocked?3:3.8);
      f.vx=-dir*(blocked?1.2:.6);
@@ -1036,6 +1120,7 @@ class Combat{
    }
   }
   if(f.attackFrame>7){
+   if(!f.attackHit&&f.attackType&&this.onWhiff)this.onWhiff();
    f.attackType=null;f.attackHit=false;f.attackFrame=0;
   }
  }
@@ -1139,6 +1224,15 @@ class Game{
   this.combat=new Combat(this.particles);
   this.combat.onImpact=(damage,blocked)=>this.hitFeedback(damage,blocked);
   this.specials.onImpact=(damage,blocked)=>this.hitFeedback(damage,blocked);
+  this.sound=new Sound();
+  this.combat.onHit=damage=>this.sound.hit(damage);
+  this.specials.onHit=damage=>this.sound.hit(damage);
+  this.combat.onBlock=()=>this.sound.block();
+  this.specials.onBlock=()=>this.sound.block();
+  this.combat.onWhiff=()=>this.sound.whiff();
+  const unlock=()=>this.sound.ensure();
+  window.addEventListener("keydown",unlock);
+  window.addEventListener("pointerdown",unlock);
   this.shake=0;this.flash=0;this.flashColor="#fff";
 
   this.mode="arcade";
@@ -1325,6 +1419,7 @@ class Game{
   this.shake=Math.max(this.shake,timeUp?5:10);
   this.flash=Math.max(this.flash,timeUp?.16:.32);
   this.flashColor="#ffffff";
+  if(!timeUp&&(this.p1.health<=0||this.p2.health<=0))this.sound.ko();
   this.lastRoundWinner=winner;
   if(winner>=0)this.wins[winner]++;
   let msg;

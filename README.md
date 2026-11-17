@@ -102,6 +102,20 @@ dealt, and bloom a bright burst of light at the point of contact. Guarded hits
 get a shorter, cool-tinted version of the same feedback, and a knockout slams the
 camera hardest.
 
+## Sound
+
+All audio is synthesized in the browser with the Web Audio API — there are no
+sound files to download:
+
+- **Hits** — a pitched thump plus a low noise smack, lower and louder on heavier strikes.
+- **Guards** — a short, bright metallic tick with a high-passed snap.
+- **Whiffs** — a soft air swish for strikes that miss or sail over a crouching opponent.
+- **Knockouts** — a falling bass sweep with a long crash.
+
+Browsers block audio until the player interacts, so the engine wakes on the first
+key press or click. Every strike gets a small random pitch offset so repeat hits
+don't sound identical.
+
 - **Charge** fills the KI bar; the AI charges too when it has space.
 - **Energy attack** costs the fighter's listed KI and fires their signature move.
 - **Shadow clone** sends two clones at the opponent (cost varies by fighter).
