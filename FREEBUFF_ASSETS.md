@@ -4,7 +4,8 @@
 projects. It is additive: `index.html` (Ninja Kombat) is untouched and draws
 everything procedurally.
 
-- **48 assets**, **126 clips** (33 animations, 93 named sprites), **8 sources**
+- **58 assets**, **169 clips** (67 animations, 102 named sprites), **16 sources**, including
+  eight CC0 stick-figure and martial-arts packs
 - every file is **CC0 1.0**, with creator, source page and the pack's own licence
   notice recorded in `freebuff-assets/manifests/sources.json` and `licenses/`
 - frame metadata is parsed from the original packs' sprite-sheet XML/text, not

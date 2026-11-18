@@ -3,6 +3,98 @@
   "notice": "Index entries only; see ASSET_INDEX.json for frame metadata.",
   "assets": [
     {
+      "id": "dancing-stickman",
+      "name": "Dancing Stickman",
+      "category": "characters",
+      "style": "vector-flat",
+      "tags": [
+        "dance",
+        "stick-figure",
+        "taunt",
+        "victory"
+      ],
+      "sheet": "assets/characters/dancing-stickman/sheet.png",
+      "clips": [
+        {
+          "name": "dance",
+          "state": "dance",
+          "kind": "animation",
+          "frameCount": 4
+        }
+      ]
+    },
+    {
+      "id": "gb-kung-fu-man",
+      "name": "Game Boy Kung Fu Man",
+      "category": "characters",
+      "style": "8-bit-pixel",
+      "tags": [
+        "fighter",
+        "gameboy",
+        "kick",
+        "kung-fu",
+        "martial-arts",
+        "punch"
+      ],
+      "sheet": "assets/characters/gb-kung-fu-man/sheet.png",
+      "clips": [
+        {
+          "name": "idle",
+          "state": "idle",
+          "kind": "animation",
+          "frameCount": 4
+        },
+        {
+          "name": "walk",
+          "state": "walk",
+          "kind": "animation",
+          "frameCount": 4
+        },
+        {
+          "name": "run",
+          "state": "run",
+          "kind": "animation",
+          "frameCount": 4
+        },
+        {
+          "name": "push",
+          "state": "special",
+          "kind": "animation",
+          "frameCount": 4
+        },
+        {
+          "name": "attack-fs",
+          "state": "special",
+          "kind": "animation",
+          "frameCount": 4
+        },
+        {
+          "name": "attack-kick",
+          "state": "kick",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "attack-punch",
+          "state": "punch",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "hit",
+          "state": "hurt",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "jump",
+          "state": "jump",
+          "kind": "sprite",
+          "frameCount": 1
+        }
+      ]
+    },
+    {
       "id": "hero-platformer-blue",
       "name": "Platformer Hero — Blue",
       "category": "characters",
@@ -159,6 +251,50 @@
       ]
     },
     {
+      "id": "kung-fu-battlers",
+      "name": "Kung Fu Battlers Cast",
+      "category": "characters",
+      "style": "16-bit-pixel",
+      "tags": [
+        "cast",
+        "kung-fu",
+        "lineup",
+        "martial-arts",
+        "pixel"
+      ],
+      "sheet": "assets/characters/kung-fu-battlers/sheet.png",
+      "clips": [
+        {
+          "name": "lineup",
+          "state": "sprite",
+          "kind": "sprite",
+          "frameCount": 1
+        }
+      ]
+    },
+    {
+      "id": "mustermann-karate",
+      "name": "Mustermann Karate Walk",
+      "category": "characters",
+      "style": "flat-vector",
+      "tags": [
+        "fighter",
+        "gif-source",
+        "karate",
+        "martial-arts",
+        "walk-cycle"
+      ],
+      "sheet": "assets/characters/mustermann-karate/sheet.png",
+      "clips": [
+        {
+          "name": "walk",
+          "state": "walk",
+          "kind": "animation",
+          "frameCount": 23
+        }
+      ]
+    },
+    {
       "id": "pixel-adventurers",
       "name": "Pixel Adventurers Sheet",
       "category": "characters",
@@ -218,6 +354,266 @@
         },
         {
           "name": "racer-yellow",
+          "state": "sprite",
+          "kind": "sprite",
+          "frameCount": 1
+        }
+      ]
+    },
+    {
+      "id": "rgs-stick-fighter",
+      "name": "RGS Stick Fighter",
+      "category": "characters",
+      "style": "vector-flat",
+      "tags": [
+        "blender-source",
+        "combo",
+        "fighter",
+        "martial-arts",
+        "stick-figure",
+        "walk-cycle"
+      ],
+      "sheet": "assets/characters/rgs-stick-fighter/sheet.png",
+      "clips": [
+        {
+          "name": "idle",
+          "state": "idle",
+          "kind": "animation",
+          "frameCount": 8
+        },
+        {
+          "name": "walk",
+          "state": "walk",
+          "kind": "animation",
+          "frameCount": 8
+        },
+        {
+          "name": "run",
+          "state": "run",
+          "kind": "animation",
+          "frameCount": 8
+        },
+        {
+          "name": "jump",
+          "state": "jump",
+          "kind": "animation",
+          "frameCount": 5
+        },
+        {
+          "name": "slide",
+          "state": "slide",
+          "kind": "animation",
+          "frameCount": 8
+        },
+        {
+          "name": "dash",
+          "state": "dash",
+          "kind": "animation",
+          "frameCount": 6
+        },
+        {
+          "name": "climb",
+          "state": "climb",
+          "kind": "animation",
+          "frameCount": 4
+        },
+        {
+          "name": "hit",
+          "state": "hurt",
+          "kind": "animation",
+          "frameCount": 4
+        },
+        {
+          "name": "death",
+          "state": "death",
+          "kind": "animation",
+          "frameCount": 10
+        },
+        {
+          "name": "air-attack",
+          "state": "special",
+          "kind": "animation",
+          "frameCount": 2
+        },
+        {
+          "name": "combo",
+          "state": "punch",
+          "kind": "animation",
+          "frameCount": 19
+        },
+        {
+          "name": "wall-slide",
+          "state": "block",
+          "kind": "animation",
+          "frameCount": 2
+        }
+      ]
+    },
+    {
+      "id": "stickman-runner",
+      "name": "Stick Man Runner",
+      "category": "characters",
+      "style": "vector-flat",
+      "tags": [
+        "locomotion",
+        "run-cycle",
+        "runner",
+        "stick-figure"
+      ],
+      "sheet": "assets/characters/stickman-runner/sheet.png",
+      "clips": [
+        {
+          "name": "run",
+          "state": "run",
+          "kind": "animation",
+          "frameCount": 12
+        }
+      ]
+    },
+    {
+      "id": "streets-brawler-girl",
+      "name": "Streets of Fight — Brawler Girl",
+      "category": "characters",
+      "style": "16-bit-pixel",
+      "tags": [
+        "beat-em-up",
+        "brawler",
+        "fighter",
+        "kick",
+        "martial-arts",
+        "punch"
+      ],
+      "sheet": "assets/characters/streets-brawler-girl/sheet.png",
+      "clips": [
+        {
+          "name": "idle",
+          "state": "idle",
+          "kind": "animation",
+          "frameCount": 4
+        },
+        {
+          "name": "walk",
+          "state": "walk",
+          "kind": "animation",
+          "frameCount": 10
+        },
+        {
+          "name": "jump",
+          "state": "jump",
+          "kind": "animation",
+          "frameCount": 4
+        },
+        {
+          "name": "jab",
+          "state": "punch",
+          "kind": "animation",
+          "frameCount": 3
+        },
+        {
+          "name": "punch",
+          "state": "punch",
+          "kind": "animation",
+          "frameCount": 3
+        },
+        {
+          "name": "kick",
+          "state": "kick",
+          "kind": "animation",
+          "frameCount": 5
+        },
+        {
+          "name": "dive-kick",
+          "state": "kick",
+          "kind": "animation",
+          "frameCount": 5
+        },
+        {
+          "name": "jump-kick",
+          "state": "kick",
+          "kind": "animation",
+          "frameCount": 3
+        },
+        {
+          "name": "hurt",
+          "state": "hurt",
+          "kind": "animation",
+          "frameCount": 2
+        }
+      ]
+    },
+    {
+      "id": "streets-enemy-punk",
+      "name": "Streets of Fight — Punk Enemy",
+      "category": "characters",
+      "style": "16-bit-pixel",
+      "tags": [
+        "beat-em-up",
+        "brawler",
+        "enemy",
+        "martial-arts",
+        "punch"
+      ],
+      "sheet": "assets/characters/streets-enemy-punk/sheet.png",
+      "clips": [
+        {
+          "name": "idle",
+          "state": "idle",
+          "kind": "animation",
+          "frameCount": 4
+        },
+        {
+          "name": "walk",
+          "state": "walk",
+          "kind": "animation",
+          "frameCount": 4
+        },
+        {
+          "name": "punch",
+          "state": "punch",
+          "kind": "animation",
+          "frameCount": 3
+        },
+        {
+          "name": "hurt",
+          "state": "hurt",
+          "kind": "animation",
+          "frameCount": 4
+        }
+      ]
+    },
+    {
+      "id": "vander-fighter-sheet",
+      "name": "Vander Fighter Reference Sheets",
+      "category": "characters",
+      "style": "8-bit-pixel",
+      "tags": [
+        "character-base",
+        "fighter",
+        "pixel",
+        "reference-sheet"
+      ],
+      "sheet": "assets/characters/vander-fighter-sheet/sheet.png",
+      "clips": [
+        {
+          "name": "v1",
+          "state": "sprite",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "v2",
+          "state": "sprite",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "v3",
+          "state": "sprite",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "v4",
           "state": "sprite",
           "kind": "sprite",
           "frameCount": 1

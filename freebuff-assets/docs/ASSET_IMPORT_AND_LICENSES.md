@@ -26,7 +26,7 @@ An asset is accepted only when every line is true:
 If any line fails, the asset is linked as an external reference in project docs
 instead of being copied here.
 
-## Current sources (8)
+## Current sources (16)
 
 All eight are Kenney packs published on OpenGameArt under CC0 1.0. Licence text
 was read from each pack's own licence file on 2026-11-18.
@@ -41,24 +41,49 @@ was read from each pack's own licence file on 2026-11-18.
 | 6 | Background Elements | Kenney | CC0 1.0 | https://opengameart.org/content/background-elements | `licenses/background-elements.txt` |
 | 7 | Generic Items | Kenney | CC0 1.0 | https://opengameart.org/content/generic-items | `licenses/generic-items.txt` |
 | 8 | Physics Assets | Kenney | CC0 1.0 | https://opengameart.org/content/physics-assets | `licenses/physics-assets.txt` |
+| 9 | Animated Stick Figure Character 2D Free CC0 | RGS_Dev | CC0 1.0 | https://rgsdev.itch.io/animated-stick-figure-character-2d-free-cc0 | `licenses/rgs-stick-figure.txt` |
+| 10 | Stick man runner | Freakerbob | CC0 1.0 | https://opengameart.org/content/stick-man-runner | `licenses/stickman-runner.txt` |
+| 11 | Dancing Stickman | Lyricsz | CC0 1.0 | https://opengameart.org/content/dancing-stickman | `licenses/dancing-stickman.txt` |
+| 12 | Fighting character template Mustermann 2 (karate) | Puffolotti | CC0 1.0 | https://opengameart.org/content/fighting-character-template-mustermann-2-a001aaaa001-karate | `licenses/mustermann-karate.txt` |
+| 13 | Spritesheet of a man CC0 | Vander96 | CC0 1.0 | https://opengameart.org/content/spritesheet-of-a-man-cc0 | `licenses/vander-spritesheet.txt` |
+| 14 | Kung Fu Battlers pixel art | CodyS | CC0 1.0 | https://opengameart.org/content/kung-fu-battlers-pixel-art | `licenses/kung-fu-battlers.txt` |
+| 15 | Streets of Fight | ansimuz | CC0 1.0 | https://opengameart.org/content/streets-of-fight | `licenses/streets-of-fight.txt` |
+| 16 | RPG Asset Character 'Kung Fu Man' Gameboy | Chasersgaming | CC0 1.0 | https://opengameart.org/content/rpg-asset-character-kung-fu-man-gameboy | `licenses/gb-kung-fu-man.txt` |
 
 CC0 1.0 deed: https://creativecommons.org/publicdomain/zero/1.0/
+
+Sources 9-16 ship no licence file of their own, so their entries in `licenses/`
+are provenance records captured from the item pages: the stated licence, the
+deed URL, the download URL and the quoted licence line.
 
 Attribution is not required by CC0. The library records creator and source on
 every asset anyway (`creator`, `attribution`, `source`), so credit stays easy.
 
-## Verified CC0 candidates not yet imported
+## Stick-figure and martial-arts imports (10 assets, 43 clips)
 
-- **RGS_Dev — Animated Stick Figure Character 2D Free CC0** — a 512×512 stick
-  figure with idle, walk, run, jump, slide, dash, climb, damage, death, air
-  attack, wall slide and attack-combo animations, plus a `.blend` source. The
-  licence is CC0 on both itch.io and OpenGameArt, so it is eligible for import;
-  the files are simply not mirrored here yet. (An earlier note in this file
-  wrongly assumed the pack forbade redistribution — the item pages say CC0.)
-- 21 further stick-figure and martial-arts sources, with the licence evidence
-  read from each item page, are catalogued in
-  [`docs/STICK_FIGURE_MARTIAL_ARTS_SOURCES.md`](STICK_FIGURE_MARTIAL_ARTS_SOURCES.md)
-  and [`manifests/stick-figure-martial-arts-sources.json`](../manifests/stick-figure-martial-arts-sources.json).
+Eight CC0 packs were imported on 2026-11-18: RGS_Dev's stick fighter (12 clips
+including a 19-frame combo), Freakerbob's stick-man run, Lyricsz's dancing
+stickman, two Streets of Fight characters (13 clips), Game Boy Kung Fu Man
+(9 clips), Mustermann's karate walk and energy burst, Vander96's reference
+sheets and CodyS's kung-fu cast sheet.
+
+How the frame metadata was obtained, per pack:
+
+- **Individual PNG frames** — RGS, the stick-man runner and Streets of Fight
+  each publish one file per frame; frames are trimmed and packed, with the
+  original canvas kept in `frameWidth`/`offsetX` so alignment survives.
+- **Fixed strips** — the Game Boy pack's `*_strip4.png` files and the dancing
+  stickman's 64×16 image are evenly divisible into frames whose size comes from
+  the file dimensions.
+- **GIF frames** — the Mustermann pack is two GIF animations; frames and frame
+  timings come from the GIF itself, and the opaque backgrounds are preserved.
+- **Not sliced** — Vander96's sheets and the Kung Fu Battlers cast are imported
+  as reference sheets because those packs publish no frame layout and the art is
+  flattened onto an opaque background; inventing a grid would be guesswork.
+
+The full survey of 22 sources, including the ones that are not redistributable,
+is in [`docs/STICK_FIGURE_MARTIAL_ARTS_SOURCES.md`](STICK_FIGURE_MARTIAL_ARTS_SOURCES.md)
+and [`manifests/stick-figure-martial-arts-sources.json`](../manifests/stick-figure-martial-arts-sources.json).
 
 ## Deliberately not imported
 

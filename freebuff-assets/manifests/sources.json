@@ -1,7 +1,7 @@
 {
   "license": "CC0-1.0",
   "counts": {
-    "sources": 8
+    "sources": 16
   },
   "sources": [
     {
@@ -107,6 +107,103 @@
       "licenseFile": "licenses/physics-assets.txt",
       "assets": 5,
       "clips": 16
+    },
+    {
+      "id": "rgs-stick-figure",
+      "title": "Animated Stick Figure Character 2D Free CC0",
+      "creator": "RGS_Dev",
+      "creatorUrl": "https://rgsdev.itch.io",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://rgsdev.itch.io/animated-stick-figure-character-2d-free-cc0",
+      "download": "https://opengameart.org/sites/default/files/stick_figure_character_sprites_2d.zip",
+      "licenseFile": "licenses/rgs-stick-figure.txt",
+      "assets": 1,
+      "clips": 12
+    },
+    {
+      "id": "stickman-runner",
+      "title": "Stick man runner",
+      "creator": "Freakerbob",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/stick-man-runner",
+      "download": "https://opengameart.org/sites/default/files/stickmanrun_0.zip",
+      "licenseFile": "licenses/stickman-runner.txt",
+      "assets": 1,
+      "clips": 1
+    },
+    {
+      "id": "dancing-stickman",
+      "title": "Dancing Stickman",
+      "creator": "Lyricsz",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/dancing-stickman",
+      "download": "https://opengameart.org/sites/default/files/dancestick_0.png",
+      "licenseFile": "licenses/dancing-stickman.txt",
+      "assets": 1,
+      "clips": 1
+    },
+    {
+      "id": "mustermann-karate",
+      "title": "Fighting character template Mustermann 2 (A001AAAA001) (karate)",
+      "creator": "Puffolotti",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/fighting-character-template-mustermann-2-a001aaaa001-karate",
+      "download": "https://opengameart.org/sites/default/files/1.gif",
+      "licenseFile": "licenses/mustermann-karate.txt",
+      "assets": 2,
+      "clips": 2
+    },
+    {
+      "id": "vander-spritesheet",
+      "title": "Spritesheet of a man CC0",
+      "creator": "Vander96",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/spritesheet-of-a-man-cc0",
+      "download": "https://opengameart.org/sites/default/files/open.png",
+      "licenseFile": "licenses/vander-spritesheet.txt",
+      "assets": 1,
+      "clips": 4
+    },
+    {
+      "id": "kung-fu-battlers",
+      "title": "Kung Fu Battlers pixel art",
+      "creator": "CodyS",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/kung-fu-battlers-pixel-art",
+      "download": "https://opengameart.org/sites/default/files/kung_fu_people.png",
+      "licenseFile": "licenses/kung-fu-battlers.txt",
+      "assets": 1,
+      "clips": 1
+    },
+    {
+      "id": "streets-of-fight",
+      "title": "Streets of Fight",
+      "creator": "ansimuz",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/streets-of-fight",
+      "download": "https://opengameart.org/sites/default/files/streets_of_fight_files.zip",
+      "licenseFile": "licenses/streets-of-fight.txt",
+      "assets": 2,
+      "clips": 13
+    },
+    {
+      "id": "gb-kung-fu-man",
+      "title": "RPG Asset Character 'Kung Fu Man' Gameboy",
+      "creator": "Chasersgaming",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/rpg-asset-character-kung-fu-man-gameboy",
+      "download": "https://opengameart.org/sites/default/files/GB%20Kung%20Fu%20Man%204way.zip",
+      "licenseFile": "licenses/gb-kung-fu-man.txt",
+      "assets": 1,
+      "clips": 9
     }
   ]
 }

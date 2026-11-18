@@ -1,0 +1,6 @@
+<TextureAtlas imagePath="sheet.png">
+  <SubTexture name="v1_001" x="576" y="0" width="600" height="192" frameX="0" frameY="0" frameWidth="600" frameHeight="192"/>
+  <SubTexture name="v2_001" x="1177" y="0" width="600" height="192" frameX="0" frameY="0" frameWidth="600" frameHeight="192"/>
+  <SubTexture name="v3_001" x="0" y="217" width="600" height="192" frameX="0" frameY="0" frameWidth="600" frameHeight="192"/>
+  <SubTexture name="v4_001" x="0" y="0" width="575" height="216" frameX="0" frameY="0" frameWidth="575" frameHeight="216"/>
+</TextureAtlas>

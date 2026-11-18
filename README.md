@@ -161,9 +161,10 @@ the game opens muted. The gesture that unlocks audio is answered with a brief
 ## Game asset library
 
 `freebuff-assets/` is a reusable, license-verified **CC0 1.0** art library for
-new HTML5 games: **48 assets**, **126 clips** from **8 sources**, with a
-browser-native loader, index search and sprite animator. It is additive — the
-game above loads nothing from it and is unaffected.
+new HTML5 games: **58 assets**, **169 clips** from **16 sources** — including
+eight CC0 stick-figure and martial-arts packs — with a browser-native loader,
+index search and sprite animator. It is additive — the game above loads nothing
+from it and is unaffected.
 
 ```js
 import { FreebuffAssets } from './freebuff-assets/src/asset-loader.js';

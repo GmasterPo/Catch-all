@@ -1,7 +1,7 @@
 # Freebuff Universal Game Asset Library
 
-A reusable 2D game art library for HTML5/JavaScript projects: **48 assets**,
-**126 clips**, from **8 license-verified CC0 1.0 sources**. Every sheet is
+A reusable 2D game art library for HTML5/JavaScript projects: **58 assets**,
+**169 clips**, from **16 license-verified CC0 1.0 sources**. Every sheet is
 committed with its original frame metadata, so nothing here is a placeholder or
 a hand-guessed rectangle.
 
@@ -32,15 +32,15 @@ python3 -m http.server 3000   # from the repository root
 
 | Category | Assets | Contents |
 | --- | --- | --- |
-| `characters` | 5 | three platformer heroes with idle/walk/jump/crouch/hurt clips, a racing cast, a pixel adventurer sheet |
-| `effects` | 3 | explosion sequence, debris bursts, beams, thruster and impact flickers |
+| `characters` | 14 | three platformer heroes with idle/walk/jump/crouch/hurt clips, a racing cast, a pixel adventurer sheet, plus nine stick-figure and martial-arts imports (RGS stick fighter with a 19-frame combo, a 12-frame stick-man run, a dancing stickman, Streets of Fight's brawler girl and punk, Game Boy Kung Fu Man, Mustermann's karate walk, Vander reference sheets and a kung-fu cast sheet) |
+| `effects` | 4 | explosion sequence, debris bursts, beams, thruster and impact flickers, plus a 12-frame energy burst |
 | `projectiles` | 1 | blue/green/red laser sequences |
 | `powers` | 1 | shield and star animations plus power-up pickups |
 | `objects` | 8 | items, HUD hearts, terrain tiles, generic inventory icons, cars, track props, coins |
 | `environments` | 5 | clouds, mountains, castles, trees, racing roads, background plates |
 | `interfaces` | 25 | buttons, arrows, icons, checkboxes and sliders |
 
-33 of the 126 clips are multi-frame animations; the other 93 are named sprites
+67 of the 169 clips are multi-frame animations; the other 102 are named sprites
 (`kind: "sprite"`, one frame), which makes single images addressable through the
 same API as animations.
 
@@ -129,7 +129,9 @@ to Kenney (kenney.nl) is appreciated but not required. Per-pack notices and
 source pages are in `licenses/` and `manifests/sources.json`; the import rules
 are in `docs/ASSET_IMPORT_AND_LICENSES.md`.
 
-Looking for stick figures, martial-arts moves or fight choreography? The
-research report [`docs/STICK_FIGURE_MARTIAL_ARTS_SOURCES.md`](docs/STICK_FIGURE_MARTIAL_ARTS_SOURCES.md)
-catalogues 22 verified sources (8 of them CC0) with the licence evidence quoted
-from each item page.
+Eight of the sources are stick-figure and martial-arts packs, imported after a
+source survey: the research report
+[`docs/STICK_FIGURE_MARTIAL_ARTS_SOURCES.md`](docs/STICK_FIGURE_MARTIAL_ARTS_SOURCES.md)
+catalogues 22 verified sources with the licence evidence quoted from each item
+page, and the eight CC0 picks now live under `assets/characters/` and
+`assets/effects/`.

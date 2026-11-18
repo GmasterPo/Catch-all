@@ -58,6 +58,28 @@
       ]
     },
     {
+      "id": "mustermann-energy-burst",
+      "name": "Mustermann Energy Burst",
+      "category": "effects",
+      "style": "flat-vector",
+      "tags": [
+        "burst",
+        "effect",
+        "energy",
+        "gif-source",
+        "special"
+      ],
+      "sheet": "assets/effects/mustermann-energy-burst/sheet.png",
+      "clips": [
+        {
+          "name": "burst",
+          "state": "explosion",
+          "kind": "animation",
+          "frameCount": 12
+        }
+      ]
+    },
+    {
       "id": "space-effects",
       "name": "Space Effects Atlas",
       "category": "effects",

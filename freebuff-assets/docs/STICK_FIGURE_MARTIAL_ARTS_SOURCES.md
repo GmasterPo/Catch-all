@@ -9,6 +9,8 @@ martial-arts combat, compiled on **2026-11-18** for reuse in HTML5 games.
   packs**, **1 motion-reference set**.
 - **8 CC0** entries are redistributable with no obligations — these are the
   only ones eligible for `freebuff-assets/` under its CC0-only policy.
+- **8 of the CC0 packs are imported** as 10 assets and 43
+  clips; each entry below lists its asset ids.
 - **7** are redistributable with conditions (credit and/or
   share-alike), **6** are not.
 
@@ -64,7 +66,7 @@ RGS_Dev — Creative Commons Zero v1.0 Universal ([deed](https://creativecommons
 - **Animations:** idle, walk, run, jump, slide, dash, climb, damage, death, air attack, wall slide, attack combo
 - **Licence evidence:** itch.io asset licence field: 'Creative Commons Zero v1.0 Universal'. Description: 'The license is CC0, so you can use any way you want, even commercially. Credits is not needed.' OpenGameArt mirror lists 'License(s): CC0'.
 - **Notes:** The strongest fit found: an actual stick figure with combat animations, CC0, and a .blend source for authoring new moves. Locomotion-heavy, but 'attack combo' and 'air attack' cover basic martial-arts strikes. Verified on two independent pages.
-- **Import candidate:** yes — CC0, so it can be mirrored into `freebuff-assets/` under the current policy.
+- **Imported:** yes — `rgs-stick-fighter` in `ASSET_INDEX.json`.
 ### Stick man runner
 Freakerbob — Creative Commons Zero v1.0 Universal ([deed](https://creativecommons.org/publicdomain/zero/1.0/))
 - **Source page:** https://opengameart.org/content/stick-man-runner
@@ -74,7 +76,7 @@ Freakerbob — Creative Commons Zero v1.0 Universal ([deed](https://creativecomm
 - **Animations:** run (12 frames)
 - **Licence evidence:** OpenGameArt licence block: 'License(s): CC0'. Description: 'A simple stick man running animation with 12 frames'.
 - **Notes:** Locomotion only; useful as a base for a fighter's run cycle. CC0.
-- **Import candidate:** yes — CC0, so it can be mirrored into `freebuff-assets/` under the current policy.
+- **Imported:** yes — `stickman-runner` in `ASSET_INDEX.json`.
 ### Dancing Stickman
 Lyricsz — Creative Commons Zero v1.0 Universal ([deed](https://creativecommons.org/publicdomain/zero/1.0/))
 - **Source page:** https://opengameart.org/content/dancing-stickman
@@ -84,7 +86,7 @@ Lyricsz — Creative Commons Zero v1.0 Universal ([deed](https://creativecommons
 - **Animations:** dance / idle flourish
 - **Licence evidence:** OpenGameArt licence block: 'License(s): CC0'. Description: 'A dancing stickman (shadow man)'.
 - **Notes:** Not a fighter, but a CC0 stick-figure loop that works as a victory or taunt animation.
-- **Import candidate:** yes — CC0, so it can be mirrored into `freebuff-assets/` under the current policy.
+- **Imported:** yes — `dancing-stickman` in `ASSET_INDEX.json`.
 ### Spritesheet of a man CC0
 Vander96 — Creative Commons Zero v1.0 Universal ([deed](https://creativecommons.org/publicdomain/zero/1.0/))
 - **Source page:** https://opengameart.org/content/spritesheet-of-a-man-cc0
@@ -94,7 +96,7 @@ Vander96 — Creative Commons Zero v1.0 Universal ([deed](https://creativecommon
 - **Animations:** punch, kick, jump, roll, shoot, axe, sword, knife, fire
 - **Licence evidence:** OpenGameArt licence block: 'License(s): CC0'. Tags: 'jump punch shoot roll attack fire axe sword knife'. Description: 'Lots of animations'.
 - **Notes:** A human fighter, not a stick figure, but the closest CC0 match for a broad combat move set (punch, kick, roll, weapons).
-- **Import candidate:** yes — CC0, so it can be mirrored into `freebuff-assets/` under the current policy.
+- **Imported:** yes — `vander-fighter-sheet` in `ASSET_INDEX.json`.
 ### Fighting character template Mustermann 2 (karate)
 Puffolotti — Creative Commons Zero v1.0 Universal ([deed](https://creativecommons.org/publicdomain/zero/1.0/))
 - **Source page:** https://opengameart.org/content/fighting-character-template-mustermann-2-a001aaaa001-karate
@@ -104,7 +106,7 @@ Puffolotti — Creative Commons Zero v1.0 Universal ([deed](https://creativecomm
 - **Animations:** karate fighting template
 - **Licence evidence:** OpenGameArt licence block: 'License(s): CC0'. Tags include 'fighting base complete template karate'.
 - **Notes:** Recolourable fighting-game template with karate moves; CC0 and directly usable in a fighter.
-- **Import candidate:** yes — CC0, so it can be mirrored into `freebuff-assets/` under the current policy.
+- **Imported:** yes — `mustermann-karate`, `mustermann-energy-burst` in `ASSET_INDEX.json`.
 ### Kung Fu Battlers pixel art
 CodyS — Creative Commons Zero v1.0 Universal ([deed](https://creativecommons.org/publicdomain/zero/1.0/))
 - **Source page:** https://opengameart.org/content/kung-fu-battlers-pixel-art
@@ -114,7 +116,7 @@ CodyS — Creative Commons Zero v1.0 Universal ([deed](https://creativecommons.o
 - **Animations:** kung-fu brawler character poses
 - **Licence evidence:** OpenGameArt licence block: 'License(s): CC0'. Description: 'Some characters I made while watching some old kung fu movies.'
 - **Notes:** Pixel kung-fu cast for a brawler; CC0.
-- **Import candidate:** yes — CC0, so it can be mirrored into `freebuff-assets/` under the current policy.
+- **Imported:** yes — `kung-fu-battlers` in `ASSET_INDEX.json`.
 ### Streets of Fight
 ansimuz — Creative Commons Zero v1.0 Universal ([deed](https://creativecommons.org/publicdomain/zero/1.0/))
 - **Source page:** https://opengameart.org/content/streets-of-fight
@@ -124,7 +126,7 @@ ansimuz — Creative Commons Zero v1.0 Universal ([deed](https://creativecommons
 - **Animations:** female player character, 9 animations, punk enemy, 4 animations
 - **Licence evidence:** OpenGameArt licence block: 'License(s): CC0'. Description: 'This is a Complete Assets Pack to develop a Beat'em Up game ... Feel free to use it on your own personal or commercial projects.'
 - **Notes:** Complete beat-em-up set including a fighter with nine animations plus stage art; CC0.
-- **Import candidate:** yes — CC0, so it can be mirrored into `freebuff-assets/` under the current policy.
+- **Imported:** yes — `streets-brawler-girl`, `streets-enemy-punk` in `ASSET_INDEX.json`.
 ### RPG Asset Character 'Kung Fu Man' Gameboy
 Chasersgaming — Creative Commons Zero v1.0 Universal ([deed](https://creativecommons.org/publicdomain/zero/1.0/))
 - **Source page:** https://opengameart.org/content/rpg-asset-character-kung-fu-man-gameboy
@@ -134,7 +136,7 @@ Chasersgaming — Creative Commons Zero v1.0 Universal ([deed](https://creativec
 - **Animations:** idle, walk, run, push, attack (swing, punch, kick), climb, hit, jump
 - **Licence evidence:** OpenGameArt licence block: 'License(s): CC0'. Description: '16x24p 4 directions. Idle, Walk, Run, Push, Attack (swing,punch,kick), Climb, Avatar, Hit, Jump.'
 - **Notes:** Game Boy palette, four-directional, includes punch and kick attacks; CC0.
-- **Import candidate:** yes — CC0, so it can be mirrored into `freebuff-assets/` under the current policy.
+- **Imported:** yes — `gb-kung-fu-man` in `ASSET_INDEX.json`.
 ## Redistributable, other open licences (1)
 
 | Pack | Author | Subject | Licence | Redistribution | Formats | Animations | Source |

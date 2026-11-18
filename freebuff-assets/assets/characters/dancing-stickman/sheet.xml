@@ -1,0 +1,6 @@
+<TextureAtlas imagePath="sheet.png">
+  <SubTexture name="dance_001" x="0" y="0" width="9" height="15" frameX="-3" frameY="0" frameWidth="16" frameHeight="16"/>
+  <SubTexture name="dance_002" x="10" y="0" width="9" height="15" frameX="-2" frameY="0" frameWidth="16" frameHeight="16"/>
+  <SubTexture name="dance_003" x="30" y="0" width="9" height="14" frameX="-3" frameY="0" frameWidth="16" frameHeight="16"/>
+  <SubTexture name="dance_004" x="20" y="0" width="9" height="15" frameX="-3" frameY="0" frameWidth="16" frameHeight="16"/>
+</TextureAtlas>

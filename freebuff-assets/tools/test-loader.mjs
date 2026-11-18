@@ -66,11 +66,18 @@ await checkAsync('loads the index over fetch', async () => {
   assert(assets.assets.length > 0, 'no assets loaded');
 });
 
-check('index reports 48 assets / 126 clips / 8 sources', () => {
+check('index reports 58 assets / 169 clips / 16 sources', () => {
   const { counts } = assets;
-  assert(counts.assets === 48, `assets=${counts.assets}`);
-  assert(counts.clips === 126, `clips=${counts.clips}`);
-  assert(counts.sources === 8, `sources=${counts.sources}`);
+  assert(counts.assets === 58, `assets=${counts.assets}`);
+  assert(counts.clips === 169, `clips=${counts.clips}`);
+  assert(counts.sources === 16, `sources=${counts.sources}`);
+});
+
+check('imported stick-figure pack exposes its combo animation', () => {
+  const clip = assets.getClip('rgs-stick-fighter', 'combo');
+  assert(clip.frameCount === 19, `expected 19 combo frames, got ${clip.frameCount}`);
+  const bare = clip.frames[0];
+  assert(bare.frameWidth >= bare.w && bare.offsetX <= 0, 'trimmed frame lost its original box');
 });
 
 check('asset ids are unique', () => {

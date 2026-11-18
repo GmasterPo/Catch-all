@@ -1,0 +1,14 @@
+Source:  Stick man runner
+Author:  Freakerbob
+Licence: CC0 1.0 (Creative Commons Zero v1.0 Universal)
+Deed:    https://creativecommons.org/publicdomain/zero/1.0/
+
+Item page:  https://opengameart.org/content/stick-man-runner
+Download:   https://opengameart.org/sites/default/files/stickmanrun_0.zip
+
+Evidence, quoted from the item page on 2026-11-18:
+  OpenGameArt licence block: "License(s): CC0"
+  Description: "A simple stick man running animation with 12 frames"
+  The archive contains twelve PNG layers, one per frame.
+
+Provenance record captured from the source page; the pack ships no licence file.

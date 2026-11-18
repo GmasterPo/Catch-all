@@ -1,0 +1,21 @@
+Source:  RPG Asset Character 'Kung Fu Man' Gameboy
+Author:  Chasersgaming
+Licence: CC0 1.0 (Creative Commons Zero v1.0 Universal)
+Deed:    https://creativecommons.org/publicdomain/zero/1.0/
+
+Item page:
+  https://opengameart.org/content/rpg-asset-character-kung-fu-man-gameboy
+Download:  https://opengameart.org/sites/default/files/GB%20Kung%20Fu%20Man%204way.zip
+
+Evidence, quoted from the item page on 2026-11-18:
+  OpenGameArt licence block: "License(s): CC0"
+  Description: "16x24p 4 directions. Idle, Walk, Run, Push, Attack
+  (swing,punch,kick), Climb, Avatar, Hit, Jump. Gameboy colours"
+
+Notes:
+  The import uses the EAST-facing frames: the *_strip4.png files are four 16x24
+  frames each, and the single-frame direction PNGs are one frame each. The pack
+  also ships 4-way combined sheets for the same animations; they are not
+  imported separately because the EAST frames carry the same animation data.
+
+Provenance record captured from the source page; the pack ships no licence file.

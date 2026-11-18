@@ -1,0 +1,23 @@
+Source:  Fighting character template Mustermann 2 (A001AAAA001) (karate)
+Author:  Puffolotti
+Licence: CC0 1.0 (Creative Commons Zero v1.0 Universal)
+Deed:    https://creativecommons.org/publicdomain/zero/1.0/
+
+Item page:
+  https://opengameart.org/content/fighting-character-template-mustermann-2-a001aaaa001-karate
+Downloads used:
+  https://opengameart.org/sites/default/files/1.gif   (23 frames, 1024x768)
+  https://opengameart.org/sites/default/files/2.gif   (12 frames, 256x256)
+
+Evidence, quoted from the item page on 2026-11-18:
+  OpenGameArt licence block: "License(s): CC0"
+  Tags: "fighting base complete template karate"
+
+Notes:
+  Frames were taken from the two GIF animations. The pack also ships two very
+  large palette PNGs (8015x6902 and 8260x6873) which are colour variants of the
+  same artwork; they are not imported because of their size.
+  The GIFs have opaque backgrounds (white for 1.gif, black for 2.gif), which are
+  preserved rather than keyed out, so the frames render as authored.
+
+Provenance record captured from the source page; the pack ships no licence file.

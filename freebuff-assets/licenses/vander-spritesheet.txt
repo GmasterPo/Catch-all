@@ -1,0 +1,22 @@
+Source:  Spritesheet of a man CC0
+Author:  Vander96
+Licence: CC0 1.0 (Creative Commons Zero v1.0 Universal)
+Deed:    https://creativecommons.org/publicdomain/zero/1.0/
+
+Item page:  https://opengameart.org/content/spritesheet-of-a-man-cc0
+Downloads used:
+  https://opengameart.org/sites/default/files/open.png
+  https://opengameart.org/sites/default/files/open%20v2.png
+  https://opengameart.org/sites/default/files/open%20v3.png
+  https://opengameart.org/sites/default/files/open%20v4.png
+
+Evidence, quoted from the item page on 2026-11-18:
+  OpenGameArt licence block: "License(s): CC0"
+  Description: "Lots of animations May be good for platformers or rts or rpgs etc"
+
+Notes:
+  Imported as four reference sheets (v1-v4), not sliced into clips: the pack
+  publishes no frame metadata, and the sheets are flattened onto an opaque
+  magenta/cyan transparency checkerboard, so any grid would be guesswork.
+
+Provenance record captured from the source page; the pack ships no licence file.

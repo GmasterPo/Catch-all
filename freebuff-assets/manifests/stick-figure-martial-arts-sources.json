@@ -19,7 +19,9 @@
     "ccBySa": 3,
     "gpl": 1,
     "paidStore": 3,
-    "importCandidates": 8
+    "importCandidates": 8,
+    "importedPacks": 8,
+    "importedAssets": 10
   },
   "licencePolicy": {
     "allowedInThisRepo": "CC0-1.0 only. Everything under freebuff-assets/ must be redistributable without attribution or share-alike obligations.",
@@ -50,19 +52,40 @@
       },
       "redistribution": "allowed",
       "commercialUse": "allowed",
-      "formats": ["PNG frames", "Blender Grease Pencil (.blend)"],
+      "formats": [
+        "PNG frames",
+        "Blender Grease Pencil (.blend)"
+      ],
       "resolution": "512x512 canvas",
-      "animations": ["idle", "walk", "run", "jump", "slide", "dash", "climb", "damage", "death", "air attack", "wall slide", "attack combo"],
+      "animations": [
+        "idle",
+        "walk",
+        "run",
+        "jump",
+        "slide",
+        "dash",
+        "climb",
+        "damage",
+        "death",
+        "air attack",
+        "wall slide",
+        "attack combo"
+      ],
       "evidence": "itch.io asset licence field: 'Creative Commons Zero v1.0 Universal'. Description: 'The license is CC0, so you can use any way you want, even commercially. Credits is not needed.' OpenGameArt mirror lists 'License(s): CC0'.",
       "notes": "The strongest fit found: an actual stick figure with combat animations, CC0, and a .blend source for authoring new moves. Locomotion-heavy, but 'attack combo' and 'air attack' cover basic martial-arts strikes. Verified on two independent pages.",
-      "importCandidate": true
+      "importCandidate": true,
+      "importedAssetIds": [
+        "rgs-stick-fighter"
+      ]
     },
     {
       "id": "oga-stickman-attack",
       "name": "Stickman Attack",
       "author": "bellow",
       "subject": "stick-figure",
-      "pages": ["https://opengameart.org/content/stickman-attack"],
+      "pages": [
+        "https://opengameart.org/content/stickman-attack"
+      ],
       "primaryPage": "https://opengameart.org/content/stickman-attack",
       "download": {
         "name": "Archive.zip",
@@ -77,9 +100,14 @@
       },
       "redistribution": "conditional",
       "commercialUse": "allowed",
-      "formats": ["sprite sheet"],
+      "formats": [
+        "sprite sheet"
+      ],
       "resolution": "not stated on page",
-      "animations": ["stickman attack (basic)", "sword and dagger variants per tags"],
+      "animations": [
+        "stickman attack (basic)",
+        "sword and dagger variants per tags"
+      ],
       "evidence": "OpenGameArt licence block: 'License(s): CC-BY 3.0'. Description: 'Start to work on new animations its the basic one you can shape it or use it if you want.'",
       "notes": "Stick-figure attack animation, small pack. Redistributable with credit to bellow; not eligible for the CC0-only library without widening policy.",
       "importCandidate": false
@@ -89,7 +117,9 @@
       "name": "Stick man runner",
       "author": "Freakerbob",
       "subject": "stick-figure",
-      "pages": ["https://opengameart.org/content/stick-man-runner"],
+      "pages": [
+        "https://opengameart.org/content/stick-man-runner"
+      ],
       "primaryPage": "https://opengameart.org/content/stick-man-runner",
       "download": {
         "name": "stickmanrun.zip (68.5 KB)",
@@ -104,19 +134,28 @@
       },
       "redistribution": "allowed",
       "commercialUse": "allowed",
-      "formats": ["sprite sheet"],
+      "formats": [
+        "sprite sheet"
+      ],
       "resolution": "not stated on page",
-      "animations": ["run (12 frames)"],
+      "animations": [
+        "run (12 frames)"
+      ],
       "evidence": "OpenGameArt licence block: 'License(s): CC0'. Description: 'A simple stick man running animation with 12 frames'.",
       "notes": "Locomotion only; useful as a base for a fighter's run cycle. CC0.",
-      "importCandidate": true
+      "importCandidate": true,
+      "importedAssetIds": [
+        "stickman-runner"
+      ]
     },
     {
       "id": "oga-dancing-stickman",
       "name": "Dancing Stickman",
       "author": "Lyricsz",
       "subject": "stick-figure",
-      "pages": ["https://opengameart.org/content/dancing-stickman"],
+      "pages": [
+        "https://opengameart.org/content/dancing-stickman"
+      ],
       "primaryPage": "https://opengameart.org/content/dancing-stickman",
       "download": {
         "name": "dancestick.png",
@@ -131,19 +170,28 @@
       },
       "redistribution": "allowed",
       "commercialUse": "allowed",
-      "formats": ["PNG"],
+      "formats": [
+        "PNG"
+      ],
       "resolution": "not stated on page",
-      "animations": ["dance / idle flourish"],
+      "animations": [
+        "dance / idle flourish"
+      ],
       "evidence": "OpenGameArt licence block: 'License(s): CC0'. Description: 'A dancing stickman (shadow man)'.",
       "notes": "Not a fighter, but a CC0 stick-figure loop that works as a victory or taunt animation.",
-      "importCandidate": true
+      "importCandidate": true,
+      "importedAssetIds": [
+        "dancing-stickman"
+      ]
     },
     {
       "id": "oga-walk-animation-template",
       "name": "Walk Animation Template",
       "author": "hansolo",
       "subject": "stick-figure",
-      "pages": ["https://opengameart.org/content/walk-animation-template"],
+      "pages": [
+        "https://opengameart.org/content/walk-animation-template"
+      ],
       "primaryPage": "https://opengameart.org/content/walk-animation-template",
       "download": {
         "name": "walk-template-sheet.png",
@@ -158,9 +206,13 @@
       },
       "redistribution": "conditional",
       "commercialUse": "allowed",
-      "formats": ["PNG sprite sheet"],
+      "formats": [
+        "PNG sprite sheet"
+      ],
       "resolution": "not stated on page",
-      "animations": ["walk (4 frames, sequence 1,2,3,4,3,2)"],
+      "animations": [
+        "walk (4 frames, sequence 1,2,3,4,3,2)"
+      ],
       "evidence": "OpenGameArt licence block: 'License(s): CC-BY 3.0'. Description: 'I made a template 4-frame walk animation ... Walk frame sequence: 1,2,3,4,3,2'.",
       "notes": "Animation timing reference for leg mechanics rather than a finished character.",
       "importCandidate": false
@@ -170,7 +222,9 @@
       "name": "martial arts guy sprite animations",
       "author": "softocean",
       "subject": "martial-arts-character",
-      "pages": ["https://opengameart.org/content/martial-arts-guy-sprite-animations"],
+      "pages": [
+        "https://opengameart.org/content/martial-arts-guy-sprite-animations"
+      ],
       "primaryPage": "https://opengameart.org/content/martial-arts-guy-sprite-animations",
       "download": {
         "name": "aikido-guy-animations.zip",
@@ -185,9 +239,13 @@
       },
       "redistribution": "conditional",
       "commercialUse": "allowed",
-      "formats": ["sprite sheet"],
+      "formats": [
+        "sprite sheet"
+      ],
       "resolution": "not stated on page",
-      "animations": ["aikido moves, combined animation sets for blue and yellow characters"],
+      "animations": [
+        "aikido moves, combined animation sets for blue and yellow characters"
+      ],
       "evidence": "OpenGameArt licence block: 'License(s): CC-BY-SA 3.0'. Description: 'Martial arts move using combined animations for blue and yellow characters.'",
       "notes": "Genuine martial-arts move animations. Share-alike means derivative sheets must stay CC-BY-SA; not eligible for the CC0-only library.",
       "importCandidate": false
@@ -197,7 +255,9 @@
       "name": "sprite animations martial arts guy rendered",
       "author": "softocean",
       "subject": "martial-arts-character",
-      "pages": ["https://opengameart.org/content/sprite-animations-martial-arts-guy-rendered"],
+      "pages": [
+        "https://opengameart.org/content/sprite-animations-martial-arts-guy-rendered"
+      ],
       "primaryPage": "https://opengameart.org/content/sprite-animations-martial-arts-guy-rendered",
       "download": {
         "name": "aikido-guy-rendered-animations.zip (2.5 MB)",
@@ -212,9 +272,13 @@
       },
       "redistribution": "conditional",
       "commercialUse": "allowed",
-      "formats": ["rendered sprite animations"],
+      "formats": [
+        "rendered sprite animations"
+      ],
       "resolution": "not stated on page",
-      "animations": ["aikido throws and locks (rendered)"],
+      "animations": [
+        "aikido throws and locks (rendered)"
+      ],
       "evidence": "OpenGameArt licence block: 'License(s): CC-BY-SA 3.0'. Description: 'Contains rendered animations for 2d sprite martial arts guys (aikido moves).' Attribution notice: 'copyright 2019 Jerry Kalkhof'.",
       "notes": "Companion to the pack above with rendered rather than pixel output. Needs credit and share-alike.",
       "importCandidate": false
@@ -224,7 +288,9 @@
       "name": "Stick Fight Best.gif",
       "author": "Nurasko",
       "subject": "stick-figure",
-      "pages": ["https://commons.wikimedia.org/wiki/File:Stick_Fight_Best.gif"],
+      "pages": [
+        "https://commons.wikimedia.org/wiki/File:Stick_Fight_Best.gif"
+      ],
       "primaryPage": "https://commons.wikimedia.org/wiki/File:Stick_Fight_Best.gif",
       "download": {
         "name": "Stick_Fight_Best.gif (168 frames, 252x212, 254 KB)",
@@ -239,9 +305,13 @@
       },
       "redistribution": "conditional",
       "commercialUse": "allowed",
-      "formats": ["animated GIF"],
+      "formats": [
+        "animated GIF"
+      ],
       "resolution": "252x212",
-      "animations": ["13-second stick fight loop (168 frames)"],
+      "animations": [
+        "13-second stick fight loop (168 frames)"
+      ],
       "evidence": "Commons file page: 'This file is licensed under the Creative Commons Attribution-Share Alike 3.0 Unported license.' Description: 'One of the many type of animations possible with pivot.'",
       "notes": "A complete stick-figure fight on a single GIF. Usable as motion reference or, with attribution and share-alike, as an in-game loop.",
       "importCandidate": false
@@ -251,7 +321,9 @@
       "name": "Spritesheet of a man CC0",
       "author": "Vander96",
       "subject": "martial-arts-character",
-      "pages": ["https://opengameart.org/content/spritesheet-of-a-man-cc0"],
+      "pages": [
+        "https://opengameart.org/content/spritesheet-of-a-man-cc0"
+      ],
       "primaryPage": "https://opengameart.org/content/spritesheet-of-a-man-cc0",
       "download": {
         "name": "open.png, open v2.png, open v3.png, open v4.png",
@@ -266,19 +338,36 @@
       },
       "redistribution": "allowed",
       "commercialUse": "allowed",
-      "formats": ["PNG sprite sheet"],
+      "formats": [
+        "PNG sprite sheet"
+      ],
       "resolution": "not stated on page",
-      "animations": ["punch", "kick", "jump", "roll", "shoot", "axe", "sword", "knife", "fire"],
+      "animations": [
+        "punch",
+        "kick",
+        "jump",
+        "roll",
+        "shoot",
+        "axe",
+        "sword",
+        "knife",
+        "fire"
+      ],
       "evidence": "OpenGameArt licence block: 'License(s): CC0'. Tags: 'jump punch shoot roll attack fire axe sword knife'. Description: 'Lots of animations'.",
       "notes": "A human fighter, not a stick figure, but the closest CC0 match for a broad combat move set (punch, kick, roll, weapons).",
-      "importCandidate": true
+      "importCandidate": true,
+      "importedAssetIds": [
+        "vander-fighter-sheet"
+      ]
     },
     {
       "id": "oga-mustermann-karate",
       "name": "Fighting character template Mustermann 2 (karate)",
       "author": "Puffolotti",
       "subject": "martial-arts-character",
-      "pages": ["https://opengameart.org/content/fighting-character-template-mustermann-2-a001aaaa001-karate"],
+      "pages": [
+        "https://opengameart.org/content/fighting-character-template-mustermann-2-a001aaaa001-karate"
+      ],
       "primaryPage": "https://opengameart.org/content/fighting-character-template-mustermann-2-a001aaaa001-karate",
       "download": {
         "name": "1.gif, 2.gif, Orangeblack.png, Blueehite.png",
@@ -293,19 +382,30 @@
       },
       "redistribution": "allowed",
       "commercialUse": "allowed",
-      "formats": ["GIF preview", "PNG palettes"],
+      "formats": [
+        "GIF preview",
+        "PNG palettes"
+      ],
       "resolution": "not stated on page",
-      "animations": ["karate fighting template"],
+      "animations": [
+        "karate fighting template"
+      ],
       "evidence": "OpenGameArt licence block: 'License(s): CC0'. Tags include 'fighting base complete template karate'.",
       "notes": "Recolourable fighting-game template with karate moves; CC0 and directly usable in a fighter.",
-      "importCandidate": true
+      "importCandidate": true,
+      "importedAssetIds": [
+        "mustermann-karate",
+        "mustermann-energy-burst"
+      ]
     },
     {
       "id": "oga-kung-fu-battlers",
       "name": "Kung Fu Battlers pixel art",
       "author": "CodyS",
       "subject": "martial-arts-character",
-      "pages": ["https://opengameart.org/content/kung-fu-battlers-pixel-art"],
+      "pages": [
+        "https://opengameart.org/content/kung-fu-battlers-pixel-art"
+      ],
       "primaryPage": "https://opengameart.org/content/kung-fu-battlers-pixel-art",
       "download": {
         "name": "kung_fu_people.png",
@@ -320,19 +420,28 @@
       },
       "redistribution": "allowed",
       "commercialUse": "allowed",
-      "formats": ["PNG sprite sheet"],
+      "formats": [
+        "PNG sprite sheet"
+      ],
       "resolution": "not stated on page",
-      "animations": ["kung-fu brawler character poses"],
+      "animations": [
+        "kung-fu brawler character poses"
+      ],
       "evidence": "OpenGameArt licence block: 'License(s): CC0'. Description: 'Some characters I made while watching some old kung fu movies.'",
       "notes": "Pixel kung-fu cast for a brawler; CC0.",
-      "importCandidate": true
+      "importCandidate": true,
+      "importedAssetIds": [
+        "kung-fu-battlers"
+      ]
     },
     {
       "id": "oga-streets-of-fight",
       "name": "Streets of Fight",
       "author": "ansimuz",
       "subject": "martial-arts-character",
-      "pages": ["https://opengameart.org/content/streets-of-fight"],
+      "pages": [
+        "https://opengameart.org/content/streets-of-fight"
+      ],
       "primaryPage": "https://opengameart.org/content/streets-of-fight",
       "download": {
         "name": "streets_of_fight_files.zip",
@@ -347,19 +456,31 @@
       },
       "redistribution": "allowed",
       "commercialUse": "allowed",
-      "formats": ["PNG sprite sheets", "tileset"],
+      "formats": [
+        "PNG sprite sheets",
+        "tileset"
+      ],
       "resolution": "pixel art (not stated)",
-      "animations": ["female player character, 9 animations", "punk enemy, 4 animations"],
+      "animations": [
+        "female player character, 9 animations",
+        "punk enemy, 4 animations"
+      ],
       "evidence": "OpenGameArt licence block: 'License(s): CC0'. Description: 'This is a Complete Assets Pack to develop a Beat'em Up game ... Feel free to use it on your own personal or commercial projects.'",
       "notes": "Complete beat-em-up set including a fighter with nine animations plus stage art; CC0.",
-      "importCandidate": true
+      "importCandidate": true,
+      "importedAssetIds": [
+        "streets-brawler-girl",
+        "streets-enemy-punk"
+      ]
     },
     {
       "id": "oga-kung-fu-man-gameboy",
       "name": "RPG Asset Character 'Kung Fu Man' Gameboy",
       "author": "Chasersgaming",
       "subject": "martial-arts-character",
-      "pages": ["https://opengameart.org/content/rpg-asset-character-kung-fu-man-gameboy"],
+      "pages": [
+        "https://opengameart.org/content/rpg-asset-character-kung-fu-man-gameboy"
+      ],
       "primaryPage": "https://opengameart.org/content/rpg-asset-character-kung-fu-man-gameboy",
       "download": {
         "name": "GB Kung Fu Man 4way.zip",
@@ -374,19 +495,35 @@
       },
       "redistribution": "allowed",
       "commercialUse": "allowed",
-      "formats": ["PNG sprite sheet"],
+      "formats": [
+        "PNG sprite sheet"
+      ],
       "resolution": "16x24 pixels, 4 directions",
-      "animations": ["idle", "walk", "run", "push", "attack (swing, punch, kick)", "climb", "hit", "jump"],
+      "animations": [
+        "idle",
+        "walk",
+        "run",
+        "push",
+        "attack (swing, punch, kick)",
+        "climb",
+        "hit",
+        "jump"
+      ],
       "evidence": "OpenGameArt licence block: 'License(s): CC0'. Description: '16x24p 4 directions. Idle, Walk, Run, Push, Attack (swing,punch,kick), Climb, Avatar, Hit, Jump.'",
       "notes": "Game Boy palette, four-directional, includes punch and kick attacks; CC0.",
-      "importCandidate": true
+      "importCandidate": true,
+      "importedAssetIds": [
+        "gb-kung-fu-man"
+      ]
     },
     {
       "id": "oga-cat-fighter",
       "name": "Cat Fighter Sprite Sheet",
       "author": "dogchicken",
       "subject": "martial-arts-character",
-      "pages": ["https://opengameart.org/content/cat-fighter-sprite-sheet"],
+      "pages": [
+        "https://opengameart.org/content/cat-fighter-sprite-sheet"
+      ],
       "primaryPage": "https://opengameart.org/content/cat-fighter-sprite-sheet",
       "download": {
         "name": "cat_ani.zip, sprite_base_addon_2012_12_14.png",
@@ -401,9 +538,14 @@
       },
       "redistribution": "conditional",
       "commercialUse": "allowed",
-      "formats": ["PNG sprite sheet", "ZIP of frames"],
+      "formats": [
+        "PNG sprite sheet",
+        "ZIP of frames"
+      ],
       "resolution": "pixel art (not stated)",
-      "animations": ["fighter poses for a cat character"],
+      "animations": [
+        "fighter poses for a cat character"
+      ],
       "evidence": "OpenGameArt licence block: 'License(s): CC-BY 3.0'. Tags: 'sprite sheet fighter cat Sprite pixel'.",
       "notes": "Fighter animation with a non-human cast; needs credit.",
       "importCandidate": false
@@ -413,7 +555,9 @@
       "name": "2D, kung fu master",
       "author": "davilj",
       "subject": "martial-arts-character",
-      "pages": ["https://opengameart.org/content/2d-kung-fu-master"],
+      "pages": [
+        "https://opengameart.org/content/2d-kung-fu-master"
+      ],
       "primaryPage": "https://opengameart.org/content/2d-kung-fu-master",
       "download": {
         "name": "spritesheet.png",
@@ -428,9 +572,13 @@
       },
       "redistribution": "conditional",
       "commercialUse": "allowed under GPL terms",
-      "formats": ["PNG sprite sheet"],
+      "formats": [
+        "PNG sprite sheet"
+      ],
       "resolution": "not stated on page",
-      "animations": ["kung-fu master walk/attack set (3/4 directional)"],
+      "animations": [
+        "kung-fu master walk/attack set (3/4 directional)"
+      ],
       "evidence": "OpenGameArt licence block: 'License(s): GPL 2.0'. Description: '2D character with yellow kung fu suit'.",
       "notes": "Copyleft: shipping art in a game effectively obliges GPL compliance for the art and its derivatives, which conflicts with this library's CC0-only rule.",
       "importCandidate": false
@@ -462,7 +610,9 @@
       },
       "redistribution": "allowed",
       "commercialUse": "allowed",
-      "formats": ["animated GIF"],
+      "formats": [
+        "animated GIF"
+      ],
       "resolution": "140x112 to 292x480",
       "animations": [
         "butterfly kick (public domain)",
@@ -480,9 +630,14 @@
       "name": "Stickman Fighter — Spine 2D character sprites",
       "author": "overcrafted",
       "subject": "stick-figure",
-      "pages": ["https://overcrafted.itch.io/stickman-fighter-spine-2d-game-character-sprites"],
+      "pages": [
+        "https://overcrafted.itch.io/stickman-fighter-spine-2d-game-character-sprites"
+      ],
       "primaryPage": "https://overcrafted.itch.io/stickman-fighter-spine-2d-game-character-sprites",
-      "download": { "name": "Spine 2D Stickman Fighter Character Asset v3.8.99.zip", "url": "https://overcrafted.itch.io/stickman-fighter-spine-2d-game-character-sprites" },
+      "download": {
+        "name": "Spine 2D Stickman Fighter Character Asset v3.8.99.zip",
+        "url": "https://overcrafted.itch.io/stickman-fighter-spine-2d-game-character-sprites"
+      },
       "license": {
         "spdx": "commercial-store",
         "name": "Paid asset ($7) — store terms, licence not stated on page",
@@ -492,9 +647,13 @@
       },
       "redistribution": "prohibited",
       "commercialUse": "allowed within purchased projects per store terms",
-      "formats": ["Spine JSON"],
+      "formats": [
+        "Spine JSON"
+      ],
       "resolution": "vector",
-      "animations": ["stickman fighter rig (Spine skeletal animation)"],
+      "animations": [
+        "stickman fighter rig (Spine skeletal animation)"
+      ],
       "evidence": "Page shows 'Buy Now $7' and file list including 'Spine 2D Stickman Fighter Character Asset v3.8.99.zip'; no open licence is offered.",
       "notes": "Best-looking stickman fighter rig found, but paid and not redistributable — list for reference only.",
       "importCandidate": false
@@ -504,9 +663,14 @@
       "name": "Stickman Animation Pack",
       "author": "Game Technology",
       "subject": "stick-figure",
-      "pages": ["https://gamestechnology.itch.io/stickman-animation-pack"],
+      "pages": [
+        "https://gamestechnology.itch.io/stickman-animation-pack"
+      ],
       "primaryPage": "https://gamestechnology.itch.io/stickman-animation-pack",
-      "download": { "name": "Stickman.zip (46 MB)", "url": "https://gamestechnology.itch.io/stickman-animation-pack" },
+      "download": {
+        "name": "Stickman.zip (46 MB)",
+        "url": "https://gamestechnology.itch.io/stickman-animation-pack"
+      },
       "license": {
         "spdx": "commercial-store",
         "name": "Paid asset ($49) — store terms, licence not stated on page",
@@ -516,9 +680,13 @@
       },
       "redistribution": "prohibited",
       "commercialUse": "allowed within purchased projects per store terms",
-      "formats": ["not stated on page"],
+      "formats": [
+        "not stated on page"
+      ],
       "resolution": "not stated on page",
-      "animations": ["stickman animation set"],
+      "animations": [
+        "stickman animation set"
+      ],
       "evidence": "Page shows 'Buy Now $49' and a single 'Stickman.zip (46 MB)' download.",
       "notes": "Large paid pack; excluded because the raw files cannot be redistributed here.",
       "importCandidate": false
@@ -528,9 +696,14 @@
       "name": "2D Modular Stickman Animation Pack (50 animations)",
       "author": "Stable Image",
       "subject": "stick-figure",
-      "pages": ["https://stableimage.itch.io/2d-modular-stickman-animation-pack-50-animation"],
+      "pages": [
+        "https://stableimage.itch.io/2d-modular-stickman-animation-pack-50-animation"
+      ],
       "primaryPage": "https://stableimage.itch.io/2d-modular-stickman-animation-pack-50-animation",
-      "download": { "name": "Free / name your own price", "url": "https://stableimage.itch.io/2d-modular-stickman-animation-pack-50-animation" },
+      "download": {
+        "name": "Free / name your own price",
+        "url": "https://stableimage.itch.io/2d-modular-stickman-animation-pack-50-animation"
+      },
       "license": {
         "spdx": "unclear",
         "name": "Custom: 'Commercial & Personal Use' — redistribution and modification terms not fully stated",
@@ -540,9 +713,14 @@
       },
       "redistribution": "unclear",
       "commercialUse": "allowed",
-      "formats": ["sprite atlas", "Godot AnimationPlayer resource"],
+      "formats": [
+        "sprite atlas",
+        "Godot AnimationPlayer resource"
+      ],
       "resolution": "not stated on page",
-      "animations": ["50 modular stickman animations"],
+      "animations": [
+        "50 modular stickman animations"
+      ],
       "evidence": "Description: 'License Commercial & Personal Use: You are free to use these assets in any of your projects, including commercial games, videos, and animations. Modif...' (page text truncated at the point where redistribution would be addressed).",
       "notes": "Attractive size (50 animations) and free, but the terms do not clearly grant redistribution of the raw atlas. Use in a game, do not mirror the files.",
       "importCandidate": false
@@ -552,9 +730,15 @@
       "name": "Stick Figure Animation Pack / Stick Figures Battle",
       "author": "Blue Sofa Studio",
       "subject": "stick-figure",
-      "pages": ["https://blue-sofa-studio.itch.io/stick-figure-animation-pack", "https://blue-sofa-studio.itch.io/stick-figures-battle"],
+      "pages": [
+        "https://blue-sofa-studio.itch.io/stick-figure-animation-pack",
+        "https://blue-sofa-studio.itch.io/stick-figures-battle"
+      ],
       "primaryPage": "https://blue-sofa-studio.itch.io/stick-figure-animation-pack",
-      "download": { "name": "Free download (battle pack includes Trojan_horse.zip, 289 MB)", "url": "https://blue-sofa-studio.itch.io/stick-figures-battle" },
+      "download": {
+        "name": "Free download (battle pack includes Trojan_horse.zip, 289 MB)",
+        "url": "https://blue-sofa-studio.itch.io/stick-figures-battle"
+      },
       "license": {
         "spdx": "unstated",
         "name": "No licence stated on the page",
@@ -564,9 +748,14 @@
       },
       "redistribution": "unclear",
       "commercialUse": "unclear",
-      "formats": ["not stated on page"],
+      "formats": [
+        "not stated on page"
+      ],
       "resolution": "not stated on page",
-      "animations": ["stick-figure animation sets", "stick-figure battle assets"],
+      "animations": [
+        "stick-figure animation sets",
+        "stick-figure battle assets"
+      ],
       "evidence": "Both pages are marked free, but neither description nor asset-licence field states a licence; no licence keyword appears anywhere in the page text.",
       "notes": "Free to download is not the same as licensed for reuse. Ask the author before using.",
       "importCandidate": false
@@ -576,9 +765,14 @@
       "name": "2D Stickman Character",
       "author": "TheRealGI",
       "subject": "stick-figure",
-      "pages": ["https://therealgi.itch.io/2d-stickman-character"],
+      "pages": [
+        "https://therealgi.itch.io/2d-stickman-character"
+      ],
       "primaryPage": "https://therealgi.itch.io/2d-stickman-character",
-      "download": { "name": "Stickman Basic Pack Compress.zip (73 MB)", "url": "https://therealgi.itch.io/2d-stickman-character" },
+      "download": {
+        "name": "Stickman Basic Pack Compress.zip (73 MB)",
+        "url": "https://therealgi.itch.io/2d-stickman-character"
+      },
       "license": {
         "spdx": "unstated",
         "name": "No licence stated on the page",
@@ -588,9 +782,13 @@
       },
       "redistribution": "unclear",
       "commercialUse": "unclear",
-      "formats": ["PNG frames"],
+      "formats": [
+        "PNG frames"
+      ],
       "resolution": "not stated on page",
-      "animations": ["stickman basic move set"],
+      "animations": [
+        "stickman basic move set"
+      ],
       "evidence": "Free download ('Download Stickman Basic Pack Compress.zip 73 MB') with no licence text on the page.",
       "notes": "Large free stickman set, but unlicensed for redistribution; contact the author.",
       "importCandidate": false
@@ -600,9 +798,14 @@
       "name": "GameDev Market mirror of the RGS stick figure pack",
       "author": "RgsDev (mirrored by GameDev Market)",
       "subject": "stick-figure",
-      "pages": ["https://www.gamedevmarket.net/asset/animated-stick-figure-character-2d-free-cc0"],
+      "pages": [
+        "https://www.gamedevmarket.net/asset/animated-stick-figure-character-2d-free-cc0"
+      ],
       "primaryPage": "https://www.gamedevmarket.net/asset/animated-stick-figure-character-2d-free-cc0",
-      "download": { "name": "Free after sign-in", "url": "https://www.gamedevmarket.net/asset/animated-stick-figure-character-2d-free-cc0" },
+      "download": {
+        "name": "Free after sign-in",
+        "url": "https://www.gamedevmarket.net/asset/animated-stick-figure-character-2d-free-cc0"
+      },
       "license": {
         "spdx": "commercial-store",
         "name": "GameDev Market Pro Licence (forbids redistributing the raw assets)",
@@ -612,9 +815,13 @@
       },
       "redistribution": "prohibited",
       "commercialUse": "allowed within Media Products only",
-      "formats": ["same as the original itch pack"],
+      "formats": [
+        "same as the original itch pack"
+      ],
       "resolution": "same as the original itch pack",
-      "animations": ["same as the original itch pack"],
+      "animations": [
+        "same as the original itch pack"
+      ],
       "evidence": "Store licence summary: 'You cannot: ... Sell, share or redistribute the asset or Derivative Works outside of the Media Product ... Allow the user of the Media Product to extract the asset'.",
       "notes": "Same artwork as the CC0 pack, but the store mirror imposes stricter terms. Always take it from the creator's itch.io or OpenGameArt page instead.",
       "importCandidate": false
@@ -647,5 +854,6 @@
     "bestMartialArtsCC0": "oga-spritesheet-of-a-man-cc0",
     "bestFightTemplateCC0": "oga-mustermann-karate",
     "notes": "Only the CC0 entries (RGS stick figure, stick man runner, dancing stickman, spritesheet of a man, Mustermann karate, kung-fu battlers, Streets of Fight, Kung Fu Man Gameboy) can be imported into freebuff-assets/ without changing its CC0-only policy. CC-BY and CC-BY-SA packs are usable in a game with credit, but not eligible for mirroring here."
-  }
+  },
+  "importNote": "The eight CC0 packs marked with importedAssetIds were imported into freebuff-assets/ on 2026-11-18 as 10 assets and 43 clips; see ASSET_INDEX.json."
 }

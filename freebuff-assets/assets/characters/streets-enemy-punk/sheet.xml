@@ -1,0 +1,17 @@
+<TextureAtlas imagePath="sheet.png">
+  <SubTexture name="hurt_001" x="75" y="0" width="28" height="50" frameX="-31" frameY="-13" frameWidth="96" frameHeight="63"/>
+  <SubTexture name="hurt_002" x="191" y="0" width="32" height="49" frameX="-32" frameY="-14" frameWidth="96" frameHeight="63"/>
+  <SubTexture name="hurt_003" x="390" y="0" width="49" height="40" frameX="-23" frameY="-22" frameWidth="96" frameHeight="63"/>
+  <SubTexture name="hurt_004" x="440" y="0" width="62" height="16" frameX="-12" frameY="-47" frameWidth="96" frameHeight="63"/>
+  <SubTexture name="idle_001" x="104" y="0" width="28" height="50" frameX="-31" frameY="-13" frameWidth="96" frameHeight="63"/>
+  <SubTexture name="idle_002" x="224" y="0" width="28" height="49" frameX="-31" frameY="-14" frameWidth="96" frameHeight="63"/>
+  <SubTexture name="idle_003" x="282" y="0" width="28" height="48" frameX="-31" frameY="-15" frameWidth="96" frameHeight="63"/>
+  <SubTexture name="idle_004" x="253" y="0" width="28" height="49" frameX="-31" frameY="-14" frameWidth="96" frameHeight="63"/>
+  <SubTexture name="punch_001" x="133" y="0" width="28" height="50" frameX="-31" frameY="-13" frameWidth="96" frameHeight="63"/>
+  <SubTexture name="punch_002" x="311" y="0" width="28" height="48" frameX="-34" frameY="-15" frameWidth="96" frameHeight="63"/>
+  <SubTexture name="punch_003" x="340" y="0" width="49" height="45" frameX="-11" frameY="-18" frameWidth="96" frameHeight="63"/>
+  <SubTexture name="walk_001" x="162" y="0" width="28" height="50" frameX="-31" frameY="-13" frameWidth="96" frameHeight="63"/>
+  <SubTexture name="walk_002" x="50" y="0" width="24" height="51" frameX="-31" frameY="-12" frameWidth="96" frameHeight="63"/>
+  <SubTexture name="walk_003" x="0" y="0" width="24" height="52" frameX="-31" frameY="-11" frameWidth="96" frameHeight="63"/>
+  <SubTexture name="walk_004" x="25" y="0" width="24" height="52" frameX="-31" frameY="-11" frameWidth="96" frameHeight="63"/>
+</TextureAtlas>

@@ -1,0 +1,14 @@
+<TextureAtlas imagePath="sheet.png">
+  <SubTexture name="burst_001" x="0" y="0" width="246" height="252" frameX="0" frameY="0" frameWidth="246" frameHeight="252"/>
+  <SubTexture name="burst_002" x="247" y="0" width="246" height="252" frameX="0" frameY="0" frameWidth="246" frameHeight="252"/>
+  <SubTexture name="burst_003" x="494" y="0" width="246" height="252" frameX="0" frameY="0" frameWidth="246" frameHeight="252"/>
+  <SubTexture name="burst_004" x="741" y="0" width="246" height="252" frameX="0" frameY="0" frameWidth="246" frameHeight="252"/>
+  <SubTexture name="burst_005" x="988" y="0" width="246" height="252" frameX="0" frameY="0" frameWidth="246" frameHeight="252"/>
+  <SubTexture name="burst_006" x="1235" y="0" width="246" height="252" frameX="0" frameY="0" frameWidth="246" frameHeight="252"/>
+  <SubTexture name="burst_007" x="1482" y="0" width="246" height="252" frameX="0" frameY="0" frameWidth="246" frameHeight="252"/>
+  <SubTexture name="burst_008" x="1729" y="0" width="246" height="252" frameX="0" frameY="0" frameWidth="246" frameHeight="252"/>
+  <SubTexture name="burst_009" x="0" y="253" width="246" height="252" frameX="0" frameY="0" frameWidth="246" frameHeight="252"/>
+  <SubTexture name="burst_010" x="247" y="253" width="246" height="252" frameX="0" frameY="0" frameWidth="246" frameHeight="252"/>
+  <SubTexture name="burst_011" x="494" y="253" width="246" height="252" frameX="0" frameY="0" frameWidth="246" frameHeight="252"/>
+  <SubTexture name="burst_012" x="741" y="253" width="246" height="252" frameX="0" frameY="0" frameWidth="246" frameHeight="252"/>
+</TextureAtlas>

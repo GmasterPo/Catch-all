@@ -1,0 +1,20 @@
+Source:  Animated Stick Figure Character 2D Free CC0
+Author:  RGS_Dev (https://rgsdev.itch.io)
+Licence: CC0 1.0 (Creative Commons Zero v1.0 Universal)
+Deed:    https://creativecommons.org/publicdomain/zero/1.0/
+
+Item pages:
+  https://rgsdev.itch.io/animated-stick-figure-character-2d-free-cc0
+  https://opengameart.org/content/animated-stick-figure-character-2d-free-cc0
+
+Download used:
+  https://opengameart.org/sites/default/files/stick_figure_character_sprites_2d.zip
+
+Evidence, quoted from the item pages on 2026-11-18:
+  itch.io asset licence field: "Creative Commons Zero v1.0 Universal"
+  itch.io description: "The license is CC0, so you can use any way you want, even
+  commercially. Credits is not needed."
+  OpenGameArt licence block: "License(s): CC0"
+
+This is a provenance record captured from the source pages. These packs ship no
+licence file of their own, so this record replaces one.

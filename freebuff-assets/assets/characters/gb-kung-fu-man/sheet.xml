@@ -1,0 +1,26 @@
+<TextureAtlas imagePath="sheet.png">
+  <SubTexture name="idle_001" x="0" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="idle_002" x="17" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="idle_003" x="34" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="idle_004" x="51" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="walk_001" x="68" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="walk_002" x="85" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="walk_003" x="102" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="walk_004" x="119" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="run_001" x="136" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="run_002" x="153" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="run_003" x="170" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="run_004" x="187" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="push_001" x="204" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="push_002" x="221" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="push_003" x="238" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="push_004" x="255" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="attack-fs_001" x="272" y="0" width="24" height="24" frameX="0" frameY="0" frameWidth="24" frameHeight="24"/>
+  <SubTexture name="attack-fs_002" x="297" y="0" width="24" height="24" frameX="0" frameY="0" frameWidth="24" frameHeight="24"/>
+  <SubTexture name="attack-fs_003" x="322" y="0" width="24" height="24" frameX="0" frameY="0" frameWidth="24" frameHeight="24"/>
+  <SubTexture name="attack-fs_004" x="347" y="0" width="24" height="24" frameX="0" frameY="0" frameWidth="24" frameHeight="24"/>
+  <SubTexture name="attack-kick_001" x="372" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="attack-punch_001" x="389" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="hit_001" x="406" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+  <SubTexture name="jump_001" x="423" y="0" width="16" height="24" frameX="0" frameY="0" frameWidth="16" frameHeight="24"/>
+</TextureAtlas>

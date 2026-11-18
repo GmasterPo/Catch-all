@@ -7,12 +7,12 @@
   "basePath": "./",
   "generatedBy": "tools/build-index.mjs",
   "counts": {
-    "assets": 48,
-    "clips": 126,
-    "animations": 33,
-    "sprites": 93,
-    "sources": 8,
-    "frames": 693
+    "assets": 58,
+    "clips": 169,
+    "animations": 67,
+    "sprites": 102,
+    "sources": 16,
+    "frames": 911
   },
   "sources": [
     {
@@ -118,9 +118,596 @@
       "licenseFile": "licenses/physics-assets.txt",
       "assets": 5,
       "clips": 16
+    },
+    {
+      "id": "rgs-stick-figure",
+      "title": "Animated Stick Figure Character 2D Free CC0",
+      "creator": "RGS_Dev",
+      "creatorUrl": "https://rgsdev.itch.io",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://rgsdev.itch.io/animated-stick-figure-character-2d-free-cc0",
+      "download": "https://opengameart.org/sites/default/files/stick_figure_character_sprites_2d.zip",
+      "licenseFile": "licenses/rgs-stick-figure.txt",
+      "assets": 1,
+      "clips": 12
+    },
+    {
+      "id": "stickman-runner",
+      "title": "Stick man runner",
+      "creator": "Freakerbob",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/stick-man-runner",
+      "download": "https://opengameart.org/sites/default/files/stickmanrun_0.zip",
+      "licenseFile": "licenses/stickman-runner.txt",
+      "assets": 1,
+      "clips": 1
+    },
+    {
+      "id": "dancing-stickman",
+      "title": "Dancing Stickman",
+      "creator": "Lyricsz",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/dancing-stickman",
+      "download": "https://opengameart.org/sites/default/files/dancestick_0.png",
+      "licenseFile": "licenses/dancing-stickman.txt",
+      "assets": 1,
+      "clips": 1
+    },
+    {
+      "id": "mustermann-karate",
+      "title": "Fighting character template Mustermann 2 (A001AAAA001) (karate)",
+      "creator": "Puffolotti",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/fighting-character-template-mustermann-2-a001aaaa001-karate",
+      "download": "https://opengameart.org/sites/default/files/1.gif",
+      "licenseFile": "licenses/mustermann-karate.txt",
+      "assets": 2,
+      "clips": 2
+    },
+    {
+      "id": "vander-spritesheet",
+      "title": "Spritesheet of a man CC0",
+      "creator": "Vander96",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/spritesheet-of-a-man-cc0",
+      "download": "https://opengameart.org/sites/default/files/open.png",
+      "licenseFile": "licenses/vander-spritesheet.txt",
+      "assets": 1,
+      "clips": 4
+    },
+    {
+      "id": "kung-fu-battlers",
+      "title": "Kung Fu Battlers pixel art",
+      "creator": "CodyS",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/kung-fu-battlers-pixel-art",
+      "download": "https://opengameart.org/sites/default/files/kung_fu_people.png",
+      "licenseFile": "licenses/kung-fu-battlers.txt",
+      "assets": 1,
+      "clips": 1
+    },
+    {
+      "id": "streets-of-fight",
+      "title": "Streets of Fight",
+      "creator": "ansimuz",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/streets-of-fight",
+      "download": "https://opengameart.org/sites/default/files/streets_of_fight_files.zip",
+      "licenseFile": "licenses/streets-of-fight.txt",
+      "assets": 2,
+      "clips": 13
+    },
+    {
+      "id": "gb-kung-fu-man",
+      "title": "RPG Asset Character 'Kung Fu Man' Gameboy",
+      "creator": "Chasersgaming",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/rpg-asset-character-kung-fu-man-gameboy",
+      "download": "https://opengameart.org/sites/default/files/GB%20Kung%20Fu%20Man%204way.zip",
+      "licenseFile": "licenses/gb-kung-fu-man.txt",
+      "assets": 1,
+      "clips": 9
     }
   ],
   "assets": [
+    {
+      "id": "dancing-stickman",
+      "name": "Dancing Stickman",
+      "category": "characters",
+      "style": "vector-flat",
+      "tags": [
+        "dance",
+        "stick-figure",
+        "taunt",
+        "victory"
+      ],
+      "source": "dancing-stickman",
+      "sheet": "assets/characters/dancing-stickman/sheet.png",
+      "sheetSize": [
+        39,
+        16
+      ],
+      "frameMetadata": {
+        "type": "sparrow-xml",
+        "file": "assets/characters/dancing-stickman/sheet.xml"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "Lyricsz",
+      "attribution": "Dancing Stickman by Lyricsz (https://opengameart.org/content/dancing-stickman) — CC0-1.0",
+      "redistributionAllowed": true,
+      "placeholder": false,
+      "clips": [
+        {
+          "name": "dance",
+          "state": "dance",
+          "kind": "animation",
+          "fps": 8,
+          "loop": true,
+          "frameCount": 4,
+          "frameWidth": 16,
+          "frameHeight": 16,
+          "frames": [
+            {
+              "name": "dance_001",
+              "x": 0,
+              "y": 0,
+              "w": 9,
+              "h": 15,
+              "frameWidth": 16,
+              "frameHeight": 16,
+              "offsetX": -3,
+              "offsetY": 0
+            },
+            {
+              "name": "dance_002",
+              "x": 10,
+              "y": 0,
+              "w": 9,
+              "h": 15,
+              "frameWidth": 16,
+              "frameHeight": 16,
+              "offsetX": -2,
+              "offsetY": 0
+            },
+            {
+              "name": "dance_003",
+              "x": 30,
+              "y": 0,
+              "w": 9,
+              "h": 14,
+              "frameWidth": 16,
+              "frameHeight": 16,
+              "offsetX": -3,
+              "offsetY": 0
+            },
+            {
+              "name": "dance_004",
+              "x": 20,
+              "y": 0,
+              "w": 9,
+              "h": 15,
+              "frameWidth": 16,
+              "frameHeight": 16,
+              "offsetX": -3,
+              "offsetY": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gb-kung-fu-man",
+      "name": "Game Boy Kung Fu Man",
+      "category": "characters",
+      "style": "8-bit-pixel",
+      "tags": [
+        "fighter",
+        "gameboy",
+        "kick",
+        "kung-fu",
+        "martial-arts",
+        "punch"
+      ],
+      "source": "gb-kung-fu-man",
+      "sheet": "assets/characters/gb-kung-fu-man/sheet.png",
+      "sheetSize": [
+        439,
+        25
+      ],
+      "frameMetadata": {
+        "type": "sparrow-xml",
+        "file": "assets/characters/gb-kung-fu-man/sheet.xml"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "Chasersgaming",
+      "attribution": "RPG Asset Character 'Kung Fu Man' Gameboy by Chasersgaming (https://opengameart.org/content/rpg-asset-character-kung-fu-man-gameboy) — CC0-1.0",
+      "redistributionAllowed": true,
+      "placeholder": false,
+      "clips": [
+        {
+          "name": "idle",
+          "state": "idle",
+          "kind": "animation",
+          "fps": 8,
+          "loop": true,
+          "frameCount": 4,
+          "frameWidth": 16,
+          "frameHeight": 24,
+          "frames": [
+            {
+              "name": "idle_001",
+              "x": 0,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "idle_002",
+              "x": 17,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "idle_003",
+              "x": 34,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "idle_004",
+              "x": 51,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        },
+        {
+          "name": "walk",
+          "state": "walk",
+          "kind": "animation",
+          "fps": 10,
+          "loop": true,
+          "frameCount": 4,
+          "frameWidth": 16,
+          "frameHeight": 24,
+          "frames": [
+            {
+              "name": "walk_001",
+              "x": 68,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_002",
+              "x": 85,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_003",
+              "x": 102,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_004",
+              "x": 119,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        },
+        {
+          "name": "run",
+          "state": "run",
+          "kind": "animation",
+          "fps": 12,
+          "loop": true,
+          "frameCount": 4,
+          "frameWidth": 16,
+          "frameHeight": 24,
+          "frames": [
+            {
+              "name": "run_001",
+              "x": 136,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "run_002",
+              "x": 153,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "run_003",
+              "x": 170,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "run_004",
+              "x": 187,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        },
+        {
+          "name": "push",
+          "state": "special",
+          "kind": "animation",
+          "fps": 10,
+          "loop": false,
+          "frameCount": 4,
+          "frameWidth": 16,
+          "frameHeight": 24,
+          "frames": [
+            {
+              "name": "push_001",
+              "x": 204,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "push_002",
+              "x": 221,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "push_003",
+              "x": 238,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "push_004",
+              "x": 255,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        },
+        {
+          "name": "attack-fs",
+          "state": "special",
+          "kind": "animation",
+          "fps": 12,
+          "loop": false,
+          "frameCount": 4,
+          "frameWidth": 24,
+          "frameHeight": 24,
+          "frames": [
+            {
+              "name": "attack-fs_001",
+              "x": 272,
+              "y": 0,
+              "w": 24,
+              "h": 24,
+              "frameWidth": 24,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "attack-fs_002",
+              "x": 297,
+              "y": 0,
+              "w": 24,
+              "h": 24,
+              "frameWidth": 24,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "attack-fs_003",
+              "x": 322,
+              "y": 0,
+              "w": 24,
+              "h": 24,
+              "frameWidth": 24,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "attack-fs_004",
+              "x": 347,
+              "y": 0,
+              "w": 24,
+              "h": 24,
+              "frameWidth": 24,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        },
+        {
+          "name": "attack-kick",
+          "state": "kick",
+          "kind": "sprite",
+          "fps": 10,
+          "loop": false,
+          "frameCount": 1,
+          "frameWidth": 16,
+          "frameHeight": 24,
+          "frames": [
+            {
+              "name": "attack-kick_001",
+              "x": 372,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        },
+        {
+          "name": "attack-punch",
+          "state": "punch",
+          "kind": "sprite",
+          "fps": 10,
+          "loop": false,
+          "frameCount": 1,
+          "frameWidth": 16,
+          "frameHeight": 24,
+          "frames": [
+            {
+              "name": "attack-punch_001",
+              "x": 389,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        },
+        {
+          "name": "hit",
+          "state": "hurt",
+          "kind": "sprite",
+          "fps": 10,
+          "loop": false,
+          "frameCount": 1,
+          "frameWidth": 16,
+          "frameHeight": 24,
+          "frames": [
+            {
+              "name": "hit_001",
+              "x": 406,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        },
+        {
+          "name": "jump",
+          "state": "jump",
+          "kind": "sprite",
+          "fps": 10,
+          "loop": false,
+          "frameCount": 1,
+          "frameWidth": 16,
+          "frameHeight": 24,
+          "frames": [
+            {
+              "name": "jump_001",
+              "x": 423,
+              "y": 0,
+              "w": 16,
+              "h": 24,
+              "frameWidth": 16,
+              "frameHeight": 24,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "hero-platformer-blue",
       "name": "Platformer Hero — Blue",
@@ -770,6 +1357,356 @@
       ]
     },
     {
+      "id": "kung-fu-battlers",
+      "name": "Kung Fu Battlers Cast",
+      "category": "characters",
+      "style": "16-bit-pixel",
+      "tags": [
+        "cast",
+        "kung-fu",
+        "lineup",
+        "martial-arts",
+        "pixel"
+      ],
+      "source": "kung-fu-battlers",
+      "sheet": "assets/characters/kung-fu-battlers/sheet.png",
+      "sheetSize": [
+        192,
+        66
+      ],
+      "frameMetadata": {
+        "type": "sparrow-xml",
+        "file": "assets/characters/kung-fu-battlers/sheet.xml"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "CodyS",
+      "attribution": "Kung Fu Battlers pixel art by CodyS (https://opengameart.org/content/kung-fu-battlers-pixel-art) — CC0-1.0",
+      "redistributionAllowed": true,
+      "placeholder": false,
+      "clips": [
+        {
+          "name": "lineup",
+          "state": "sprite",
+          "kind": "sprite",
+          "fps": 0,
+          "loop": false,
+          "frameCount": 1,
+          "frameWidth": 192,
+          "frameHeight": 65,
+          "frames": [
+            {
+              "name": "lineup_001",
+              "x": 0,
+              "y": 0,
+              "w": 192,
+              "h": 65,
+              "frameWidth": 192,
+              "frameHeight": 65,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mustermann-karate",
+      "name": "Mustermann Karate Walk",
+      "category": "characters",
+      "style": "flat-vector",
+      "tags": [
+        "fighter",
+        "gif-source",
+        "karate",
+        "martial-arts",
+        "walk-cycle"
+      ],
+      "source": "mustermann-karate",
+      "sheet": "assets/characters/mustermann-karate/sheet.png",
+      "sheetSize": [
+        1847,
+        2084
+      ],
+      "frameMetadata": {
+        "type": "sparrow-xml",
+        "file": "assets/characters/mustermann-karate/sheet.xml"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "Puffolotti",
+      "attribution": "Fighting character template Mustermann 2 (A001AAAA001) (karate) by Puffolotti (https://opengameart.org/content/fighting-character-template-mustermann-2-a001aaaa001-karate) — CC0-1.0",
+      "redistributionAllowed": true,
+      "placeholder": false,
+      "clips": [
+        {
+          "name": "walk",
+          "state": "walk",
+          "kind": "animation",
+          "fps": 25,
+          "loop": true,
+          "frameCount": 23,
+          "frameWidth": 263,
+          "frameHeight": 520,
+          "frames": [
+            {
+              "name": "walk_001",
+              "x": 0,
+              "y": 0,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_002",
+              "x": 264,
+              "y": 0,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_003",
+              "x": 528,
+              "y": 0,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_004",
+              "x": 792,
+              "y": 0,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_005",
+              "x": 1056,
+              "y": 0,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_006",
+              "x": 1320,
+              "y": 0,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_007",
+              "x": 1584,
+              "y": 0,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_008",
+              "x": 0,
+              "y": 521,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_009",
+              "x": 264,
+              "y": 521,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_010",
+              "x": 528,
+              "y": 521,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_011",
+              "x": 792,
+              "y": 521,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_012",
+              "x": 1056,
+              "y": 521,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_013",
+              "x": 1320,
+              "y": 521,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_014",
+              "x": 1584,
+              "y": 521,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_015",
+              "x": 0,
+              "y": 1042,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_016",
+              "x": 264,
+              "y": 1042,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_017",
+              "x": 528,
+              "y": 1042,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_018",
+              "x": 792,
+              "y": 1042,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_019",
+              "x": 1056,
+              "y": 1042,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_020",
+              "x": 1320,
+              "y": 1042,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_021",
+              "x": 1584,
+              "y": 1042,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_022",
+              "x": 0,
+              "y": 1563,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "walk_023",
+              "x": 264,
+              "y": 1563,
+              "w": 263,
+              "h": 520,
+              "frameWidth": 263,
+              "frameHeight": 520,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "pixel-adventurers",
       "name": "Pixel Adventurers Sheet",
       "category": "characters",
@@ -938,6 +1875,2215 @@
               "y": 106,
               "w": 42,
               "h": 51
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rgs-stick-fighter",
+      "name": "RGS Stick Fighter",
+      "category": "characters",
+      "style": "vector-flat",
+      "tags": [
+        "blender-source",
+        "combo",
+        "fighter",
+        "martial-arts",
+        "stick-figure",
+        "walk-cycle"
+      ],
+      "source": "rgs-stick-figure",
+      "sheet": "assets/characters/rgs-stick-fighter/sheet.png",
+      "sheetSize": [
+        2020,
+        807
+      ],
+      "frameMetadata": {
+        "type": "sparrow-xml",
+        "file": "assets/characters/rgs-stick-fighter/sheet.xml"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "RGS_Dev",
+      "attribution": "Animated Stick Figure Character 2D Free CC0 by RGS_Dev (https://rgsdev.itch.io/animated-stick-figure-character-2d-free-cc0) — CC0-1.0",
+      "redistributionAllowed": true,
+      "placeholder": false,
+      "clips": [
+        {
+          "name": "idle",
+          "state": "idle",
+          "kind": "animation",
+          "fps": 8,
+          "loop": true,
+          "frameCount": 8,
+          "frameWidth": 512,
+          "frameHeight": 512,
+          "frames": [
+            {
+              "name": "idle_001",
+              "x": 1594,
+              "y": 180,
+              "w": 106,
+              "h": 160,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -200,
+              "offsetY": -220
+            },
+            {
+              "name": "idle_002",
+              "x": 754,
+              "y": 180,
+              "w": 106,
+              "h": 164,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -202,
+              "offsetY": -216
+            },
+            {
+              "name": "idle_003",
+              "x": 1479,
+              "y": 0,
+              "w": 106,
+              "h": 168,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -205,
+              "offsetY": -212
+            },
+            {
+              "name": "idle_004",
+              "x": 0,
+              "y": 180,
+              "w": 105,
+              "h": 166,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -208,
+              "offsetY": -214
+            },
+            {
+              "name": "idle_005",
+              "x": 1701,
+              "y": 180,
+              "w": 105,
+              "h": 160,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -209,
+              "offsetY": -220
+            },
+            {
+              "name": "idle_006",
+              "x": 1090,
+              "y": 180,
+              "w": 106,
+              "h": 163,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -208,
+              "offsetY": -217
+            },
+            {
+              "name": "idle_007",
+              "x": 1586,
+              "y": 0,
+              "w": 106,
+              "h": 168,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -205,
+              "offsetY": -212
+            },
+            {
+              "name": "idle_008",
+              "x": 106,
+              "y": 180,
+              "w": 106,
+              "h": 166,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -202,
+              "offsetY": -214
+            }
+          ]
+        },
+        {
+          "name": "walk",
+          "state": "walk",
+          "kind": "animation",
+          "fps": 12,
+          "loop": true,
+          "frameCount": 8,
+          "frameWidth": 512,
+          "frameHeight": 512,
+          "frames": [
+            {
+              "name": "walk_001",
+              "x": 521,
+              "y": 0,
+              "w": 105,
+              "h": 174,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -217,
+              "offsetY": -207
+            },
+            {
+              "name": "walk_002",
+              "x": 309,
+              "y": 0,
+              "w": 105,
+              "h": 176,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -217,
+              "offsetY": -204
+            },
+            {
+              "name": "walk_003",
+              "x": 627,
+              "y": 0,
+              "w": 106,
+              "h": 173,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -218,
+              "offsetY": -208
+            },
+            {
+              "name": "walk_004",
+              "x": 1693,
+              "y": 0,
+              "w": 105,
+              "h": 168,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -220,
+              "offsetY": -212
+            },
+            {
+              "name": "walk_005",
+              "x": 734,
+              "y": 0,
+              "w": 106,
+              "h": 173,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -218,
+              "offsetY": -208
+            },
+            {
+              "name": "walk_006",
+              "x": 415,
+              "y": 0,
+              "w": 105,
+              "h": 176,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -217,
+              "offsetY": -204
+            },
+            {
+              "name": "walk_007",
+              "x": 841,
+              "y": 0,
+              "w": 105,
+              "h": 172,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -217,
+              "offsetY": -208
+            },
+            {
+              "name": "walk_008",
+              "x": 1373,
+              "y": 0,
+              "w": 105,
+              "h": 170,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -217,
+              "offsetY": -211
+            }
+          ]
+        },
+        {
+          "name": "run",
+          "state": "run",
+          "kind": "animation",
+          "fps": 14,
+          "loop": true,
+          "frameCount": 8,
+          "frameWidth": 512,
+          "frameHeight": 512,
+          "frames": [
+            {
+              "name": "run_001",
+              "x": 213,
+              "y": 180,
+              "w": 108,
+              "h": 165,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -223,
+              "offsetY": -210
+            },
+            {
+              "name": "run_002",
+              "x": 1897,
+              "y": 507,
+              "w": 122,
+              "h": 146,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -209,
+              "offsetY": -204
+            },
+            {
+              "name": "run_003",
+              "x": 322,
+              "y": 180,
+              "w": 109,
+              "h": 165,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -222,
+              "offsetY": -208
+            },
+            {
+              "name": "run_004",
+              "x": 861,
+              "y": 180,
+              "w": 106,
+              "h": 164,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -225,
+              "offsetY": -215
+            },
+            {
+              "name": "run_005",
+              "x": 750,
+              "y": 347,
+              "w": 110,
+              "h": 157,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -221,
+              "offsetY": -210
+            },
+            {
+              "name": "run_006",
+              "x": 0,
+              "y": 664,
+              "w": 107,
+              "h": 142,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -224,
+              "offsetY": -204
+            },
+            {
+              "name": "run_007",
+              "x": 432,
+              "y": 180,
+              "w": 107,
+              "h": 165,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -224,
+              "offsetY": -208
+            },
+            {
+              "name": "run_008",
+              "x": 947,
+              "y": 0,
+              "w": 105,
+              "h": 171,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -226,
+              "offsetY": -211
+            }
+          ]
+        },
+        {
+          "name": "jump",
+          "state": "jump",
+          "kind": "animation",
+          "fps": 12,
+          "loop": false,
+          "frameCount": 5,
+          "frameWidth": 512,
+          "frameHeight": 512,
+          "frames": [
+            {
+              "name": "jump_001",
+              "x": 1422,
+              "y": 507,
+              "w": 106,
+              "h": 148,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -217,
+              "offsetY": -232
+            },
+            {
+              "name": "jump_002",
+              "x": 226,
+              "y": 0,
+              "w": 82,
+              "h": 177,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -214,
+              "offsetY": -204
+            },
+            {
+              "name": "jump_003",
+              "x": 1053,
+              "y": 0,
+              "w": 105,
+              "h": 171,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -209,
+              "offsetY": -211
+            },
+            {
+              "name": "jump_004",
+              "x": 803,
+              "y": 664,
+              "w": 104,
+              "h": 125,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -218,
+              "offsetY": -255
+            },
+            {
+              "name": "jump_005",
+              "x": 1529,
+              "y": 507,
+              "w": 104,
+              "h": 148,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -213,
+              "offsetY": -232
+            }
+          ]
+        },
+        {
+          "name": "slide",
+          "state": "slide",
+          "kind": "animation",
+          "fps": 14,
+          "loop": false,
+          "frameCount": 8,
+          "frameWidth": 512,
+          "frameHeight": 512,
+          "frames": [
+            {
+              "name": "slide_001",
+              "x": 231,
+              "y": 664,
+              "w": 142,
+              "h": 128,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -128,
+              "offsetY": -254
+            },
+            {
+              "name": "slide_002",
+              "x": 374,
+              "y": 664,
+              "w": 142,
+              "h": 128,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -128,
+              "offsetY": -254
+            },
+            {
+              "name": "slide_003",
+              "x": 517,
+              "y": 664,
+              "w": 142,
+              "h": 128,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -128,
+              "offsetY": -254
+            },
+            {
+              "name": "slide_004",
+              "x": 660,
+              "y": 664,
+              "w": 142,
+              "h": 128,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -128,
+              "offsetY": -254
+            },
+            {
+              "name": "slide_005",
+              "x": 108,
+              "y": 664,
+              "w": 122,
+              "h": 138,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -151,
+              "offsetY": -244
+            },
+            {
+              "name": "slide_006",
+              "x": 1781,
+              "y": 507,
+              "w": 115,
+              "h": 147,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -178,
+              "offsetY": -235
+            },
+            {
+              "name": "slide_007",
+              "x": 1807,
+              "y": 180,
+              "w": 107,
+              "h": 160,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -191,
+              "offsetY": -221
+            },
+            {
+              "name": "slide_008",
+              "x": 1159,
+              "y": 0,
+              "w": 106,
+              "h": 171,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -206,
+              "offsetY": -209
+            }
+          ]
+        },
+        {
+          "name": "dash",
+          "state": "dash",
+          "kind": "animation",
+          "fps": 16,
+          "loop": false,
+          "frameCount": 6,
+          "frameWidth": 512,
+          "frameHeight": 512,
+          "frames": [
+            {
+              "name": "dash_001",
+              "x": 1634,
+              "y": 507,
+              "w": 146,
+              "h": 148,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -213,
+              "offsetY": -233
+            },
+            {
+              "name": "dash_002",
+              "x": 1278,
+              "y": 507,
+              "w": 143,
+              "h": 149,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -216,
+              "offsetY": -232
+            },
+            {
+              "name": "dash_003",
+              "x": 1029,
+              "y": 507,
+              "w": 134,
+              "h": 151,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -222,
+              "offsetY": -230
+            },
+            {
+              "name": "dash_004",
+              "x": 861,
+              "y": 347,
+              "w": 119,
+              "h": 157,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -227,
+              "offsetY": -223
+            },
+            {
+              "name": "dash_005",
+              "x": 1905,
+              "y": 0,
+              "w": 105,
+              "h": 167,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -222,
+              "offsetY": -213
+            },
+            {
+              "name": "dash_006",
+              "x": 1266,
+              "y": 0,
+              "w": 106,
+              "h": 171,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -206,
+              "offsetY": -209
+            }
+          ]
+        },
+        {
+          "name": "climb",
+          "state": "climb",
+          "kind": "animation",
+          "fps": 8,
+          "loop": true,
+          "frameCount": 4,
+          "frameWidth": 512,
+          "frameHeight": 512,
+          "frames": [
+            {
+              "name": "climb_001",
+              "x": 112,
+              "y": 0,
+              "w": 113,
+              "h": 178,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -209,
+              "offsetY": -210
+            },
+            {
+              "name": "climb_002",
+              "x": 540,
+              "y": 180,
+              "w": 106,
+              "h": 165,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -209,
+              "offsetY": -209
+            },
+            {
+              "name": "climb_003",
+              "x": 0,
+              "y": 0,
+              "w": 111,
+              "h": 179,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -202,
+              "offsetY": -209
+            },
+            {
+              "name": "climb_004",
+              "x": 647,
+              "y": 180,
+              "w": 106,
+              "h": 165,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -209,
+              "offsetY": -209
+            }
+          ]
+        },
+        {
+          "name": "hit",
+          "state": "hurt",
+          "kind": "animation",
+          "fps": 12,
+          "loop": false,
+          "frameCount": 4,
+          "frameWidth": 512,
+          "frameHeight": 512,
+          "frames": [
+            {
+              "name": "hit_001",
+              "x": 1805,
+              "y": 347,
+              "w": 105,
+              "h": 156,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -183,
+              "offsetY": -224
+            },
+            {
+              "name": "hit_002",
+              "x": 981,
+              "y": 347,
+              "w": 105,
+              "h": 157,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -187,
+              "offsetY": -223
+            },
+            {
+              "name": "hit_003",
+              "x": 216,
+              "y": 347,
+              "w": 105,
+              "h": 158,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -196,
+              "offsetY": -222
+            },
+            {
+              "name": "hit_004",
+              "x": 322,
+              "y": 347,
+              "w": 106,
+              "h": 158,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -200,
+              "offsetY": -222
+            }
+          ]
+        },
+        {
+          "name": "death",
+          "state": "death",
+          "kind": "animation",
+          "fps": 12,
+          "loop": false,
+          "frameCount": 10,
+          "frameWidth": 512,
+          "frameHeight": 512,
+          "frames": [
+            {
+              "name": "death_001",
+              "x": 514,
+              "y": 507,
+              "w": 111,
+              "h": 153,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -248,
+              "offsetY": -219
+            },
+            {
+              "name": "death_002",
+              "x": 1164,
+              "y": 507,
+              "w": 113,
+              "h": 150,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -226,
+              "offsetY": -175
+            },
+            {
+              "name": "death_003",
+              "x": 1799,
+              "y": 0,
+              "w": 105,
+              "h": 168,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -224,
+              "offsetY": -163
+            },
+            {
+              "name": "death_004",
+              "x": 1319,
+              "y": 180,
+              "w": 108,
+              "h": 161,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -197,
+              "offsetY": -168
+            },
+            {
+              "name": "death_005",
+              "x": 908,
+              "y": 664,
+              "w": 139,
+              "h": 122,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -167,
+              "offsetY": -223
+            },
+            {
+              "name": "death_006",
+              "x": 1384,
+              "y": 664,
+              "w": 163,
+              "h": 105,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -162,
+              "offsetY": -303
+            },
+            {
+              "name": "death_007",
+              "x": 1725,
+              "y": 664,
+              "w": 151,
+              "h": 104,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -174,
+              "offsetY": -275
+            },
+            {
+              "name": "death_008",
+              "x": 1048,
+              "y": 664,
+              "w": 163,
+              "h": 109,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -165,
+              "offsetY": -278
+            },
+            {
+              "name": "death_009",
+              "x": 1212,
+              "y": 664,
+              "w": 171,
+              "h": 106,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -161,
+              "offsetY": -300
+            },
+            {
+              "name": "death_010",
+              "x": 1548,
+              "y": 664,
+              "w": 176,
+              "h": 105,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -161,
+              "offsetY": -309
+            }
+          ]
+        },
+        {
+          "name": "air-attack",
+          "state": "special",
+          "kind": "animation",
+          "fps": 12,
+          "loop": false,
+          "frameCount": 2,
+          "frameWidth": 512,
+          "frameHeight": 512,
+          "frames": [
+            {
+              "name": "air_attack_001",
+              "x": 1087,
+              "y": 347,
+              "w": 120,
+              "h": 157,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -195,
+              "offsetY": -217
+            },
+            {
+              "name": "air_attack_002",
+              "x": 1208,
+              "y": 347,
+              "w": 120,
+              "h": 157,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -195,
+              "offsetY": -217
+            }
+          ]
+        },
+        {
+          "name": "combo",
+          "state": "punch",
+          "kind": "animation",
+          "fps": 14,
+          "loop": false,
+          "frameCount": 19,
+          "frameWidth": 512,
+          "frameHeight": 512,
+          "frames": [
+            {
+              "name": "combo_001",
+              "x": 871,
+              "y": 507,
+              "w": 157,
+              "h": 152,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -196,
+              "offsetY": -228
+            },
+            {
+              "name": "combo_002",
+              "x": 626,
+              "y": 507,
+              "w": 137,
+              "h": 153,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -197,
+              "offsetY": -227
+            },
+            {
+              "name": "combo_003",
+              "x": 172,
+              "y": 507,
+              "w": 127,
+              "h": 155,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -198,
+              "offsetY": -225
+            },
+            {
+              "name": "combo_004",
+              "x": 1329,
+              "y": 347,
+              "w": 107,
+              "h": 157,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -200,
+              "offsetY": -223
+            },
+            {
+              "name": "combo_005",
+              "x": 429,
+              "y": 347,
+              "w": 106,
+              "h": 158,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -200,
+              "offsetY": -222
+            },
+            {
+              "name": "combo_006",
+              "x": 1428,
+              "y": 180,
+              "w": 165,
+              "h": 161,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -171,
+              "offsetY": -224
+            },
+            {
+              "name": "combo_007",
+              "x": 1437,
+              "y": 347,
+              "w": 155,
+              "h": 157,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -173,
+              "offsetY": -223
+            },
+            {
+              "name": "combo_008",
+              "x": 0,
+              "y": 347,
+              "w": 109,
+              "h": 159,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -180,
+              "offsetY": -221
+            },
+            {
+              "name": "combo_009",
+              "x": 1915,
+              "y": 180,
+              "w": 105,
+              "h": 160,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -190,
+              "offsetY": -220
+            },
+            {
+              "name": "combo_010",
+              "x": 110,
+              "y": 347,
+              "w": 105,
+              "h": 159,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -198,
+              "offsetY": -221
+            },
+            {
+              "name": "combo_011",
+              "x": 536,
+              "y": 347,
+              "w": 106,
+              "h": 158,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -200,
+              "offsetY": -222
+            },
+            {
+              "name": "combo_012",
+              "x": 643,
+              "y": 347,
+              "w": 106,
+              "h": 158,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -200,
+              "offsetY": -222
+            },
+            {
+              "name": "combo_013",
+              "x": 300,
+              "y": 507,
+              "w": 106,
+              "h": 155,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -198,
+              "offsetY": -225
+            },
+            {
+              "name": "combo_014",
+              "x": 407,
+              "y": 507,
+              "w": 106,
+              "h": 155,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -203,
+              "offsetY": -225
+            },
+            {
+              "name": "combo_015",
+              "x": 1911,
+              "y": 347,
+              "w": 105,
+              "h": 156,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -208,
+              "offsetY": -224
+            },
+            {
+              "name": "combo_016",
+              "x": 0,
+              "y": 507,
+              "w": 171,
+              "h": 156,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -198,
+              "offsetY": -224
+            },
+            {
+              "name": "combo_017",
+              "x": 764,
+              "y": 507,
+              "w": 106,
+              "h": 153,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -223,
+              "offsetY": -227
+            },
+            {
+              "name": "combo_018",
+              "x": 1593,
+              "y": 347,
+              "w": 105,
+              "h": 157,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -221,
+              "offsetY": -223
+            },
+            {
+              "name": "combo_019",
+              "x": 1699,
+              "y": 347,
+              "w": 105,
+              "h": 157,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -221,
+              "offsetY": -223
+            }
+          ]
+        },
+        {
+          "name": "wall-slide",
+          "state": "block",
+          "kind": "animation",
+          "fps": 8,
+          "loop": true,
+          "frameCount": 2,
+          "frameWidth": 512,
+          "frameHeight": 512,
+          "frames": [
+            {
+              "name": "wallslide_001",
+              "x": 968,
+              "y": 180,
+              "w": 121,
+              "h": 164,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -181,
+              "offsetY": -213
+            },
+            {
+              "name": "wallslide_002",
+              "x": 1197,
+              "y": 180,
+              "w": 121,
+              "h": 162,
+              "frameWidth": 512,
+              "frameHeight": 512,
+              "offsetX": -181,
+              "offsetY": -215
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stickman-runner",
+      "name": "Stick Man Runner",
+      "category": "characters",
+      "style": "vector-flat",
+      "tags": [
+        "locomotion",
+        "run-cycle",
+        "runner",
+        "stick-figure"
+      ],
+      "source": "stickman-runner",
+      "sheet": "assets/characters/stickman-runner/sheet.png",
+      "sheetSize": [
+        662,
+        101
+      ],
+      "frameMetadata": {
+        "type": "sparrow-xml",
+        "file": "assets/characters/stickman-runner/sheet.xml"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "Freakerbob",
+      "attribution": "Stick man runner by Freakerbob (https://opengameart.org/content/stick-man-runner) — CC0-1.0",
+      "redistributionAllowed": true,
+      "placeholder": false,
+      "clips": [
+        {
+          "name": "run",
+          "state": "run",
+          "kind": "animation",
+          "fps": 12,
+          "loop": true,
+          "frameCount": 12,
+          "frameWidth": 73,
+          "frameHeight": 100,
+          "frames": [
+            {
+              "name": "run_001",
+              "x": 137,
+              "y": 0,
+              "w": 63,
+              "h": 99,
+              "frameWidth": 63,
+              "frameHeight": 99,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "run_002",
+              "x": 201,
+              "y": 0,
+              "w": 52,
+              "h": 99,
+              "frameWidth": 63,
+              "frameHeight": 100,
+              "offsetX": -5,
+              "offsetY": -1
+            },
+            {
+              "name": "run_003",
+              "x": 254,
+              "y": 0,
+              "w": 44,
+              "h": 99,
+              "frameWidth": 44,
+              "frameHeight": 99,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "run_004",
+              "x": 299,
+              "y": 0,
+              "w": 39,
+              "h": 99,
+              "frameWidth": 39,
+              "frameHeight": 99,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "run_005",
+              "x": 339,
+              "y": 0,
+              "w": 38,
+              "h": 99,
+              "frameWidth": 38,
+              "frameHeight": 99,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "run_006",
+              "x": 378,
+              "y": 0,
+              "w": 42,
+              "h": 99,
+              "frameWidth": 42,
+              "frameHeight": 99,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "run_007",
+              "x": 421,
+              "y": 0,
+              "w": 43,
+              "h": 99,
+              "frameWidth": 43,
+              "frameHeight": 99,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "run_008",
+              "x": 465,
+              "y": 0,
+              "w": 58,
+              "h": 99,
+              "frameWidth": 58,
+              "frameHeight": 99,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "run_009",
+              "x": 598,
+              "y": 0,
+              "w": 64,
+              "h": 96,
+              "frameWidth": 64,
+              "frameHeight": 96,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "run_010",
+              "x": 0,
+              "y": 0,
+              "w": 63,
+              "h": 100,
+              "frameWidth": 63,
+              "frameHeight": 100,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "run_011",
+              "x": 64,
+              "y": 0,
+              "w": 72,
+              "h": 100,
+              "frameWidth": 72,
+              "frameHeight": 100,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "run_012",
+              "x": 524,
+              "y": 0,
+              "w": 73,
+              "h": 99,
+              "frameWidth": 73,
+              "frameHeight": 99,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "streets-brawler-girl",
+      "name": "Streets of Fight — Brawler Girl",
+      "category": "characters",
+      "style": "16-bit-pixel",
+      "tags": [
+        "beat-em-up",
+        "brawler",
+        "fighter",
+        "kick",
+        "martial-arts",
+        "punch"
+      ],
+      "source": "streets-of-fight",
+      "sheet": "assets/characters/streets-brawler-girl/sheet.png",
+      "sheetSize": [
+        1105,
+        49
+      ],
+      "frameMetadata": {
+        "type": "sparrow-xml",
+        "file": "assets/characters/streets-brawler-girl/sheet.xml"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "ansimuz",
+      "attribution": "Streets of Fight by ansimuz (https://opengameart.org/content/streets-of-fight) — CC0-1.0",
+      "redistributionAllowed": true,
+      "placeholder": false,
+      "clips": [
+        {
+          "name": "idle",
+          "state": "idle",
+          "kind": "animation",
+          "fps": 10,
+          "loop": true,
+          "frameCount": 4,
+          "frameWidth": 96,
+          "frameHeight": 63,
+          "frames": [
+            {
+              "name": "idle_001",
+              "x": 107,
+              "y": 0,
+              "w": 24,
+              "h": 46,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -33,
+              "offsetY": -17
+            },
+            {
+              "name": "idle_002",
+              "x": 273,
+              "y": 0,
+              "w": 24,
+              "h": 45,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -33,
+              "offsetY": -18
+            },
+            {
+              "name": "idle_003",
+              "x": 467,
+              "y": 0,
+              "w": 25,
+              "h": 44,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -32,
+              "offsetY": -19
+            },
+            {
+              "name": "idle_004",
+              "x": 298,
+              "y": 0,
+              "w": 24,
+              "h": 45,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -33,
+              "offsetY": -18
+            }
+          ]
+        },
+        {
+          "name": "walk",
+          "state": "walk",
+          "kind": "animation",
+          "fps": 12,
+          "loop": true,
+          "frameCount": 10,
+          "frameWidth": 96,
+          "frameHeight": 63,
+          "frames": [
+            {
+              "name": "walk_001",
+              "x": 157,
+              "y": 0,
+              "w": 22,
+              "h": 46,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -37,
+              "offsetY": -17
+            },
+            {
+              "name": "walk_002",
+              "x": 180,
+              "y": 0,
+              "w": 19,
+              "h": 46,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -38,
+              "offsetY": -17
+            },
+            {
+              "name": "walk_003",
+              "x": 200,
+              "y": 0,
+              "w": 14,
+              "h": 46,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -39,
+              "offsetY": -17
+            },
+            {
+              "name": "walk_004",
+              "x": 37,
+              "y": 0,
+              "w": 17,
+              "h": 47,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -39,
+              "offsetY": -16
+            },
+            {
+              "name": "walk_005",
+              "x": 55,
+              "y": 0,
+              "w": 18,
+              "h": 47,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -39,
+              "offsetY": -16
+            },
+            {
+              "name": "walk_006",
+              "x": 215,
+              "y": 0,
+              "w": 24,
+              "h": 46,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -37,
+              "offsetY": -17
+            },
+            {
+              "name": "walk_007",
+              "x": 240,
+              "y": 0,
+              "w": 17,
+              "h": 46,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -39,
+              "offsetY": -17
+            },
+            {
+              "name": "walk_008",
+              "x": 258,
+              "y": 0,
+              "w": 14,
+              "h": 46,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -39,
+              "offsetY": -17
+            },
+            {
+              "name": "walk_009",
+              "x": 74,
+              "y": 0,
+              "w": 14,
+              "h": 47,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -40,
+              "offsetY": -16
+            },
+            {
+              "name": "walk_010",
+              "x": 89,
+              "y": 0,
+              "w": 17,
+              "h": 47,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -39,
+              "offsetY": -16
+            }
+          ]
+        },
+        {
+          "name": "jump",
+          "state": "jump",
+          "kind": "animation",
+          "fps": 12,
+          "loop": false,
+          "frameCount": 4,
+          "frameWidth": 96,
+          "frameHeight": 63,
+          "frames": [
+            {
+              "name": "jump_001",
+              "x": 708,
+              "y": 0,
+              "w": 22,
+              "h": 39,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -34,
+              "offsetY": -24
+            },
+            {
+              "name": "jump_002",
+              "x": 493,
+              "y": 0,
+              "w": 16,
+              "h": 44,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -37,
+              "offsetY": -18
+            },
+            {
+              "name": "jump_003",
+              "x": 447,
+              "y": 0,
+              "w": 19,
+              "h": 45,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -34,
+              "offsetY": -17
+            },
+            {
+              "name": "jump_004",
+              "x": 1002,
+              "y": 0,
+              "w": 26,
+              "h": 33,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -29,
+              "offsetY": -20
+            }
+          ]
+        },
+        {
+          "name": "jab",
+          "state": "punch",
+          "kind": "animation",
+          "fps": 14,
+          "loop": false,
+          "frameCount": 3,
+          "frameWidth": 96,
+          "frameHeight": 63,
+          "frames": [
+            {
+              "name": "jab_001",
+              "x": 323,
+              "y": 0,
+              "w": 26,
+              "h": 45,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -33,
+              "offsetY": -18
+            },
+            {
+              "name": "jab_002",
+              "x": 350,
+              "y": 0,
+              "w": 50,
+              "h": 45,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -32,
+              "offsetY": -18
+            },
+            {
+              "name": "jab_003",
+              "x": 401,
+              "y": 0,
+              "w": 45,
+              "h": 45,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -32,
+              "offsetY": -18
+            }
+          ]
+        },
+        {
+          "name": "punch",
+          "state": "punch",
+          "kind": "animation",
+          "fps": 14,
+          "loop": false,
+          "frameCount": 3,
+          "frameWidth": 96,
+          "frameHeight": 63,
+          "frames": [
+            {
+              "name": "punch_001",
+              "x": 510,
+              "y": 0,
+              "w": 27,
+              "h": 44,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -35,
+              "offsetY": -19
+            },
+            {
+              "name": "punch_002",
+              "x": 561,
+              "y": 0,
+              "w": 46,
+              "h": 43,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -38,
+              "offsetY": -20
+            },
+            {
+              "name": "punch_003",
+              "x": 608,
+              "y": 0,
+              "w": 43,
+              "h": 43,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -38,
+              "offsetY": -20
+            }
+          ]
+        },
+        {
+          "name": "kick",
+          "state": "kick",
+          "kind": "animation",
+          "fps": 14,
+          "loop": false,
+          "frameCount": 5,
+          "frameWidth": 96,
+          "frameHeight": 63,
+          "frames": [
+            {
+              "name": "kick_001",
+              "x": 132,
+              "y": 0,
+              "w": 24,
+              "h": 46,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -33,
+              "offsetY": -17
+            },
+            {
+              "name": "kick_002",
+              "x": 538,
+              "y": 0,
+              "w": 22,
+              "h": 43,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -29,
+              "offsetY": -20
+            },
+            {
+              "name": "kick_003",
+              "x": 677,
+              "y": 0,
+              "w": 30,
+              "h": 41,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -22,
+              "offsetY": -22
+            },
+            {
+              "name": "kick_004",
+              "x": 756,
+              "y": 0,
+              "w": 48,
+              "h": 38,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -30,
+              "offsetY": -25
+            },
+            {
+              "name": "kick_005",
+              "x": 805,
+              "y": 0,
+              "w": 41,
+              "h": 38,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -32,
+              "offsetY": -25
+            }
+          ]
+        },
+        {
+          "name": "dive-kick",
+          "state": "kick",
+          "kind": "animation",
+          "fps": 14,
+          "loop": false,
+          "frameCount": 5,
+          "frameWidth": 96,
+          "frameHeight": 63,
+          "frames": [
+            {
+              "name": "dive-kick_001",
+              "x": 932,
+              "y": 0,
+              "w": 26,
+              "h": 33,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -29,
+              "offsetY": -20
+            },
+            {
+              "name": "dive-kick_002",
+              "x": 731,
+              "y": 0,
+              "w": 24,
+              "h": 38,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -36,
+              "offsetY": -16
+            },
+            {
+              "name": "dive-kick_003",
+              "x": 876,
+              "y": 0,
+              "w": 26,
+              "h": 35,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -37,
+              "offsetY": -19
+            },
+            {
+              "name": "dive-kick_004",
+              "x": 1056,
+              "y": 0,
+              "w": 49,
+              "h": 32,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -36,
+              "offsetY": -18
+            },
+            {
+              "name": "dive-kick_005",
+              "x": 959,
+              "y": 0,
+              "w": 42,
+              "h": 33,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -33,
+              "offsetY": -17
+            }
+          ]
+        },
+        {
+          "name": "jump-kick",
+          "state": "kick",
+          "kind": "animation",
+          "fps": 14,
+          "loop": false,
+          "frameCount": 3,
+          "frameWidth": 96,
+          "frameHeight": 63,
+          "frames": [
+            {
+              "name": "jump-kick_001",
+              "x": 1029,
+              "y": 0,
+              "w": 26,
+              "h": 33,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -29,
+              "offsetY": -20
+            },
+            {
+              "name": "jump-kick_002",
+              "x": 0,
+              "y": 0,
+              "w": 36,
+              "h": 48,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -33,
+              "offsetY": -10
+            },
+            {
+              "name": "jump-kick_003",
+              "x": 652,
+              "y": 0,
+              "w": 24,
+              "h": 42,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -38,
+              "offsetY": -14
+            }
+          ]
+        },
+        {
+          "name": "hurt",
+          "state": "hurt",
+          "kind": "animation",
+          "fps": 10,
+          "loop": false,
+          "frameCount": 2,
+          "frameWidth": 96,
+          "frameHeight": 63,
+          "frames": [
+            {
+              "name": "hurt_001",
+              "x": 847,
+              "y": 0,
+              "w": 28,
+              "h": 37,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -30,
+              "offsetY": -26
+            },
+            {
+              "name": "hurt_002",
+              "x": 903,
+              "y": 0,
+              "w": 28,
+              "h": 34,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -30,
+              "offsetY": -29
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "streets-enemy-punk",
+      "name": "Streets of Fight — Punk Enemy",
+      "category": "characters",
+      "style": "16-bit-pixel",
+      "tags": [
+        "beat-em-up",
+        "brawler",
+        "enemy",
+        "martial-arts",
+        "punch"
+      ],
+      "source": "streets-of-fight",
+      "sheet": "assets/characters/streets-enemy-punk/sheet.png",
+      "sheetSize": [
+        502,
+        53
+      ],
+      "frameMetadata": {
+        "type": "sparrow-xml",
+        "file": "assets/characters/streets-enemy-punk/sheet.xml"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "ansimuz",
+      "attribution": "Streets of Fight by ansimuz (https://opengameart.org/content/streets-of-fight) — CC0-1.0",
+      "redistributionAllowed": true,
+      "placeholder": false,
+      "clips": [
+        {
+          "name": "idle",
+          "state": "idle",
+          "kind": "animation",
+          "fps": 10,
+          "loop": true,
+          "frameCount": 4,
+          "frameWidth": 96,
+          "frameHeight": 63,
+          "frames": [
+            {
+              "name": "idle_001",
+              "x": 104,
+              "y": 0,
+              "w": 28,
+              "h": 50,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -31,
+              "offsetY": -13
+            },
+            {
+              "name": "idle_002",
+              "x": 224,
+              "y": 0,
+              "w": 28,
+              "h": 49,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -31,
+              "offsetY": -14
+            },
+            {
+              "name": "idle_003",
+              "x": 282,
+              "y": 0,
+              "w": 28,
+              "h": 48,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -31,
+              "offsetY": -15
+            },
+            {
+              "name": "idle_004",
+              "x": 253,
+              "y": 0,
+              "w": 28,
+              "h": 49,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -31,
+              "offsetY": -14
+            }
+          ]
+        },
+        {
+          "name": "walk",
+          "state": "walk",
+          "kind": "animation",
+          "fps": 10,
+          "loop": true,
+          "frameCount": 4,
+          "frameWidth": 96,
+          "frameHeight": 63,
+          "frames": [
+            {
+              "name": "walk_001",
+              "x": 162,
+              "y": 0,
+              "w": 28,
+              "h": 50,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -31,
+              "offsetY": -13
+            },
+            {
+              "name": "walk_002",
+              "x": 50,
+              "y": 0,
+              "w": 24,
+              "h": 51,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -31,
+              "offsetY": -12
+            },
+            {
+              "name": "walk_003",
+              "x": 0,
+              "y": 0,
+              "w": 24,
+              "h": 52,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -31,
+              "offsetY": -11
+            },
+            {
+              "name": "walk_004",
+              "x": 25,
+              "y": 0,
+              "w": 24,
+              "h": 52,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -31,
+              "offsetY": -11
+            }
+          ]
+        },
+        {
+          "name": "punch",
+          "state": "punch",
+          "kind": "animation",
+          "fps": 12,
+          "loop": false,
+          "frameCount": 3,
+          "frameWidth": 96,
+          "frameHeight": 63,
+          "frames": [
+            {
+              "name": "punch_001",
+              "x": 133,
+              "y": 0,
+              "w": 28,
+              "h": 50,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -31,
+              "offsetY": -13
+            },
+            {
+              "name": "punch_002",
+              "x": 311,
+              "y": 0,
+              "w": 28,
+              "h": 48,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -34,
+              "offsetY": -15
+            },
+            {
+              "name": "punch_003",
+              "x": 340,
+              "y": 0,
+              "w": 49,
+              "h": 45,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -11,
+              "offsetY": -18
+            }
+          ]
+        },
+        {
+          "name": "hurt",
+          "state": "hurt",
+          "kind": "animation",
+          "fps": 10,
+          "loop": false,
+          "frameCount": 4,
+          "frameWidth": 96,
+          "frameHeight": 63,
+          "frames": [
+            {
+              "name": "hurt_001",
+              "x": 75,
+              "y": 0,
+              "w": 28,
+              "h": 50,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -31,
+              "offsetY": -13
+            },
+            {
+              "name": "hurt_002",
+              "x": 191,
+              "y": 0,
+              "w": 32,
+              "h": 49,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -32,
+              "offsetY": -14
+            },
+            {
+              "name": "hurt_003",
+              "x": 390,
+              "y": 0,
+              "w": 49,
+              "h": 40,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -23,
+              "offsetY": -22
+            },
+            {
+              "name": "hurt_004",
+              "x": 440,
+              "y": 0,
+              "w": 62,
+              "h": 16,
+              "frameWidth": 96,
+              "frameHeight": 63,
+              "offsetX": -12,
+              "offsetY": -47
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vander-fighter-sheet",
+      "name": "Vander Fighter Reference Sheets",
+      "category": "characters",
+      "style": "8-bit-pixel",
+      "tags": [
+        "character-base",
+        "fighter",
+        "pixel",
+        "reference-sheet"
+      ],
+      "source": "vander-spritesheet",
+      "sheet": "assets/characters/vander-fighter-sheet/sheet.png",
+      "sheetSize": [
+        1777,
+        410
+      ],
+      "frameMetadata": {
+        "type": "sparrow-xml",
+        "file": "assets/characters/vander-fighter-sheet/sheet.xml"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "Vander96",
+      "attribution": "Spritesheet of a man CC0 by Vander96 (https://opengameart.org/content/spritesheet-of-a-man-cc0) — CC0-1.0",
+      "redistributionAllowed": true,
+      "placeholder": false,
+      "clips": [
+        {
+          "name": "v1",
+          "state": "sprite",
+          "kind": "sprite",
+          "fps": 0,
+          "loop": false,
+          "frameCount": 1,
+          "frameWidth": 600,
+          "frameHeight": 192,
+          "frames": [
+            {
+              "name": "v1_001",
+              "x": 576,
+              "y": 0,
+              "w": 600,
+              "h": 192,
+              "frameWidth": 600,
+              "frameHeight": 192,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        },
+        {
+          "name": "v2",
+          "state": "sprite",
+          "kind": "sprite",
+          "fps": 0,
+          "loop": false,
+          "frameCount": 1,
+          "frameWidth": 600,
+          "frameHeight": 192,
+          "frames": [
+            {
+              "name": "v2_001",
+              "x": 1177,
+              "y": 0,
+              "w": 600,
+              "h": 192,
+              "frameWidth": 600,
+              "frameHeight": 192,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        },
+        {
+          "name": "v3",
+          "state": "sprite",
+          "kind": "sprite",
+          "fps": 0,
+          "loop": false,
+          "frameCount": 1,
+          "frameWidth": 600,
+          "frameHeight": 192,
+          "frames": [
+            {
+              "name": "v3_001",
+              "x": 0,
+              "y": 217,
+              "w": 600,
+              "h": 192,
+              "frameWidth": 600,
+              "frameHeight": 192,
+              "offsetX": 0,
+              "offsetY": 0
+            }
+          ]
+        },
+        {
+          "name": "v4",
+          "state": "sprite",
+          "kind": "sprite",
+          "fps": 0,
+          "loop": false,
+          "frameCount": 1,
+          "frameWidth": 575,
+          "frameHeight": 216,
+          "frames": [
+            {
+              "name": "v4_001",
+              "x": 0,
+              "y": 0,
+              "w": 575,
+              "h": 216,
+              "frameWidth": 575,
+              "frameHeight": 216,
+              "offsetX": 0,
+              "offsetY": 0
             }
           ]
         }
@@ -1516,6 +4662,181 @@
               "y": 430,
               "w": 70,
               "h": 70
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mustermann-energy-burst",
+      "name": "Mustermann Energy Burst",
+      "category": "effects",
+      "style": "flat-vector",
+      "tags": [
+        "burst",
+        "effect",
+        "energy",
+        "gif-source",
+        "special"
+      ],
+      "source": "mustermann-karate",
+      "sheet": "assets/effects/mustermann-energy-burst/sheet.png",
+      "sheetSize": [
+        1975,
+        506
+      ],
+      "frameMetadata": {
+        "type": "sparrow-xml",
+        "file": "assets/effects/mustermann-energy-burst/sheet.xml"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": "Puffolotti",
+      "attribution": "Fighting character template Mustermann 2 (A001AAAA001) (karate) by Puffolotti (https://opengameart.org/content/fighting-character-template-mustermann-2-a001aaaa001-karate) — CC0-1.0",
+      "redistributionAllowed": true,
+      "placeholder": false,
+      "clips": [
+        {
+          "name": "burst",
+          "state": "explosion",
+          "kind": "animation",
+          "fps": 10,
+          "loop": false,
+          "frameCount": 12,
+          "frameWidth": 246,
+          "frameHeight": 252,
+          "frames": [
+            {
+              "name": "burst_001",
+              "x": 0,
+              "y": 0,
+              "w": 246,
+              "h": 252,
+              "frameWidth": 246,
+              "frameHeight": 252,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "burst_002",
+              "x": 247,
+              "y": 0,
+              "w": 246,
+              "h": 252,
+              "frameWidth": 246,
+              "frameHeight": 252,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "burst_003",
+              "x": 494,
+              "y": 0,
+              "w": 246,
+              "h": 252,
+              "frameWidth": 246,
+              "frameHeight": 252,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "burst_004",
+              "x": 741,
+              "y": 0,
+              "w": 246,
+              "h": 252,
+              "frameWidth": 246,
+              "frameHeight": 252,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "burst_005",
+              "x": 988,
+              "y": 0,
+              "w": 246,
+              "h": 252,
+              "frameWidth": 246,
+              "frameHeight": 252,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "burst_006",
+              "x": 1235,
+              "y": 0,
+              "w": 246,
+              "h": 252,
+              "frameWidth": 246,
+              "frameHeight": 252,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "burst_007",
+              "x": 1482,
+              "y": 0,
+              "w": 246,
+              "h": 252,
+              "frameWidth": 246,
+              "frameHeight": 252,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "burst_008",
+              "x": 1729,
+              "y": 0,
+              "w": 246,
+              "h": 252,
+              "frameWidth": 246,
+              "frameHeight": 252,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "burst_009",
+              "x": 0,
+              "y": 253,
+              "w": 246,
+              "h": 252,
+              "frameWidth": 246,
+              "frameHeight": 252,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "burst_010",
+              "x": 247,
+              "y": 253,
+              "w": 246,
+              "h": 252,
+              "frameWidth": 246,
+              "frameHeight": 252,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "burst_011",
+              "x": 494,
+              "y": 253,
+              "w": 246,
+              "h": 252,
+              "frameWidth": 246,
+              "frameHeight": 252,
+              "offsetX": 0,
+              "offsetY": 0
+            },
+            {
+              "name": "burst_012",
+              "x": 741,
+              "y": 253,
+              "w": 246,
+              "h": 252,
+              "frameWidth": 246,
+              "frameHeight": 252,
+              "offsetX": 0,
+              "offsetY": 0
             }
           ]
         }
