@@ -128,3 +128,8 @@ modified and redistributed, including commercially, without attribution. Credit
 to Kenney (kenney.nl) is appreciated but not required. Per-pack notices and
 source pages are in `licenses/` and `manifests/sources.json`; the import rules
 are in `docs/ASSET_IMPORT_AND_LICENSES.md`.
+
+Looking for stick figures, martial-arts moves or fight choreography? The
+research report [`docs/STICK_FIGURE_MARTIAL_ARTS_SOURCES.md`](docs/STICK_FIGURE_MARTIAL_ARTS_SOURCES.md)
+catalogues 22 verified sources (8 of them CC0) with the licence evidence quoted
+from each item page.

@@ -47,11 +47,26 @@ CC0 1.0 deed: https://creativecommons.org/publicdomain/zero/1.0/
 Attribution is not required by CC0. The library records creator and source on
 every asset anyway (`creator`, `attribution`, `source`), so credit stays easy.
 
+## Verified CC0 candidates not yet imported
+
+- **RGS_Dev — Animated Stick Figure Character 2D Free CC0** — a 512×512 stick
+  figure with idle, walk, run, jump, slide, dash, climb, damage, death, air
+  attack, wall slide and attack-combo animations, plus a `.blend` source. The
+  licence is CC0 on both itch.io and OpenGameArt, so it is eligible for import;
+  the files are simply not mirrored here yet. (An earlier note in this file
+  wrongly assumed the pack forbade redistribution — the item pages say CC0.)
+- 21 further stick-figure and martial-arts sources, with the licence evidence
+  read from each item page, are catalogued in
+  [`docs/STICK_FIGURE_MARTIAL_ARTS_SOURCES.md`](STICK_FIGURE_MARTIAL_ARTS_SOURCES.md)
+  and [`manifests/stick-figure-martial-arts-sources.json`](../manifests/stick-figure-martial-arts-sources.json).
+
 ## Deliberately not imported
 
-- **RGS Dev animated stick figures** — the download is free to use in games, but
-  the terms do not grant redistribution of the raw sprites, so the files cannot
-  live in this repository. Reference the creator's page from a game instead.
+- **CC-BY, CC-BY-SA and GPL martial-arts packs** — redistributable, but the
+  credit, share-alike or copyleft obligations conflict with this library's
+  CC0-only policy. They are fine to use directly inside a game.
+- **"Free" itch.io packs with no stated licence** — a free download is not a
+  licence; the research report lists the ones that fall into this group.
 - **Mortal Kombat / Dragon Ball / Naruto sprites and rip packs** — copyrighted,
   no redistribution rights.
 - **"Free" asset aggregator sites without a stated licence** — unverified, so

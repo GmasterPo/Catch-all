@@ -34,6 +34,7 @@ working demo.
 | [`freebuff-assets/README.md`](freebuff-assets/README.md) | API, layout, clip model, build and test commands |
 | [`freebuff-assets/docs/FREEBUFF_INTEGRATION.md`](freebuff-assets/docs/FREEBUFF_INTEGRATION.md) | how a new project should search, reuse and extend the library |
 | [`freebuff-assets/docs/ASSET_IMPORT_AND_LICENSES.md`](freebuff-assets/docs/ASSET_IMPORT_AND_LICENSES.md) | import checklist, source table, what was deliberately excluded |
+| [`freebuff-assets/docs/STICK_FIGURE_MARTIAL_ARTS_SOURCES.md`](freebuff-assets/docs/STICK_FIGURE_MARTIAL_ARTS_SOURCES.md) | survey of 22 stick-figure and martial-arts animation sources with licence verdicts |
 
 ## Check it
 
