@@ -1,0 +1,107 @@
+{
+  "generatedBy": "tools/build-index.mjs",
+  "notice": "Index entries only; see ASSET_INDEX.json for frame metadata.",
+  "assets": [
+    {
+      "id": "debris-atlas",
+      "name": "Debris Atlas",
+      "category": "effects",
+      "style": "flat-vector",
+      "tags": [
+        "debris",
+        "glass",
+        "shatter",
+        "stone",
+        "wood"
+      ],
+      "sheet": "assets/effects/debris-atlas/sheet.png",
+      "clips": [
+        {
+          "name": "glass",
+          "state": "hit",
+          "kind": "animation",
+          "frameCount": 3
+        },
+        {
+          "name": "stone",
+          "state": "hit",
+          "kind": "animation",
+          "frameCount": 3
+        },
+        {
+          "name": "wood",
+          "state": "hit",
+          "kind": "animation",
+          "frameCount": 3
+        }
+      ]
+    },
+    {
+      "id": "explosion-atlas",
+      "name": "Explosion Atlas",
+      "category": "effects",
+      "style": "flat-vector",
+      "tags": [
+        "blast",
+        "debris",
+        "explosion",
+        "impact"
+      ],
+      "sheet": "assets/effects/explosion-atlas/sheet.png",
+      "clips": [
+        {
+          "name": "detonate",
+          "state": "explosion",
+          "kind": "animation",
+          "frameCount": 58
+        }
+      ]
+    },
+    {
+      "id": "space-effects",
+      "name": "Space Effects Atlas",
+      "category": "effects",
+      "style": "flat-vector",
+      "tags": [
+        "beam",
+        "engine",
+        "explosion",
+        "hit",
+        "thruster"
+      ],
+      "sheet": "assets/effects/space-effects/sheet.png",
+      "clips": [
+        {
+          "name": "fire",
+          "state": "explosion",
+          "kind": "animation",
+          "frameCount": 20
+        },
+        {
+          "name": "beam",
+          "state": "beam",
+          "kind": "animation",
+          "frameCount": 7
+        },
+        {
+          "name": "beam-long",
+          "state": "beam",
+          "kind": "animation",
+          "frameCount": 2
+        },
+        {
+          "name": "scratch",
+          "state": "hit",
+          "kind": "animation",
+          "frameCount": 3
+        },
+        {
+          "name": "engine",
+          "state": "thruster",
+          "kind": "animation",
+          "frameCount": 5
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "generatedBy": "tools/build-index.mjs",
+  "notice": "Index entries only; see ASSET_INDEX.json for frame metadata.",
+  "assets": [
+    {
+      "id": "space-shields",
+      "name": "Space Shields and Power-ups",
+      "category": "powers",
+      "style": "flat-vector",
+      "tags": [
+        "buff",
+        "pickup",
+        "powerup",
+        "shield"
+      ],
+      "sheet": "assets/powers/space-shields/sheet.png",
+      "clips": [
+        {
+          "name": "shield",
+          "state": "block",
+          "kind": "animation",
+          "frameCount": 3
+        },
+        {
+          "name": "star",
+          "state": "power",
+          "kind": "animation",
+          "frameCount": 3
+        },
+        {
+          "name": "powerup-blue",
+          "state": "sprite",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "powerup-red",
+          "state": "sprite",
+          "kind": "sprite",
+          "frameCount": 1
+        }
+      ]
+    },
+    {
+      "id": "space-lasers",
+      "name": "Space Lasers",
+      "category": "projectiles",
+      "style": "flat-vector",
+      "tags": [
+        "bullet",
+        "laser",
+        "projectile",
+        "shot"
+      ],
+      "sheet": "assets/projectiles/space-lasers/sheet.png",
+      "clips": [
+        {
+          "name": "laser-blue",
+          "state": "projectile",
+          "kind": "animation",
+          "frameCount": 16
+        },
+        {
+          "name": "laser-green",
+          "state": "projectile",
+          "kind": "animation",
+          "frameCount": 16
+        },
+        {
+          "name": "laser-red",
+          "state": "projectile",
+          "kind": "animation",
+          "frameCount": 16
+        }
+      ]
+    }
+  ]
+}

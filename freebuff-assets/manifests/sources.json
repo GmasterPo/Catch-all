@@ -1,0 +1,112 @@
+{
+  "license": "CC0-1.0",
+  "counts": {
+    "sources": 8
+  },
+  "sources": [
+    {
+      "id": "platformer-deluxe",
+      "title": "Platformer Art Deluxe",
+      "creator": "Kenney (Kenney Vleugels)",
+      "creatorUrl": "https://www.kenney.nl",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/platformer-art-deluxe",
+      "download": "https://opengameart.org/sites/default/files/platformerGraphicsDeluxe_Updated.zip",
+      "licenseFile": "licenses/platformer-deluxe.txt",
+      "assets": 6,
+      "clips": 35
+    },
+    {
+      "id": "platformer-pixel-redux",
+      "title": "Platformer Art: Pixel Redux",
+      "creator": "Kenney (Kenney Vleugels)",
+      "creatorUrl": "https://www.kenney.nl",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/platformer-art-pixel-redux",
+      "download": "https://opengameart.org/sites/default/files/Platformer%20Art%20Pixel%20Redux.zip",
+      "licenseFile": "licenses/platformer-pixel-redux.txt",
+      "assets": 2,
+      "clips": 2
+    },
+    {
+      "id": "space-shooter-redux",
+      "title": "Space Shooter Redux",
+      "creator": "Kenney (Kenney Vleugels)",
+      "creatorUrl": "https://www.kenney.nl",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/space-shooter-redux",
+      "download": "https://opengameart.org/sites/default/files/SpaceShooterRedux.zip",
+      "licenseFile": "licenses/space-shooter-redux.txt",
+      "assets": 3,
+      "clips": 12
+    },
+    {
+      "id": "ui-pack",
+      "title": "UI Pack",
+      "creator": "Kenney (Kenney Vleugels)",
+      "creatorUrl": "https://www.kenney.nl",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/ui-pack",
+      "download": "https://opengameart.org/sites/default/files/kenney_ui-pack.zip",
+      "licenseFile": "licenses/ui-pack.txt",
+      "assets": 25,
+      "clips": 25
+    },
+    {
+      "id": "racing-pack",
+      "title": "Racing Pack",
+      "creator": "Kenney (Kenney Vleugels)",
+      "creatorUrl": "https://www.kenney.nl",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/racing-pack",
+      "download": "https://opengameart.org/sites/default/files/racing-pack.zip",
+      "licenseFile": "licenses/racing-pack.txt",
+      "assets": 4,
+      "clips": 19
+    },
+    {
+      "id": "background-elements",
+      "title": "Background Elements",
+      "creator": "Kenney (Kenney Vleugels)",
+      "creatorUrl": "https://www.kenney.nl",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/background-elements",
+      "download": "https://opengameart.org/sites/default/files/kenney_backgroundElements.zip",
+      "licenseFile": "licenses/background-elements.txt",
+      "assets": 1,
+      "clips": 8
+    },
+    {
+      "id": "generic-items",
+      "title": "Generic Items",
+      "creator": "Kenney (Kenney Vleugels)",
+      "creatorUrl": "https://www.kenney.nl",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/generic-items",
+      "download": "https://opengameart.org/sites/default/files/kenney_genericItems_updatedCross.zip",
+      "licenseFile": "licenses/generic-items.txt",
+      "assets": 2,
+      "clips": 9
+    },
+    {
+      "id": "physics-assets",
+      "title": "Physics Assets",
+      "creator": "Kenney (Kenney Vleugels)",
+      "creatorUrl": "https://www.kenney.nl",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "page": "https://opengameart.org/content/physics-assets",
+      "download": "https://opengameart.org/sites/default/files/kenney_physicsAssets_v2.zip",
+      "licenseFile": "licenses/physics-assets.txt",
+      "assets": 5,
+      "clips": 16
+    }
+  ]
+}

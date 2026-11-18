@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Freebuff Assets — loader demo</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: #11131a; color: #e8ecf5;
+    font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    display: flex; justify-content: center; padding: 24px;
+  }
+  main { width: min(100%, 860px); }
+  h1 { font-size: 20px; margin: 0 0 4px; letter-spacing: .04em; }
+  p.lead { margin: 0 0 16px; color: #8e9bb3; }
+  .counts { color: #6fd08c; margin: 0 0 16px; }
+  canvas {
+    width: 100%; height: auto; display: block; border-radius: 10px;
+    background: linear-gradient(#243049, #3d5a80 60%, #6b8f71);
+    border: 1px solid #2b3247;
+  }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+  button {
+    font: inherit; padding: 6px 12px; border-radius: 8px; cursor: pointer;
+    background: #1c2333; color: #cdd7ea; border: 1px solid #313c55;
+  }
+  button:hover { background: #25304a; }
+  button[aria-pressed="true"] { background: #2f6ea8; border-color: #4c93d6; color: #fff; }
+  input {
+    font: inherit; width: 100%; padding: 8px 10px; border-radius: 8px;
+    background: #171d2b; color: #e8ecf5; border: 1px solid #313c55;
+  }
+  ul { list-style: none; padding: 0; margin: 10px 0 0; }
+  li { padding: 6px 8px; border-radius: 6px; color: #aeb9cd; }
+  li button { padding: 2px 8px; margin-left: 8px; }
+  .hint { color: #68758c; font-size: 12px; }
+  .status { color: #f0b76a; min-height: 20px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>FREEBUFF ASSETS</h1>
+  <p class="lead">Loader demo — real clips parsed from the committed CC0 sprite sheets.</p>
+  <p class="counts" id="counts">loading index…</p>
+
+  <canvas id="stage" width="640" height="260" aria-label="Animated sprite preview"></canvas>
+
+  <div class="row" id="clips"></div>
+  <label class="hint" for="q">Search the index (try “laser”, “coin”, “cloud”, “button”)</label>
+  <input id="q" type="search" placeholder="name, tag, category or clip" autocomplete="off">
+  <ul id="results"></ul>
+  <p class="status" id="status"></p>
+</main>
+
+<script type="module">
+import { FreebuffAssets } from '../../src/asset-loader.js';
+import { SpriteAnimator } from '../../src/sprite-animation.js';
+
+const canvas = document.getElementById('stage');
+const ctx = canvas.getContext('2d');
+const statusEl = document.getElementById('status');
+const countsEl = document.getElementById('counts');
+const clipsEl = document.getElementById('clips');
+const resultsEl = document.getElementById('results');
+const searchEl = document.getElementById('q');
+
+// The page lives in freebuff-assets/examples/html5/, so the library root is two
+// levels up and ASSET_INDEX.json sits there.
+const assets = new FreebuffAssets({ basePath: '../../' });
+const status = (message) => { statusEl.textContent = message; };
+
+let animator = null;
+let last = performance.now();
+
+try {
+  await assets.loadIndex();
+  const { counts } = assets;
+  countsEl.textContent = `${counts.assets} assets · ${counts.clips} clips · ${counts.sources} sources · ${counts.animations} animations · all ${assets.index.license}`;
+
+  await showAsset('hero-platformer-red', 'walk');
+
+  for (const clip of assets.getAsset('hero-platformer-red').clips) {
+    const button = document.createElement('button');
+    button.textContent = clip.name;
+    button.dataset.clip = clip.name;
+    button.addEventListener('click', () => {
+      animator.play(clip.name);
+      for (const other of clipsEl.children) other.setAttribute('aria-pressed', String(other === button));
+    });
+    clipsEl.append(button);
+  }
+  clipsEl.firstChild?.setAttribute('aria-pressed', 'true');
+
+  searchEl.addEventListener('input', () => {
+    const query = searchEl.value.trim();
+    resultsEl.replaceChildren();
+    if (!query) return;
+    const matches = assets.find({ q: query, limit: 8 });
+    if (matches.length === 0) {
+      resultsEl.append(Object.assign(document.createElement('li'), { textContent: 'no matches' }));
+      return;
+    }
+    for (const asset of matches) {
+      const item = document.createElement('li');
+      item.append(`${asset.name} — ${asset.category}, ${asset.clips.length} clip(s)`);
+      const button = document.createElement('button');
+      button.textContent = 'load';
+      button.addEventListener('click', () => showAsset(asset.id, asset.clips[0].name));
+      item.append(button);
+      resultsEl.append(item);
+    }
+  });
+} catch (error) {
+  status(String(error.message ?? error));
+}
+
+async function showAsset(assetId, clipName) {
+  try {
+    const { asset, clip, image } = await assets.loadClip(assetId, clipName);
+    animator = new SpriteAnimator({ asset, clip, image, scale: fitScale(asset) });
+    status(`${asset.name} → ${clip.name} (${clip.frameCount} frames @ ${clip.fps || 'static'} fps)`);
+    for (const button of clipsEl.children) {
+      button.setAttribute('aria-pressed', String(button.dataset.clip === clip.name));
+    }
+  } catch (error) {
+    status(String(error.message ?? error));
+  }
+}
+
+function fitScale(asset) {
+  const [width, height] = asset.sheetSize;
+  const scale = Math.min(3, Math.floor(canvas.height / 120));
+  if (asset.category === 'interfaces') return Math.min(2, 240 / Math.max(width, height));
+  return scale;
+}
+
+function frame(now) {
+  const dt = Math.min(64, now - last);
+  last = now;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Simple ground line so sprite baselines are visible.
+  ctx.fillStyle = 'rgba(0,0,0,.28)';
+  ctx.fillRect(0, canvas.height - 42, canvas.width, 42);
+  ctx.fillStyle = 'rgba(255,255,255,.12)';
+  ctx.fillRect(0, canvas.height - 42, canvas.width, 2);
+
+  if (animator) {
+    animator.update(dt);
+    animator.draw(ctx, canvas.width / 2, canvas.height - 44);
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

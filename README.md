@@ -157,3 +157,22 @@ the game opens muted. The gesture that unlocks audio is answered with a brief
 5. GitHub publishes the game at `https://<user>.github.io/<repo>/` within a minute or two.
 
 `.nojekyll` is included so GitHub Pages serves the files as-is.
+
+## Game asset library
+
+`freebuff-assets/` is a reusable, license-verified **CC0 1.0** art library for
+new HTML5 games: **48 assets**, **126 clips** from **8 sources**, with a
+browser-native loader, index search and sprite animator. It is additive — the
+game above loads nothing from it and is unaffected.
+
+```js
+import { FreebuffAssets } from './freebuff-assets/src/asset-loader.js';
+
+const assets = new FreebuffAssets({ basePath: './freebuff-assets/' });
+await assets.loadIndex();
+const { clip, image } = await assets.loadClip('hero-platformer-red', 'walk');
+```
+
+See [FREEBUFF_ASSETS.md](FREEBUFF_ASSETS.md) for the summary and
+[freebuff-assets/README.md](freebuff-assets/README.md) for the API, layout and
+provenance. Validate the library with `cd freebuff-assets && npm run check`.

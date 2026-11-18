@@ -1,0 +1,39 @@
+{
+  "name": "freebuff-assets",
+  "version": "1.0.0",
+  "description": "License-verified CC0 1.0 2D game art with a browser-native loader, search and sprite animation helpers.",
+  "private": true,
+  "type": "module",
+  "license": "CC0-1.0",
+  "exports": {
+    ".": "./src/asset-loader.js",
+    "./search": "./src/asset-search.js",
+    "./animation": "./src/sprite-animation.js",
+    "./cache": "./src/asset-cache.js",
+    "./index": "./ASSET_INDEX.json"
+  },
+  "files": [
+    "ASSET_INDEX.json",
+    "assets",
+    "docs",
+    "examples",
+    "licenses",
+    "manifests",
+    "src",
+    "tools"
+  ],
+  "scripts": {
+    "build": "node tools/build-index.mjs",
+    "validate": "node tools/validate-assets.mjs",
+    "test": "node tools/test-loader.mjs",
+    "check": "npm run build && npm run validate && npm run test"
+  },
+  "keywords": [
+    "game-assets",
+    "sprites",
+    "sprite-sheet",
+    "cc0",
+    "html5",
+    "canvas"
+  ]
+}

@@ -1,0 +1,228 @@
+{
+  "generatedBy": "tools/build-index.mjs",
+  "notice": "Index entries only; see ASSET_INDEX.json for frame metadata.",
+  "assets": [
+    {
+      "id": "hero-platformer-blue",
+      "name": "Platformer Hero — Blue",
+      "category": "characters",
+      "style": "16-bit-pixel",
+      "tags": [
+        "hero",
+        "jump",
+        "platformer",
+        "player",
+        "walk-cycle"
+      ],
+      "sheet": "assets/characters/hero-platformer-blue/sheet.png",
+      "clips": [
+        {
+          "name": "idle",
+          "state": "idle",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "walk",
+          "state": "walk",
+          "kind": "animation",
+          "frameCount": 11
+        },
+        {
+          "name": "jump",
+          "state": "jump",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "crouch",
+          "state": "crouch",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "hurt",
+          "state": "hurt",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "front",
+          "state": "idle",
+          "kind": "sprite",
+          "frameCount": 1
+        }
+      ]
+    },
+    {
+      "id": "hero-platformer-green",
+      "name": "Platformer Hero — Green",
+      "category": "characters",
+      "style": "16-bit-pixel",
+      "tags": [
+        "hero",
+        "jump",
+        "platformer",
+        "player",
+        "walk-cycle"
+      ],
+      "sheet": "assets/characters/hero-platformer-green/sheet.png",
+      "clips": [
+        {
+          "name": "idle",
+          "state": "idle",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "walk",
+          "state": "walk",
+          "kind": "animation",
+          "frameCount": 11
+        },
+        {
+          "name": "jump",
+          "state": "jump",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "crouch",
+          "state": "crouch",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "hurt",
+          "state": "hurt",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "front",
+          "state": "idle",
+          "kind": "sprite",
+          "frameCount": 1
+        }
+      ]
+    },
+    {
+      "id": "hero-platformer-red",
+      "name": "Platformer Hero — Red",
+      "category": "characters",
+      "style": "16-bit-pixel",
+      "tags": [
+        "hero",
+        "jump",
+        "platformer",
+        "player",
+        "walk-cycle"
+      ],
+      "sheet": "assets/characters/hero-platformer-red/sheet.png",
+      "clips": [
+        {
+          "name": "idle",
+          "state": "idle",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "walk",
+          "state": "walk",
+          "kind": "animation",
+          "frameCount": 11
+        },
+        {
+          "name": "jump",
+          "state": "jump",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "crouch",
+          "state": "crouch",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "hurt",
+          "state": "hurt",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "front",
+          "state": "idle",
+          "kind": "sprite",
+          "frameCount": 1
+        }
+      ]
+    },
+    {
+      "id": "pixel-adventurers",
+      "name": "Pixel Adventurers Sheet",
+      "category": "characters",
+      "style": "8-bit-pixel",
+      "tags": [
+        "adventurer",
+        "pixel",
+        "platformer",
+        "sheet"
+      ],
+      "sheet": "assets/characters/pixel-adventurers/sheet.png",
+      "clips": [
+        {
+          "name": "sheet",
+          "state": "sprite",
+          "kind": "sprite",
+          "frameCount": 1
+        }
+      ]
+    },
+    {
+      "id": "racer-characters",
+      "name": "Racing Characters",
+      "category": "characters",
+      "style": "flat-vector",
+      "tags": [
+        "cast",
+        "driver",
+        "racer",
+        "top-down"
+      ],
+      "sheet": "assets/characters/racer-characters/sheet.png",
+      "clips": [
+        {
+          "name": "racer-blue",
+          "state": "sprite",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "racer-red",
+          "state": "sprite",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "racer-green",
+          "state": "sprite",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "racer-black",
+          "state": "sprite",
+          "kind": "sprite",
+          "frameCount": 1
+        },
+        {
+          "name": "racer-yellow",
+          "state": "sprite",
+          "kind": "sprite",
+          "frameCount": 1
+        }
+      ]
+    }
+  ]
+}
