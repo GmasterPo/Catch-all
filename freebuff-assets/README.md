@@ -28,6 +28,11 @@ python3 -m http.server 3000   # from the repository root
 # then visit http://localhost:3000/freebuff-assets/examples/html5/
 ```
 
+`examples/html5/fighter.html` is a playable round built from the newer imports:
+pick the RGS stick fighter, the Streets of Fight brawler girl or the punk, then
+move with <kbd>A</kbd>/<kbd>D</kbd>, jump with <kbd>W</kbd> and swing with
+<kbd>J</kbd> (primary) and <kbd>K</kbd> (secondary).
+
 ## What is in the library
 
 | Category | Assets | Contents |
@@ -96,7 +101,7 @@ freebuff-assets/
 ├── ASSET_INDEX.json        generated index: assets, clips, frames, sources
 ├── assets/<category>/<id>/ sheet.png or sprite.png + sheet.xml / sheet.txt
 ├── docs/                   integration guide and import/licensing policy
-├── examples/html5/         loader + animation demo
+├── examples/html5/         loader + animation demo and the fighter demo
 ├── licenses/               the original CC0 notice from each pack
 ├── manifests/              sources, characters, animations, powers, effects
 ├── src/                    loader, search, cache, sprite animation

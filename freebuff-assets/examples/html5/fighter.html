@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Freebuff Assets — stick-figure fighter</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: #0d0f15; color: #e8ecf5;
+    font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    display: flex; justify-content: center; padding: 20px;
+  }
+  main { width: min(100%, 900px); }
+  h1 { font-size: 18px; margin: 0 0 2px; letter-spacing: .08em; }
+  .lead { margin: 0 0 14px; color: #8e9bb3; }
+  .bars { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+  .bar { background: #171d2b; border: 1px solid #2b3247; border-radius: 6px; padding: 5px 8px; }
+  .bar span { display: flex; justify-content: space-between; font-size: 11px; color: #aeb9cd; }
+  .track { height: 8px; background: #0b0e15; border-radius: 4px; margin-top: 4px; overflow: hidden; }
+  .fill { height: 100%; width: 100%; background: #6fd08c; transition: width .12s linear; }
+  .fill.low { background: #e05c5c; }
+  canvas {
+    width: 100%; height: auto; display: block; border-radius: 10px;
+    background: linear-gradient(#1b2438, #2b3a55 55%, #4a5c46);
+    border: 1px solid #2b3247; image-rendering: pixelated;
+  }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  button {
+    font: inherit; padding: 6px 11px; border-radius: 8px; cursor: pointer;
+    background: #1c2333; color: #cdd7ea; border: 1px solid #313c55;
+  }
+  button:hover { background: #25304a; }
+  button[aria-pressed="true"] { background: #2f6ea8; border-color: #4c93d6; color: #fff; }
+  kbd { background: #232c40; border: 1px solid #3a4763; border-radius: 4px; padding: 1px 5px; font-size: 11px; }
+  .status { color: #f0b76a; min-height: 20px; margin: 4px 0 0; }
+  .hint { color: #68758c; }
+</style>
+</head>
+<body>
+<main>
+  <h1>STICK FIGHTER</h1>
+  <p class="lead">RGS stick fighter and Streets of Fight clips, played straight from <code>ASSET_INDEX.json</code>.</p>
+
+  <div class="bars">
+    <div class="bar"><span><b id="p-name">stick fighter</b><b id="p-hp">100</b></span><div class="track"><div class="fill" id="p-fill"></div></div></div>
+    <div class="bar"><span><b id="e-name">punk</b><b id="e-hp">100</b></span><div class="track"><div class="fill" id="e-fill"></div></div></div>
+  </div>
+
+  <canvas id="stage" width="880" height="330" aria-label="Stick figure fighter demo"></canvas>
+
+  <div class="row">
+    <button data-role="player" data-char="rgs-stick-fighter" aria-pressed="true">1 · stick fighter</button>
+    <button data-role="player" data-char="streets-brawler-girl">2 · brawler girl</button>
+    <button data-role="player" data-char="streets-enemy-punk">3 · punk</button>
+  </div>
+  <div class="row">
+    <button data-role="opponent" data-char="streets-enemy-punk" aria-pressed="true">opponent: punk</button>
+    <button data-role="opponent" data-char="streets-brawler-girl">opponent: brawler girl</button>
+    <button data-role="opponent" data-char="rgs-stick-fighter">opponent: stick fighter</button>
+    <button id="restart">restart (R)</button>
+  </div>
+
+  <p class="hint">
+    <kbd>A</kbd>/<kbd>D</kbd> or arrows move · <kbd>W</kbd>/<kbd>↑</kbd> jump ·
+    <kbd>J</kbd> primary attack · <kbd>K</kbd> secondary · <kbd>R</kbd> restart
+  </p>
+  <p class="status" id="status">loading…</p>
+</main>
+
+<script type="module">
+import { FreebuffAssets } from '../../src/asset-loader.js';
+import { SpriteAnimator } from '../../src/sprite-animation.js';
+
+const canvas = document.getElementById('stage');
+const ctx = canvas.getContext('2d');
+const statusEl = document.getElementById('status');
+const status = (text) => { statusEl.textContent = text; };
+
+// Character definitions: clip names are the ones in ASSET_INDEX.json.
+const ROSTER = {
+  'rgs-stick-fighter': {
+    label: 'stick fighter', height: 168, speed: 235, hp: 100, cooldown: 0.5,
+    idle: 'idle', walk: 'walk', jump: 'jump', hurt: 'hit', death: 'death',
+    primary: { clip: 'combo', damage: 11, range: 165, warmup: 0.18 },
+    secondary: { clip: 'air-attack', damage: 8, range: 140, warmup: 0.1 },
+  },
+  'streets-brawler-girl': {
+    label: 'brawler girl', height: 132, speed: 215, hp: 100, cooldown: 0.45,
+    idle: 'idle', walk: 'walk', jump: 'jump', hurt: 'hurt', death: 'hurt',
+    primary: { clip: 'punch', damage: 8, range: 120, warmup: 0.08 },
+    secondary: { clip: 'kick', damage: 12, range: 140, warmup: 0.14 },
+  },
+  'streets-enemy-punk': {
+    label: 'punk', height: 132, speed: 165, hp: 100, cooldown: 0.95,
+    idle: 'idle', walk: 'walk', jump: 'jump', hurt: 'hurt', death: 'hurt',
+    primary: { clip: 'punch', damage: 9, range: 120, warmup: 0.1 },
+    secondary: { clip: 'punch', damage: 9, range: 120, warmup: 0.1 },
+  },
+};
+
+const assets = new FreebuffAssets({ basePath: '../../' });
+const GROUND = canvas.height - 34;
+const loaded = new Map();
+
+class Fighter {
+  constructor({ id, x, facing, isPlayer }) {
+    const spec = ROSTER[id];
+    this.id = id;
+    this.spec = spec;
+    this.x = x;
+    this.facing = facing; // 1 faces right, -1 faces left
+    this.isPlayer = isPlayer;
+    this.hp = spec.hp;
+    this.vx = 0;
+    this.vy = 0;
+    this.onGround = true;
+    this.state = 'idle';
+    this.cooldown = 0;
+    this.invuln = 0;
+    this.pendingHit = null;
+    this.dead = false;
+    const entry = loaded.get(id);
+    const idleClip = entry.asset.clips.find((clip) => clip.name === spec.idle);
+    this.animator = new SpriteAnimator({
+      asset: entry.asset,
+      clip: idleClip,
+      image: entry.image,
+      scale: spec.height / idleClip.frameHeight,
+    });
+    this.animator.onComplete = () => {
+      if (this.state === 'attack' || this.state === 'hurt') this.toIdle();
+    };
+  }
+
+  toIdle() {
+    this.state = 'idle';
+    this.animator.play(this.spec.idle);
+  }
+
+  play(clipName) {
+    this.animator.play(clipName);
+  }
+
+  attack(kind, opponent) {
+    if (this.dead || this.state === 'attack' || this.state === 'hurt' || this.cooldown > 0) return;
+    const move = this.spec[kind];
+    // Turn into the opponent so swings connect even after crossing over.
+    if (Math.abs(opponent.x - this.x) > 8) this.facing = Math.sign(opponent.x - this.x);
+    this.state = 'attack';
+    this.cooldown = this.spec.cooldown;
+    this.play(move.clip);
+    this.pendingHit = {
+      at: move.warmup,
+      done: false,
+      move,
+      target: opponent,
+    };
+  }
+
+  hurt(damage, from) {
+    if (this.dead || this.invuln > 0) return;
+    this.hp = Math.max(0, this.hp - damage);
+    this.invuln = 0.45;
+    this.vx = (this.x < from.x ? -1 : 1) * 190;
+    this.state = 'hurt';
+    this.play(this.spec.hurt);
+    if (this.hp === 0) {
+      this.dead = true;
+      this.state = 'dead';
+      this.play(this.spec.death);
+      this.animator.onComplete = null;
+    }
+  }
+
+  update(dt, opponent, input, allowAI = true) {
+    this.cooldown = Math.max(0, this.cooldown - dt);
+    this.invuln = Math.max(0, this.invuln - dt);
+    if (this.pendingHit) {
+      this.pendingHit.at -= dt;
+      if (this.pendingHit.at <= 0 && !this.pendingHit.done) {
+        this.pendingHit.done = true;
+        const { move, target } = this.pendingHit;
+        const distance = Math.abs(target.x - this.x);
+        const inFront = Math.sign(target.x - this.x) === this.facing || distance < 40;
+        if (!target.dead && distance <= move.range && inFront) {
+          target.hurt(move.damage, this);
+          flash(target.x);
+        }
+      }
+    }
+
+    const canAct = !this.dead && this.state !== 'attack' && this.state !== 'hurt';
+    let moving = 0;
+
+    if (canAct) {
+      if (this.isPlayer) {
+        if (input.left) moving -= 1;
+        if (input.right) moving += 1;
+        if (input.jump && this.onGround) {
+          this.vy = -520;
+          this.onGround = false;
+          this.state = 'jump';
+          this.play(this.spec.jump);
+        }
+        if (input.primary) this.attack('primary', opponent);
+        if (input.secondary) this.attack('secondary', opponent);
+      } else if (allowAI) {
+        // Very small opponent AI: close the gap, then swing at a measured pace.
+        const distance = Math.abs(opponent.x - this.x);
+        const toward = Math.sign(opponent.x - this.x);
+        if (distance > this.spec.primary.range * 0.8) moving = toward;
+        else if (Math.random() < 0.012) this.attack(Math.random() < 0.7 ? 'primary' : 'secondary', opponent);
+        if (distance < 60 && Math.random() < 0.01 && this.onGround) {
+          this.vy = -480;
+          this.onGround = false;
+          this.state = 'jump';
+          this.play(this.spec.jump);
+        }
+      }
+    }
+
+    if (moving !== 0) {
+      this.facing = moving;
+      this.vx = moving * this.spec.speed;
+      if (canAct && this.onGround && this.state !== 'jump') {
+        this.state = 'walk';
+        if (this.animator.clipName !== this.spec.walk) this.play(this.spec.walk);
+      }
+    } else {
+      this.vx *= 0.75;
+      if (canAct && this.onGround && this.state === 'walk') this.toIdle();
+    }
+
+    this.x += this.vx * dt;
+    if (!this.onGround) {
+      this.vy += 1500 * dt;
+      this.y = (this.y ?? GROUND) + this.vy * dt;
+      if (this.y >= GROUND) {
+        this.y = GROUND;
+        this.vy = 0;
+        this.onGround = true;
+        if (this.state === 'jump') this.toIdle();
+      }
+    } else {
+      this.y = GROUND;
+    }
+    this.x = Math.max(40, Math.min(canvas.width - 40, this.x));
+
+    this.animator.flipX = this.facing === -1;
+    this.animator.update(dt * 1000);
+  }
+
+  draw(ctx) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,.28)';
+    ctx.beginPath();
+    ctx.ellipse(this.x, GROUND + 2, 26, 6, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    this.animator.draw(ctx, this.x, (this.y ?? GROUND) + 4);
+  }
+}
+
+let player;
+let opponent;
+let playerChar = 'rgs-stick-fighter';
+let opponentChar = 'streets-enemy-punk';
+const input = { left: false, right: false, jump: false, primary: false, secondary: false };
+const pending = { jump: false, primary: false, secondary: false };
+let flashAt = null;
+let matchAge = 0;
+
+function flash(x) {
+  flashAt = { x, t: 0.12 };
+}
+
+
+function setBars() {
+  const paint = (prefix, fighter) => {
+    document.getElementById(`${prefix}-name`).textContent = fighter.spec.label;
+    document.getElementById(`${prefix}-hp`).textContent = String(fighter.hp);
+    const fill = document.getElementById(`${prefix}-fill`);
+    fill.style.width = `${fighter.hp}%`;
+    fill.classList.toggle('low', fighter.hp <= 30);
+  };
+  paint('p', player);
+  paint('e', opponent);
+}
+
+function resetMatch() {
+  player = new Fighter({ id: playerChar, x: canvas.width * 0.3, facing: 1, isPlayer: true });
+  opponent = new Fighter({ id: opponentChar, x: canvas.width * 0.7, facing: -1, isPlayer: false });
+  matchAge = 0;
+  setBars();
+  status('fight');
+}
+
+async function loadCharacter(id) {
+  if (loaded.has(id)) return;
+  const image = await assets.loadImage(id);
+  loaded.set(id, { asset: assets.getAsset(id), image });
+}
+
+const keyMap = {
+  KeyA: 'left', ArrowLeft: 'left',
+  KeyD: 'right', ArrowRight: 'right',
+  KeyW: 'jump', ArrowUp: 'jump', Space: 'jump',
+  KeyJ: 'primary', KeyK: 'secondary',
+};
+window.addEventListener('keydown', (event) => {
+  if (event.code === 'KeyR') { resetMatch(); return; }
+  const action = keyMap[event.code];
+  if (!action) return;
+  event.preventDefault();
+  if (!input[action]) pending[action] = true;
+  input[action] = true;
+});
+window.addEventListener('keyup', (event) => {
+  const action = keyMap[event.code];
+  if (!action) return;
+  input[action] = false;
+});
+window.addEventListener('blur', () => {
+  for (const key of Object.keys(input)) input[key] = false;
+});
+
+for (const button of document.querySelectorAll('button[data-role]')) {
+  button.addEventListener('click', () => {
+    if (button.dataset.role === 'player') {
+      playerChar = button.dataset.char;
+      for (const other of document.querySelectorAll('button[data-role="player"]')) {
+        other.setAttribute('aria-pressed', String(other === button));
+      }
+    } else {
+      opponentChar = button.dataset.char;
+      for (const other of document.querySelectorAll('button[data-role="opponent"]')) {
+        other.setAttribute('aria-pressed', String(other === button));
+      }
+    }
+    resetMatch();
+  });
+}
+document.getElementById('restart').addEventListener('click', resetMatch);
+
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000);
+  last = now;
+
+  player.update(dt, opponent, {
+    ...input,
+    jump: input.jump && pending.jump,
+    primary: input.primary && pending.primary,
+    secondary: input.secondary && pending.secondary,
+  });
+  for (const key of Object.keys(pending)) pending[key] = false;
+  matchAge += dt;
+  // Give the player a moment before the opponent starts closing in.
+  opponent.update(dt, player, input, matchAge > 1.2);
+
+  // Keep the fighters from standing inside each other: without this they walk
+  // through one another and every swing ends up behind the target.
+  const gap = opponent.x - player.x;
+  const minGap = 64;
+  if (Math.abs(gap) < minGap) {
+    const push = (minGap - Math.abs(gap)) / 2;
+    const dir = Math.sign(gap) || 1;
+    player.x = Math.max(40, Math.min(canvas.width - 40, player.x - push * dir));
+    opponent.x = Math.max(40, Math.min(canvas.width - 40, opponent.x + push * dir));
+  }
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'rgba(0,0,0,.25)';
+  ctx.fillRect(0, GROUND + 8, canvas.width, canvas.height - GROUND - 8);
+
+  if (flashAt) {
+    flashAt.t -= dt;
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, flashAt.t * 6);
+    ctx.fillStyle = '#ffe9a8';
+    ctx.beginPath();
+    ctx.arc(flashAt.x, GROUND - 90, 34, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    if (flashAt.t <= 0) flashAt = null;
+  }
+
+  // Draw the further fighter first so overlaps look right.
+  const order = player.x < opponent.x ? [opponent, player] : [player, opponent];
+  for (const fighter of order) fighter.draw(ctx);
+
+  // Brief red wash while a fighter is recovering from a hit.
+  for (const fighter of order) {
+    if (fighter.invuln > 0 && !fighter.dead) {
+      ctx.save();
+      ctx.globalAlpha = 0.18;
+      ctx.fillStyle = '#ff6b6b';
+      ctx.fillRect(fighter.x - 34, GROUND - fighter.spec.height - 10, 68, fighter.spec.height + 14);
+      ctx.restore();
+    }
+  }
+
+  if (player.dead || opponent.dead) {
+    status(player.dead ? `${opponent.spec.label} wins — press R` : `${player.spec.label} wins — press R`);
+  } else {
+    status(`${player.spec.label} (${playerChar}) vs ${opponent.spec.label} · ${player.state}`);
+  }
+  setBars();
+  requestAnimationFrame(frame);
+}
+
+try {
+  await assets.loadIndex();
+  await Promise.all(Object.keys(ROSTER).map(loadCharacter));
+  resetMatch();
+  requestAnimationFrame(frame);
+} catch (error) {
+  status(String(error.message ?? error));
+}
+</script>
+</body>
+</html>
