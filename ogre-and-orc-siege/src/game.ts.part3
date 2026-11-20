@@ -1,3 +1,4 @@
+
     if (this.betch || this.mode === 'endless') return;
     this.betch = true;
     this.gold += Game.BETCH_PAYOUT;
