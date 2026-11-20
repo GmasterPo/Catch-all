@@ -1,3 +1,4 @@
+
             return { placed: false, reason: 'tile refused', tile: slot };
           }
           this.confirmPlacement();
