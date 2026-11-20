@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ogre &amp; Orc Siege — Tower Defense</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#0a0e14" />
+    <link rel="icon" href="/icons/icon-192.png" sizes="192x192" type="image/png" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="Top-down tower defense: hold the eastern gate through 50 waves of ogres and orcs." />
+  </head>
+  <body class="menu-open">
+    <canvas id="scene"></canvas>
+    <div id="vignette"></div>
+
+    <header id="topbar">
+      <div class="brand">
+        <div class="crest">⚔</div>
+        <div class="brand-text">
+          <h1>Ogre &amp; Orc Siege</h1>
+          <p>Hold the eastern gate</p>
+        </div>
+      </div>
+      <div class="controls">
+        <button id="startWave" class="start">▶ Start 1-1</button>
+        <button id="pauseBtn" title="Pause / resume">⏸</button>
+        <div class="speed-group">
+          <button class="spd active" data-spd="1">1×</button>
+          <button class="spd" data-spd="2">2×</button>
+          <button class="spd" data-spd="3">3×</button>
+        </div>
+        <button id="accountBtn" class="account-btn" title="Account — save your progress"><span id="accountBtnLabel">Sign in</span></button>
+        <button id="menuBtn" class="modes" title="Game modes"><span class="mb-ico">☰</span><span class="mb-label">Modes</span></button>
+        <button id="helpBtn" title="How to play">?</button>
+      </div>
+    </header>
+
+    <div id="vitals">
+      <div class="vital gold"><span class="v-ico">🪙</span><b id="gold">500</b></div>
+      <div class="vital lives"><span class="v-ico">🛡️</span><b id="lives">20</b><i>gate</i></div>
+      <div class="vital wave"><span class="v-ico">🌊</span><b id="wave">1-1</b><i id="waveTotal">/3-10</i></div>
+      <div class="vital prestige hidden" id="prestigePill"><span class="v-ico">✦</span><b id="prestigeVal">1</b><i>prestige</i></div>
+    </div>
+
+    <div id="bossbar" class="hidden">
+      <span id="bossname">Boss</span>
+      <div class="btrack"><div id="bossfill"></div></div>
+    </div>
+
+    <div id="toasts"></div>
+
+    <div id="betchWarn" class="hidden">Betches dont get to win</div>
+
+    <div id="accountModal" class="hidden">
+      <div class="account-card">
+        <button id="accountClose" class="pop-close" title="Close">✕</button>
+        <h2>Account</h2>
+        <p class="account-blurb">
+          Sign in to keep your prestige and stored towers, and pick them up on another device.
+        </p>
+
+        <form id="accountForm">
+          <label for="accountNameInput">Name</label>
+          <input id="accountNameInput" name="name" autocomplete="username" maxlength="20" required />
+          <label for="accountPin">PIN</label>
+          <input
+            id="accountPin"
+            name="pin"
+            type="password"
+            inputmode="numeric"
+            autocomplete="current-password"
+            pattern="[0-9]{4,6}"
+            minlength="4"
+            maxlength="6"
+            required
+          />
+          <p class="account-hint">4 to 6 digits. Pick something you will remember — there is no PIN recovery.</p>
+          <div class="account-actions">
+            <button type="submit" id="accountSubmit" class="account-primary">Sign in</button>
+            <button type="button" id="accountCreate">Create account</button>
+          </div>
+        </form>
+
+        <div id="accountSignedIn" class="hidden">
+          <p class="account-who">Signed in as <b id="accountWho"></b></p>
+          <p id="accountSync" class="account-sync"></p>
+          <button type="button" id="accountSignOut">Sign out</button>
+          <button type="button" id="accountReset" title="Wipes this account's prestige and stored towers on the server">
+            Reset progress
+          </button>
+        </div>
+
+        <p id="accountError" class="account-error hidden"></p>
+      </div>
+    </div>
+
+    <div id="buildConfirm" class="hidden">
+      <span id="confirmLabel">Build here</span>
+      <button id="confirmBuild" type="button">Confirm build</button>
+      <button id="cancelBuild" type="button">Cancel</button>
+    </div>
+
+    <div id="stagebanner" class="hidden">
+      <div class="sb-tag">Stage <span id="stageNum">1</span></div>
+      <div class="sb-label" id="stageLabel">1-1</div>
+    </div>
+
+    <aside id="shop" class="panel">
+      <div class="panel-head">
+        Build <span id="placingName"></span>
+        <span id="eraPill" class="era-pill" title="Technological era">Era I</span>
+        <button id="betchBtn" class="betch" title="+10,000 gold, but the horde grows crueller">I'm a Betch</button>
+      </div>
+      <div id="tiers"></div>
+      <div class="panel-foot">Click a tower, then a tile in the build lane, then <b>Confirm</b>. <b>Right-click</b> / <b>Esc</b> cancels.</div>
+
+      <aside id="towerPop" class="hidden">
+        <button id="popClose" class="pop-close" title="Close">✕</button>
+        <div class="pop-head"><span id="popIcon">🏹</span><b id="popName">Archer Tower</b></div>
+        <div id="popTier" class="pop-tier">Tier I</div>
+        <p id="popDesc" class="pop-desc"></p>
+      </aside>
+    </aside>
+
+    <aside id="storage" class="panel hidden">
+      <div class="panel-head">Storage <span id="storageCount"></span></div>
+      <div id="storageList"></div>
+      <div class="panel-foot">Recall is free — pick a tower, then place it in the lane.</div>
+    </aside>
+
+    <div id="wavebar" class="panel">
+      <div class="wb-top">
+        <span id="waveTitle">Wave 1</span>
+        <span id="waveBadge">Prepare</span>
+      </div>
+      <div id="waveInfo">1 route · 8 enemies</div>
+    </div>
+
+    <aside id="selection" class="panel hidden"></aside>
+
+
+    <div id="overlay" class="hidden">
+      <div class="overlay-card">
+        <h2 id="ovTitle">Victory</h2>
+        <p id="ovText"></p>
+        <button id="ovBtn">Play again</button>
+        <button id="prestigeBtn" class="prestige hidden">Prestige — begin again</button>
+      </div>
+    </div>
+
+    <div id="modeMenu">
+      <div class="mm-inner">
+        <div class="mm-crest">⚔</div>
+        <h1 class="mm-title">Ogre &amp; Orc Siege</h1>
+        <p class="mm-sub">Hold the eastern gate</p>
+
+        <div class="mm-grid">
+          <button type="button" class="mode-card" id="modeCampaign">
+            <span class="mc-tag">Campaign</span>
+            <span class="mc-name">The Long Siege</span>
+            <span class="mc-desc"
+              >Wave after wave down the same road, a boss at every stage close. Beat the last wave and
+              prestige to push the campaign deeper.</span
+            >
+            <span class="mc-meta" id="modeCampaignMeta">50 waves · 5 stages</span>
+          </button>
+
+          <button type="button" class="mode-card" id="modeEndless">
+            <span class="mc-tag">Endless</span>
+            <span class="mc-name">No Last Wave</span>
+            <span class="mc-desc"
+              >A 50×50 board with fixed lanes, where a new portal opens every ten waves up to six. The
+              run ends only when the gate does.</span
+            >
+            <span class="mc-meta" id="modeEndlessMeta">No run yet</span>
+          </button>
+
+        </div>
+
+        <p class="mm-foot">Choose a mode · progress saves on this device</p>
+      </div>
+    </div>
+
+    <div id="help" class="modal hidden">
+      <div class="modal-card">
+        <h2>How to play</h2>
+        <div class="help-grid">
+          <div>
+            <h3>Build</h3>
+            <p>Pick a tower from the shop and click a tile inside the lit build lane that follows the route, then press <b>Confirm build</b> — the gold is only spent when you confirm, and tapping another tile moves the ghost first. The lane is five tiles wide; everything outside it is scenery you cannot build on. Towers cannot stand on the dirt path itself, on each other, or on the red warded ground around the spawn portal. Click a placed tower to upgrade it or sell it for 70% of what you invested.</p>
+          </div>
+          <div>
+            <h3>Defend</h3>
+            <p>Monsters march from the western portal to your gate in the east. Each stage lays out a fresh route that holds for all ten of its waves, splitting into up to three lanes from stage two. Study the glowing path, then press <b>▶</b> in the top right to start the wave.</p>
+          </div>
+          <div>
+            <h3>Upgrade</h3>
+            <p>Every tower has ten levels, and each upgrade costs more than the last. Upgrades raise damage and fire rate — never range, so coverage comes from where you build. Towers come in five technological eras: each prestige opens the next one, from timber archers up to gravity wells. Locked towers stay on the shelf so you can see what is coming.</p>
+          </div>
+          <div>
+            <h3>Survive</h3>
+            <p>The campaign runs fifty waves in five stages, and a boss closes each one — the Siege Titan leads the last stand at 5-10. Every leak damages the gate. If the gate falls, the kingdom falls with it. Each prestige adds another fifty waves before the next one is offered, up to a 500-wave campaign at 50-10, and both monsters and bosses grow tougher the deeper the run goes.</p>
+            <p>From prestige 3 the battlefield itself opens up to 45×45 and the horde gains a second portal in the west, so assaults arrive down two separate lanes. Towers held behind prestige are hidden from the shop until you earn the level.</p>
+            <p>From 2-2 the horde sends <b>Infiltrators</b>: hooded saboteurs with twice the health of an ordinary monster and a stubborn streak against slow and freeze. Five seconds after it arrives, an Infiltrator detonates a pulse that shuts down <b>every tower on the map</b> for three seconds, then again every fifteen seconds until it dies or reaches the gate. Tesla bolts that strike one directly hit for double damage — sniping them early is worth it.</p>
+            <p>Beat 5-10 and you can <b>Prestige</b>: the campaign restarts at 1-1 with every enemy 20% tougher, while your upgraded towers wait in storage.</p>
+            <p><b>Endless</b> has no last wave, and it is fought on its own 50×50 field. The portals and their lanes are fixed for the whole run and your towers stay exactly where you put them; every ten waves another portal opens beside the first, adding a new lane to march down, up to six. The packs keep thickening and enemy health climbs past anything the campaign curve reaches, and the run ends only when the gate falls — the deepest wave you survive is kept as your record.</p>
+          </div>
+        </div>
+        <div class="help-controls">Drag to pan · Scroll to zoom · Right-click cancels building</div>
+        <button id="helpClose">Into battle</button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
