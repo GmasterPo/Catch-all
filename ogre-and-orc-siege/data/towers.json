@@ -1,0 +1,163 @@
+{
+  "$comment": "Machine-readable snapshot of the tower catalog and progression rules, exported from src/towers.ts.",
+  "generated": "2026-11-20",
+  "saveVersion": 3,
+  "eras": [
+    { "era": 1, "prestige": 0, "name": "Primitive Defense", "blurb": "Timber, stone and a steady hand." },
+    { "era": 2, "prestige": 1, "name": "Industrial Technology", "blurb": "Gears, steam and sustained fire." },
+    { "era": 3, "prestige": 2, "name": "Advanced Engineering", "blurb": "Precision weapons, radar and armour-piercing rounds." },
+    { "era": 4, "prestige": 3, "name": "Modern Warfare", "blurb": "Beams, plasma and electronic disruption." },
+    { "era": 5, "prestige": 4, "name": "Experimental Technology", "blurb": "Gravity, quanta and autonomous machines." }
+  ],
+  "romanNumerals": ["I", "II", "III", "IV", "V"],
+  "eraUnlockPrestige": { "1": 0, "2": 1, "3": 2, "4": 3, "5": 4 },
+  "levelDamageMultipliers": [1, 1.22, 1.49, 1.82, 2.22, 2.71, 3.3, 4.03, 4.92, 6],
+  "levelRateMultipliers": [1, 1.07, 1.14, 1.23, 1.31, 1.4, 1.5, 1.61, 1.72, 1.84],
+  "towerCount": 21,
+  "activeTowerIds": [
+    "archer", "cannon", "ballista", "frost", "gatling", "mortar", "flame", "tesla",
+    "sniper", "missile", "radar", "autocannon", "laser", "plasma", "emp", "accelerator",
+    "quantum", "singularity", "drone", "stormgen"
+  ],
+  "shelvedTowerIds": ["artillery"],
+  "legacyTowerId": {
+    "barrage": "archer",
+    "heavy": "mortar",
+    "fire": "flame",
+    "ice": "frost",
+    "lava": "plasma",
+    "doors": "frost",
+    "inferno": "plasma",
+    "storm": "stormgen",
+    "siege": "sniper",
+    "artillery": "accelerator"
+  },
+  "towers": [
+    {
+      "id": "archer", "name": "Archer Tower", "short": "Archer", "era": 1, "cost": 70, "icon": "🏹",
+      "desc": "A timber watchtower with a long bow. Cheap, quick, and the backbone of any first wall.",
+      "ability": "Rapid single-target arrows",
+      "range": 9, "damage": 11, "fireRate": 2.4, "kind": "arrow", "projSpeed": 44, "muzzle": 2.15
+    },
+    {
+      "id": "cannon", "name": "Cannon Tower", "short": "Cannon", "era": 1, "cost": 120, "icon": "💣",
+      "desc": "A stone emplacement and a powder charge. Explosive shells scatter a small pack.",
+      "ability": "Splash damage",
+      "range": 8.5, "damage": 34, "fireRate": 0.8, "kind": "cannon", "splash": 1.5, "projSpeed": 26, "muzzle": 1.1
+    },
+    {
+      "id": "ballista", "name": "Ballista Tower", "short": "Ballista", "era": 1, "cost": 160, "icon": "🎯",
+      "desc": "A braced torsion bow throwing an iron bolt clean through a file of enemies.",
+      "ability": "Bolt pierces 3 enemies",
+      "range": 12, "damage": 62, "fireRate": 0.45, "kind": "bolt", "pierce": 3, "projSpeed": 52, "muzzle": 1.6
+    },
+    {
+      "id": "frost", "name": "Frost Tower", "short": "Frost", "era": 1, "cost": 130, "icon": "❄️",
+      "desc": "A runed pillar of river ice. Shards chill a walker and can hold the weak in place.",
+      "ability": "Slows and briefly freezes",
+      "range": 9.5, "damage": 12, "fireRate": 1.4, "kind": "ice", "slow": 0.5, "slowTime": 2.4, "freeze": 0.45, "projSpeed": 32, "muzzle": 1.9
+    },
+    {
+      "id": "gatling", "name": "Gatling Tower", "short": "Gatling", "era": 2, "cost": 260, "icon": "🔫",
+      "desc": "A hand-cranked rotator bank. Weak rounds alone, but the barrels spin up while it fires.",
+      "ability": "Spin-up to 1.6× fire rate",
+      "range": 8, "damage": 9, "fireRate": 6, "kind": "bullet", "projSpeed": 64, "muzzle": 1.25
+    },
+    {
+      "id": "mortar", "name": "Mortar Tower", "short": "Mortar", "era": 2, "cost": 300, "icon": "💥",
+      "desc": "A rifled tube that lobs a heavy shell far down the lane and carpets the road where it lands.",
+      "ability": "Long-range bombardment",
+      "range": 14, "damage": 90, "fireRate": 0.5, "kind": "shell", "splash": 2.8, "projSpeed": 22, "muzzle": 1.35
+    },
+    {
+      "id": "flame", "name": "Flame Tower", "short": "Flame", "era": 2, "cost": 240, "icon": "🔥",
+      "desc": "A pressurised oil jet. Washes a cone of fire over everything close and leaves it burning.",
+      "ability": "Cone of fire + burn",
+      "range": 7.5, "damage": 20, "fireRate": 2.2, "kind": "flame", "cone": 0.55, "burnDps": 18, "burnTime": 3, "muzzle": 1.7
+    },
+    {
+      "id": "tesla", "name": "Tesla Tower", "short": "Tesla", "era": 2, "cost": 380, "icon": "⚡",
+      "desc": "A copper coil fed by a steam dynamo. Lightning leaps from one body to the next.",
+      "ability": "Chain lightning",
+      "range": 10, "damage": 55, "fireRate": 1, "kind": "tesla", "chain": 3, "muzzle": 2.35
+    },
+    {
+      "id": "sniper", "name": "Sniper Tower", "short": "Sniper", "era": 3, "cost": 520, "icon": "🔭",
+      "desc": "A long-barrelled precision rifle on a survey mount. Picks out the toughest target in reach.",
+      "ability": "Hitscan the toughest target",
+      "range": 18, "damage": 240, "fireRate": 0.35, "kind": "sniper", "beam": true, "armorPierce": 0.5, "targeting": "strongest", "muzzle": 1.55
+    },
+    {
+      "id": "missile", "name": "Missile Tower", "short": "Missile", "era": 3, "cost": 540, "icon": "🚀",
+      "desc": "A guided rack. Missiles steer into a moving target and detonate on contact.",
+      "ability": "Tracking missiles",
+      "range": 12, "damage": 85, "fireRate": 0.7, "kind": "missile", "splash": 2.2, "projSpeed": 16, "muzzle": 1.4
+    },
+    {
+      "id": "radar", "name": "Radar Tower", "short": "Radar", "era": 3, "cost": 240, "icon": "📡",
+      "desc": "A dish and a plotting table. No gun of its own: it feeds targets to every tower nearby.",
+      "ability": "+25% range, +20% fire rate near it",
+      "range": 8, "damage": 0, "fireRate": 0, "kind": "drone", "muzzle": 1, "aura": { "range": 8, "rangeBoost": 0.25, "rateBoost": 0.2 }
+    },
+    {
+      "id": "autocannon", "name": "Heavy Autocannon", "short": "Autocannon", "era": 3, "cost": 600, "icon": "⚙️",
+      "desc": "A belt-fed cannon with tungsten penetrators. Armour counts for very little against it.",
+      "ability": "Ignores 60% of armour",
+      "range": 10, "damage": 26, "fireRate": 2.6, "kind": "bullet", "armorPierce": 0.6, "projSpeed": 62, "muzzle": 1.2
+    },
+    {
+      "id": "laser", "name": "Laser Tower", "short": "Laser", "era": 4, "cost": 900, "icon": "🔆",
+      "desc": "A solid-state emitter on a tracking gimbal. No shells, no travel time — just a held beam.",
+      "ability": "Continuous beam damage",
+      "range": 11, "damage": 26, "fireRate": 5, "kind": "laser", "beam": true, "energy": true, "muzzle": 1.9
+    },
+    {
+      "id": "plasma", "name": "Plasma Tower", "short": "Plasma", "era": 4, "cost": 760, "icon": "💠",
+      "desc": "A magnetically bottled plasma bolt. Energy burns straight through plate and bursts on impact.",
+      "ability": "Energy blasts ignore armour",
+      "range": 11, "damage": 95, "fireRate": 0.55, "kind": "plasma", "splash": 2.2, "energy": true, "projSpeed": 26, "muzzle": 1.95
+    },
+    {
+      "id": "emp", "name": "EMP Tower", "short": "EMP", "era": 4, "cost": 680, "icon": "🌀",
+      "desc": "A capacitor bank that dumps its charge in a ring. Everything caught in it stops dead.",
+      "ability": "Stuns a whole cluster",
+      "range": 9.5, "damage": 18, "fireRate": 0.35, "kind": "emp", "splash": 3, "freeze": 1.2, "slow": 0.5, "slowTime": 3, "energy": true, "muzzle": 2.2
+    },
+    {
+      "id": "accelerator", "name": "Accelerator Tower", "short": "Accelerator", "era": 4, "cost": 950, "icon": "☄️",
+      "desc": "A rail assembly that charges, then flings a slug down a straight line of bodies.",
+      "ability": "Charged shot pierces 4",
+      "range": 15, "damage": 170, "fireRate": 0.3, "kind": "accel", "pierce": 4, "energy": true, "projSpeed": 70, "muzzle": 1.8
+    },
+    {
+      "id": "quantum", "name": "Quantum Tower", "short": "Quantum", "era": 5, "cost": 1400, "icon": "🔮",
+      "desc": "A probability projector. Its shots exist in two damage states until they land.",
+      "ability": "30% chance of a double-damage surge",
+      "range": 12, "damage": 60, "fireRate": 0.85, "kind": "quantum", "splash": 1.2, "surge": 0.3, "energy": true, "projSpeed": 34, "muzzle": 1.8
+    },
+    {
+      "id": "singularity", "name": "Singularity Tower", "short": "Singularity", "era": 5, "cost": 1600, "icon": "🕳️",
+      "desc": "A contained collapse. Its shell drags anything nearby back the way it came.",
+      "ability": "Pulls enemies backwards along the lane",
+      "range": 12, "damage": 34, "fireRate": 0.4, "kind": "void", "splash": 3.4, "pull": 2.5, "slow": 0.4, "slowTime": 2, "energy": true, "projSpeed": 20, "muzzle": 2
+    },
+    {
+      "id": "drone", "name": "Drone Nexus", "short": "Drone", "era": 5, "cost": 1500, "icon": "🛸",
+      "desc": "A hangar and three autonomous hunters. Each drone picks its own target.",
+      "ability": "Three independent drones",
+      "range": 11, "damage": 34, "fireRate": 1.2, "kind": "drone", "targets": 3, "projSpeed": 30, "muzzle": 2.4
+    },
+    {
+      "id": "stormgen", "name": "Storm Generator", "short": "Storm", "era": 5, "cost": 1500, "icon": "🌩️",
+      "desc": "An ioniser that seeds a thunderhead over the lane and calls down strike after strike.",
+      "ability": "Sky-wide storm strikes",
+      "range": 13, "damage": 90, "fireRate": 0.45, "kind": "storm", "targets": 5, "energy": true, "muzzle": 3
+    },
+    {
+      "id": "artillery", "name": "Artillery", "short": "Artillery", "era": 5, "tier": 5, "cost": 1500, "icon": "🎆",
+      "desc": "Artillery — coming in a future update. A command battery meant to blanket the whole field.",
+      "ability": "Unreleased content",
+      "range": 44, "damage": 33, "fireRate": 0.2, "kind": "artillery", "splash": 1.6, "projSpeed": 30, "muzzle": 2.4, "shelved": true
+    }
+  ]
+}
