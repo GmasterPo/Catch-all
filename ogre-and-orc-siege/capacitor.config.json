@@ -1,0 +1,11 @@
+{
+  "appId": "com.ogresiege.game",
+  "appName": "Ogre & Orc Siege",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#0a0e14"
+  }
+}
