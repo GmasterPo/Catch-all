@@ -1,4 +1,3 @@
-
     const offline = this.time < this.towerShutdownUntil;
     this.applyAuras();
     for (const tower of this.towers) {
