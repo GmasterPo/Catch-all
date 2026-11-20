@@ -1,0 +1,559 @@
+import * as THREE from 'three';
+import { playTrapDefeatSting } from './audio';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import {
+  BUILD_LANE_RADIUS,
+  GATE_TILE,
+  stageOf,
+  waveInStage,
+  MAX_LEVEL,
+  PORTAL_NO_BUILD_RADIUS,
+  PRESTIGE_HP_STEP,
+  SELL_RATE,
+  START_GOLD,
+  START_LIVES,
+  TKEY,
+  totalWavesFor,
+  mapGridFor,
+  BIG_MAP_PRESTIGE,
+  inBounds,
+  tileCenterX,
+  tileCenterZ,
+  GRID_X,
+  GRID_Z,
+  mapGridForMode,
+  worldToTile,
+  type GameMode,
+  type Tile,
+} from './config';
+import {
+  ENEMIES,
+  LEVEL_DMG,
+  LEVEL_RANGE,
+  LEVEL_RATE,
+  TOWER_BY_ID,
+  eraForPrestige,
+  isShelved,
+  towerUnlockPrestige,
+  bossHpScale,
+  countGroups,
+  endlessBossHpScale,
+  endlessHpScale,
+  hpScale,
+  upgradeCost,
+  waveGroups,
+  type EnemyDef,
+  type EnemyId,
+  type GroupSpec,
+  type ProjectileKind,
+  type TowerDef,
+  type TowerId,
+} from './defs';
+import { buildGhostModel, buildRangeRing, buildTowerModel, createEnemyMesh, makeProjectileMesh } from './models';
+import { findPath, generateRoute, generateWavePaths, reachableEntrances, type WaveRoute } from './pathgen';
+import {
+  SAVE_VERSION,
+  legacyLevel,
+  loadProgress,
+  requestMode,
+  saveProgress,
+  type SaveData,
+} from './save';
+import { UI, type TowerPanelInfo } from './ui';
+import { clamp, makeRng, smoothAngle } from './util';
+import { createWorld, type World } from './world';
+
+type Phase = 'prep' | 'fight' | 'victory' | 'defeat';
+
+/** View box the board is framed into: the live grid plus a little breathing room. */
+const mapViewWidth = () => GRID_X + 2.5;
+const mapViewHeight = () => GRID_Z + 1.5;
+/** Furthest the player can pull back: a little past the fitted view, no more. */
+const MIN_ZOOM = 0.82;
+
+const dmgOf = (t: Tower) => t.def.damage * LEVEL_DMG[t.level - 1];
+/** Radar dishes widen the ring; the buff is refreshed each frame and starts at 1. */
+const rangeOf = (t: Tower) => t.def.range * LEVEL_RANGE[t.level - 1] * t.buffRange;
+const rateOf = (t: Tower) => t.def.fireRate * LEVEL_RATE[t.level - 1] * t.buffRate;
+
+/** Kinds that armour resists. Energy weapons and fire pass straight through plate. */
+const PHYSICAL_KINDS = new Set<ProjectileKind>([
+  'arrow',
+  'bolt',
+  'cannon',
+  'shell',
+  'bullet',
+  'sniper',
+  'missile',
+  'artillery',
+]);
+
+const KIND_COLOR: Record<ProjectileKind, number> = {
+  arrow: 0xe2c98a,
+  bolt: 0xd8c08a,
+  cannon: 0xffb060,
+  shell: 0xd8a45a,
+  bullet: 0xffe0a0,
+  flame: 0xff7a2a,
+  ice: 0xa8e8ff,
+  tesla: 0x9fe8ff,
+  sniper: 0x9ad8c8,
+  missile: 0xff9d6b,
+  laser: 0x8fd8ff,
+  plasma: 0xc08bff,
+  emp: 0x7fd8ff,
+  accel: 0xa0f0ff,
+  quantum: 0xc9a4ff,
+  void: 0x9d7bff,
+  drone: 0x7fe4d0,
+  storm: 0xcfe6ff,
+  artillery: 0xffc46a,
+};
+
+interface Tower {
+  def: TowerDef;
+  level: number;
+  group: THREE.Group;
+  head: THREE.Object3D | null;
+  headPos: THREE.Vector3;
+  center: THREE.Vector3;
+  tiles: Tile[];
+  cooldown: number;
+  invested: number;
+  kills: number;
+  recoil: number;
+  barrier: THREE.Mesh | null;
+  /** False while an infiltrator pulse has the tower dark. */
+  powered: boolean;
+  /** Radar support multipliers, refreshed every frame. */
+  buffRange: number;
+  buffRate: number;
+  /** How many dishes are currently covering this tower. */
+  auraStacks: number;
+  /** Gatling spin-up, 0 (cold) to 1 (full rate). */
+  spin: number;
+}
+
+interface StoredTower {
+  id: TowerId;
+  level: number;
+  invested: number;
+}
+
+interface Enemy {
+  def: EnemyDef;
+  hp: number;
+  maxHp: number;
+  reward: number;
+  speed: number;
+  track: PathTrack;
+  d: number;
+  offset: number;
+  group: THREE.Group;
+  body: THREE.Object3D | null;
+  bar: THREE.Group;
+  barFill: THREE.Mesh;
+  sprite: THREE.Mesh;
+  visualSize: number;
+  barOffset: number;
+  pos: THREE.Vector3;
+  slowUntil: number;
+  slowFactor: number;
+  freezeUntil: number;
+  /** Trap-wave monsters under the bargain ignore slow and freeze. */
+  ccImmune: boolean;
+  /** How much of a slow or freeze a boss shrugs off; 0 for everything else. */
+  ccResist: number;
+  burnUntil: number;
+  /** Next time an infiltrator detonates its pulse (Infinity for other enemies). */
+  pulseAt: number;
+  burnDps: number;
+  dead: boolean;
+  phase: number;
+  lastSource: Tower | null;
+}
+
+interface Payload {
+  damage: number;
+  splash: number;
+  /** Fraction of enemy armour this hit ignores. */
+  armorPierce?: number;
+  /** Tiles an enemy is dragged back along its lane. */
+  pull?: number;
+  /** Enemies a bolt drills through in a line. */
+  pierce?: number;
+  slow?: number;
+  slowTime?: number;
+  freeze?: number;
+  burnDps?: number;
+  burnTime?: number;
+  pool?: { dps: number; time: number; radius: number };
+  physical: boolean;
+  color: number;
+  source: Tower | null;
+}
+
+interface Projectile {
+  mesh: THREE.Object3D;
+  from: THREE.Vector3;
+  to: THREE.Vector3;
+  t: number;
+  dur: number;
+  arc: number;
+  target: Enemy | null;
+  payload: Payload;
+  kind: ProjectileKind;
+  done: boolean;
+}
+
+interface Hazard {
+  mesh: THREE.Mesh;
+  radius: number;
+  dps: number;
+  until: number;
+  source: Tower | null;
+}
+
+interface Effect {
+  obj: THREE.Object3D;
+  ttl: number;
+  life: number;
+  onUpdate: (k: number) => void;
+  cleanup?: () => void;
+}
+
+interface SpawnPlan {
+  type: EnemyId;
+  remaining: number;
+  interval: number;
+  timer: number;
+  route: number;
+}
+
+interface Sample {
+  x: number;
+  z: number;
+  dx: number;
+  dz: number;
+}
+
+class PathTrack {
+  pts: { x: number; z: number }[] = [];
+  cum: number[] = [0];
+  total = 0;
+
+  constructor(tiles: Tile[]) {
+    for (const tile of tiles) {
+      const p = { x: tileCenterX(tile.x), z: tileCenterZ(tile.z) };
+      const last = this.pts[this.pts.length - 1];
+      if (last && Math.abs(last.x - p.x) < 0.001 && Math.abs(last.z - p.z) < 0.001) continue;
+      this.pts.push(p);
+    }
+    for (let i = 1; i < this.pts.length; i++) {
+      const a = this.pts[i - 1];
+      const b = this.pts[i];
+      this.total += Math.hypot(b.x - a.x, b.z - a.z);
+      this.cum.push(this.total);
+    }
+  }
+
+  sample(d: number, out: Sample): void {
+    if (this.pts.length < 2 || this.total <= 0) {
+      const p = this.pts[0] ?? { x: 0, z: 0 };
+      out.x = p.x;
+      out.z = p.z;
+      out.dx = 1;
+      out.dz = 0;
+      return;
+    }
+    const dist = clamp(d, 0, this.total);
+    let i = 1;
+    while (i < this.cum.length - 1 && this.cum[i] < dist) i++;
+    const a = this.pts[i - 1];
+    const b = this.pts[i];
+    const segStart = this.cum[i - 1];
+    const segLen = Math.max(0.0001, this.cum[i] - segStart);
+    const t = clamp((dist - segStart) / segLen, 0, 1);
+    out.x = a.x + (b.x - a.x) * t;
+    out.z = a.z + (b.z - a.z) * t;
+    const dx = b.x - a.x;
+    const dz = b.z - a.z;
+    const len = Math.hypot(dx, dz) || 1;
+    out.dx = dx / len;
+    out.dz = dz / len;
+  }
+}
+
+export class Game {
+  private canvas: HTMLCanvasElement;
+  private renderer: THREE.WebGLRenderer;
+  private scene = new THREE.Scene();
+  private camera: THREE.OrthographicCamera;
+  private controls: OrbitControls;
+  private clock = new THREE.Clock();
+  private world: World;
+  private ui: UI;
+
+  private towerLayer = new THREE.Group();
+  private enemyLayer = new THREE.Group();
+  private fxLayer = new THREE.Group();
+  private uiLayer = new THREE.Group();
+  private systemLayer = new THREE.Group();
+
+  // economy / progression (prestige and stored towers survive a refresh)
+  private progress = loadProgress();
+  private saveListeners: Array<(data: SaveData) => void> = [];
+  /** Dev-only crowd-control tallies, used by the balance simulation. */
+  private ccTally = { slowed: 0, froze: 0, blocked: 0 };
+  /** Dev-only: tesla bolts that landed on an infiltrator with the double-damage bonus. */
+  private teslaBonusHits = 0;
+  /** Dev-only: most infiltrators ever alive at the same moment, to check the throttling. */
+  private infiltratorPeak = 0;
+  /** Dev-only: total infiltrators the wave has released so far. */
+  private infiltratorsSpawned = 0;
+  private prestige = this.progress.prestige;
+  /** Which run is on the board; endless ignores prestige and never finishes. */
+  private mode: GameMode = 'campaign';
+  /** Deepest endless wave survived, kept across sessions. */
+  private endlessBest = this.progress.endlessBest ?? 0;
+  private betch = false;
+  /** Wave where the bargain springs its trap. */
+  private static readonly BETCH_TRAP_WAVE = 49;
+  /** Gold handed over by the bargain button. */
+  private static readonly BETCH_PAYOUT = 10000;
+  /** Every monster on the bargain's trap wave arrives with this much health. */
+  private static readonly BETCH_HP = 15000;
+  /** At most this many infiltrators are ever alive on the board at once. */
+  private static readonly MAX_INFILTRATORS = 3;
+  /** Endless stops opening portals here: six lanes is the whole west edge. */
+  private static readonly ENDLESS_PORTAL_CAP = 6;
+  /** An infiltrator charges for five seconds, then pulses every fifteen. */
+  private static readonly INFILTRATOR_FIRST_PULSE = 5;
+  private static readonly INFILTRATOR_PULSE_EVERY = 15;
+  /** How long a pulse keeps every tower on the board switched off. */
+  private static readonly PULSE_DOWNTIME = 3;
+  /**
+   * Bosses shrug off 60% of every slow and freeze: durations shrink to 40%,
+   * a 50% slow only costs them 20% speed, and a freeze becomes a heavy slow
+   * instead of a stop, so a wall of frost towers cannot park them at the spawn.
+   */
+  private static readonly BOSS_CC_RESIST = 0.6;
+  private gold = START_GOLD;
+  private lives = START_LIVES;
+  private wave = 1;
+  private stage = 1;
+  private bannerStage = 0;
+  private stored: StoredTower[] = this.progress.stored;
+  private placingStored: StoredTower | null = null;
+  /** Staged placement awaiting the confirm button. */
+  private pending: { tiles: Tile[]; anchor: Tile } | null = null;
+  /** Spawn entrances for the current stage; the big field runs two. */
+  private portals: Tile[] = [{ x: 0, z: Math.floor(GRID_Z / 2) }];
+  private phase: Phase = 'prep';
+  private paused = false;
+  /** The mode menu is up: the board is frozen until a mode is picked again. */
+  private menuOpen = false;
+  private speed = 1;
+  private time = 0;
+  private visualTime = 0;
+  private rng = makeRng(90210);
+
+  // board
+  private blocked = new Uint8Array(GRID_X * GRID_Z);
+  private pathTiles = new Set<number>();
+  private buildable = new Set<number>();
+  private towers: Tower[] = [];
+  private routes: WaveRoute[] = [];
+  private tracks: PathTrack[] = [];
+
+  // combat
+  private enemies: Enemy[] = [];
+  /** Towers are dark until this time, after an infiltrator pulse. */
+  private towerShutdownUntil = 0;
+  private spawns: SpawnPlan[] = [];
+  private projectiles: Projectile[] = [];
+  private hazards: Hazard[] = [];
+  private effects: Effect[] = [];
+  private boss: Enemy | null = null;
+  private lastBossKey = '';
+
+  // interaction
+  private selected: Tower | null = null;
+  private placing: TowerId | null = null;
+  private hover: Tile | null = null;
+  private ghost: THREE.Group | null = null;
+  private raycaster = new THREE.Raycaster();
+  private ndc = new THREE.Vector2();
+  private downX = 0;
+  private downY = 0;
+  private downButton = 0;
+
+  // indicators
+  private rangeRing: THREE.Mesh;
+  private selRing: THREE.Mesh;
+  private hl1: THREE.Mesh;
+  private hl2: THREE.Mesh;
+  private burstGeo = new THREE.SphereGeometry(0.6, 8, 6);
+  private ringGeo = new THREE.RingGeometry(0.86, 1, 40);
+  private barBgGeo = new THREE.PlaneGeometry(1, 0.16);
+  private barFillGeo = new THREE.PlaneGeometry(1, 0.1);
+  private barBgMat = new THREE.MeshBasicMaterial({
+    color: 0x140f0f,
+    transparent: true,
+    opacity: 0.8,
+    depthWrite: false,
+    depthTest: false,
+  });
+  // the fill must be transparent too, or it renders in the opaque pass and the
+  // transparent background paints over it
+  private barFillMat = new THREE.MeshBasicMaterial({
+    color: 0x8fd06f,
+    transparent: true,
+    depthWrite: false,
+    depthTest: false,
+  });
+  private barBossMat = new THREE.MeshBasicMaterial({
+    color: 0xff8a5c,
+    transparent: true,
+    depthWrite: false,
+    depthTest: false,
+  });
+
+  private sampleOut: Sample = { x: 0, z: 0, dx: 1, dz: 0 };
+  private lastRemaining = -1;
+
+  constructor(canvas: HTMLCanvasElement) {
+    this.canvas = canvas;
+    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+    this.renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    const viewW = canvas.clientWidth || window.innerWidth;
+    const viewH = canvas.clientHeight || window.innerHeight;
+    this.renderer.setSize(viewW, viewH, false);
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.0;
+
+    this.scene.background = new THREE.Color(0x9ec8e6);
+
+    const aspect = viewW / viewH;
+    const fitHeight = Math.max(mapViewHeight(), mapViewWidth() / aspect);
+    this.camera = new THREE.OrthographicCamera(
+      (-fitHeight * aspect) / 2,
+      (fitHeight * aspect) / 2,
+      fitHeight / 2,
+      -fitHeight / 2,
+      1,
+      400,
+    );
+    this.camera.position.set(0, 200, 0);
+    this.camera.up.set(0, 0, -1);
+    this.camera.lookAt(0, 0, 0);
+
+    this.controls = new OrbitControls(this.camera, canvas);
+    this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.08;
+    this.controls.enableRotate = false;
+    this.controls.screenSpacePanning = true;
+    this.controls.minZoom = MIN_ZOOM;
+    this.controls.maxZoom = 4;
+    this.controls.target.set(0, 0, 0);
+    this.controls.panSpeed = 1.1;
+    this.controls.zoomSpeed = 1.1;
+    this.controls.mouseButtons = {
+      LEFT: THREE.MOUSE.PAN,
+      MIDDLE: THREE.MOUSE.DOLLY,
+      RIGHT: THREE.MOUSE.PAN,
+    };
+    // one finger drags the map; two fingers pinch-zoom and pan
+    this.controls.touches.ONE = THREE.TOUCH.PAN;
+    this.controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
+    this.controls.addEventListener('change', () => {
+      const t = this.controls.target;
+      t.x = clamp(t.x, -GRID_X * 0.66, GRID_X * 0.66);
+      t.z = clamp(t.z, -GRID_Z * 0.62, GRID_Z * 0.62);
+      t.y = 0;
+    });
+
+    this.scene.add(this.towerLayer, this.enemyLayer, this.fxLayer, this.uiLayer, this.systemLayer);
+    this.world = createWorld(this.scene);
+
+    this.rangeRing = buildRangeRing();
+    this.systemLayer.add(this.rangeRing);
+
+    this.selRing = new THREE.Mesh(
+      new THREE.RingGeometry(0.58, 0.72, 32),
+      new THREE.MeshBasicMaterial({ color: 0xffe08a, transparent: true, opacity: 0.9, side: THREE.DoubleSide, depthWrite: false }),
+    );
+    this.selRing.rotation.x = -Math.PI / 2;
+    this.selRing.position.y = 0.1;
+    this.selRing.visible = false;
+    this.systemLayer.add(this.selRing);
+
+    this.hl1 = this.makeHighlight();
+    this.hl2 = this.makeHighlight();
+    this.systemLayer.add(this.hl1, this.hl2);
+
+    this.ui = new UI({
+      onPickTower: (id) => this.beginPlacement(id),
+      onRecall: (index) => this.beginRecall(index),
+      onStartWave: () => this.play(),
+      onSpeed: (n) => this.setSpeed(n),
+      onPause: () => this.togglePause(),
+      onUpgrade: () => this.upgradeSelected(),
+      onSell: () => this.sellSelected(),
+      onDeselect: () => this.deselect(),
+      onRestart: () => this.restart(),
+      onPrestige: () => this.beginRun(true),
+      onBetch: () => this.pressBetch(),
+      onConfirmBuild: () => this.confirmPlacement(),
+      onCancelBuild: () => this.cancelPending(),
+    });
+
+    this.bindEvents();
+    this.ui.setGold(this.gold);
+    this.ui.setLives(this.lives);
+    this.ui.setWave(this.wave);
+    this.ui.setPrestige(this.prestige);
+    this.ui.setMode(this.mode);
+    this.ui.setStorage(this.stored);
+    this.prepareWave(true);
+
+    if (import.meta.env.DEV) {
+      // dev-only introspection for balance runs; production builds drop this block
+      (window as unknown as { __siege?: unknown }).__siege = {
+        snapshot: () => this.debugSnapshot(),
+        resetTally: () => {
+          this.ccTally = { slowed: 0, froze: 0, blocked: 0 };
+        },
+        siege: (opts?: { gold?: number; prestige?: number; maxTowers?: number; level?: number }) =>
+          this.devSiege(opts),
+        select: (index: number) => {
+          const tower = this.towers[index];
+          if (!tower) return null;
+          this.selectTower(tower);
+          return { id: tower.def.id, level: tower.level };
+        },
+        upgrade: () => this.upgradeSelected(),
+        jump: (wave: number) => {
+          this.wave = Math.max(1, Math.floor(wave));
+          this.ui.setWave(this.wave);
+          this.prepareWave(true);
+          return this.debugSnapshot();
+        },
+        startMode: (mode: GameMode) => {
+          this.startMode(mode);
+          return this.debugSnapshot();
+        },
+        /** Dev only: buy and place a tower on the first free build tile. */
+        place: (id: TowerId) => {
+          const slot = this.firstBuildSlot();
+          if (!slot) return { placed: false, reason: 'no free build tile' };
+          this.beginPlacement(id);
+          if (this.placing !== id) {
+            // the shop refused: locked era, shelved tower or too little gold
+            this.cancelPlacement();
+            return { placed: false, placing: this.placing, gold: this.gold };
+          }
+          this.hover = { x: slot.x, z: slot.z };
+          this.stagePlacement();
+          if (!this.pending) {
+            this.cancelPlacement();
