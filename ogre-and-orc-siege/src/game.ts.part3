@@ -1,0 +1,760 @@
+    if (this.betch || this.mode === 'endless') return;
+    this.betch = true;
+    this.gold += Game.BETCH_PAYOUT;
+    this.ui.setGold(this.gold);
+    this.ui.setBetch(true);
+    this.ui.toast(`+${Game.BETCH_PAYOUT} gold. The horde will remember that.`, 'good');
+    if (this.phase === 'prep') {
+      this.ui.setPrep(this.wave, this.routes.length, this.waveCount() * this.spawnMultiplier());
+    }
+  }
+
+  /** The groups this wave sends, which mode it is, and how many monsters that is. */
+  private waveGroupsNow(): GroupSpec[] {
+    return waveGroups(this.wave, this.mode === 'endless');
+  }
+
+  private waveCount(): number {
+    return countGroups(this.waveGroupsNow());
+  }
+
+  /** Three times the monsters on the bargain's trap wave. */
+  private spawnMultiplier(): number {
+    return this.betch && this.wave === Game.BETCH_TRAP_WAVE ? 3 : 1;
+  }
+
+  /** Stores prestige and the storage bin so a refresh does not lose them. */
+  private persist(): void {
+    const data = this.saveData();
+    saveProgress(data);
+    for (const listener of this.saveListeners) listener(data);
+  }
+
+  /** Snapshot of the meta progression, for account sync. */
+  saveData(): SaveData {
+    return {
+      prestige: this.prestige,
+      stored: this.stored.map((item) => ({ ...item })),
+      endlessBest: this.endlessBest,
+      version: SAVE_VERSION,
+    };
+  }
+
+  /**
+   * Adopts a save pulled from an account; does not echo it back to the server.
+   * The previous player's towers and wave do not follow the new account.
+   */
+  applySaveData(data: SaveData): void {
+    this.prestige = Math.max(0, Math.floor(data.prestige));
+    this.endlessBest = Math.max(0, Math.floor(data.endlessBest ?? 0));
+    // an account saved before the ten-level towers keeps its power on the new ladder
+    const legacy = !(typeof data.version === 'number' && data.version >= SAVE_VERSION);
+    this.stored = data.stored.map((item) => ({
+      ...item,
+      level: legacy ? legacyLevel(item.level) : item.level,
+    }));
+    saveProgress({ prestige: this.prestige, stored: this.stored, endlessBest: this.endlessBest });
+    this.ui.setPrestige(this.prestige);
+    // an account can carry a prestige that calls for the other battlefield
+    if (this.mapIsStale()) {
+      window.location.reload();
+      return;
+    }
+    this.ui.setStorage(this.stored);
+    this.discardTowers();
+    this.startCampaign('');
+  }
+
+  /** Dims a tower's sprites while a pulse has it switched off. */
+  private setTowerPower(tower: Tower, online: boolean): void {
+    if (tower.powered === online) return;
+    tower.powered = online;
+    tower.group.traverse((obj) => {
+      if (!(obj instanceof THREE.Mesh)) return;
+      const mat = obj.material as THREE.MeshBasicMaterial;
+      if (mat && mat.color) mat.color.setHex(online ? 0xffffff : 0x5c6675);
+    });
+  }
+
+  /** An infiltrator's charge: the whole grid goes dark for a few seconds. */
+  /** Infiltrators currently walking the route. */
+  private liveInfiltrators(): number {
+    let count = 0;
+    for (const enemy of this.enemies) {
+      if (!enemy.dead && enemy.def.id === 'infiltrator') count += 1;
+    }
+    return count;
+  }
+
+  private infiltratorPulse(enemy: Enemy): void {
+    this.towerShutdownUntil = Math.max(this.towerShutdownUntil, this.time + Game.PULSE_DOWNTIME);
+    this.addBurst(enemy.pos, 0xb46bff, 4.5);
+    this.addBurst(enemy.pos, 0x9fe8ff, 2.2);
+    this.ui.toast('Infiltrator pulse — every tower offline for 3s', 'bad');
+  }
+
+  /** True when the current prestige calls for a different battlefield size. */
+  private mapIsStale(): boolean {
+    return this.mapIsStaleFor(this.mode);
+  }
+
+  private mapIsStaleFor(mode: GameMode): boolean {
+    const grid = mapGridForMode(mode, this.prestige);
+    return grid.x !== GRID_X || grid.z !== GRID_Z;
+  }
+
+  /** Removes built towers without banking them: the save they belong to is being replaced. */
+  private discardTowers(): void {
+    for (const tower of this.towers) {
+      for (const tile of tower.tiles) this.blocked[TKEY(tile.x, tile.z)] = 0;
+      this.towerLayer.remove(tower.group);
+      tower.group.traverse((obj) => {
+        if (obj instanceof THREE.Mesh) obj.geometry.dispose();
+      });
+    }
+    this.towers = [];
+    this.deselect();
+    this.cancelPlacement();
+  }
+
+  /** Dev only: raw simulation state, used to measure what crowd control actually does. */
+  debugSnapshot(): unknown {
+    const live = this.enemies.filter((e) => !e.dead);
+    return {
+      wave: this.wave,
+      stage: this.stage,
+      mode: this.mode,
+      endlessBest: this.endlessBest,
+      hpScaleNow:
+        Math.round(
+          (this.mode === 'endless' ? endlessHpScale(this.wave) : hpScale(this.wave)) * 100,
+        ) / 100,
+      betch: this.betch,
+      phase: this.phase,
+      time: Math.round(this.time * 100) / 100,
+      lives: this.lives,
+      gold: this.gold,
+      tally: { ...this.ccTally },
+      live: live.length,
+      immune: live.filter((e) => e.ccImmune).length,
+      slowedNow: live.filter((e) => e.slowUntil > this.time).length,
+      frozenNow: live.filter((e) => e.freezeUntil > this.time).length,
+      sample: live.slice(0, 4).map((e) => ({
+        type: e.def.id,
+        hp: Math.round(e.hp),
+        maxHp: Math.round(e.maxHp),
+        travelled: Math.round(e.d * 10) / 10,
+      })),
+      grid: { x: GRID_X, z: GRID_Z },
+      infiltrators: live.filter((e) => e.def.id === 'infiltrator').length,
+      infiltratorPeak: this.infiltratorPeak,
+      infiltratorsSpawned: this.infiltratorsSpawned,
+      infiltratorHp: Math.round(live.find((e) => e.def.id === 'infiltrator')?.maxHp ?? 0),
+      teslaBonusHits: this.teslaBonusHits,
+      shutdownUntil: Math.round(this.towerShutdownUntil * 100) / 100,
+      portals: this.portals.map((p) => ({ ...p })),
+      lanes: this.routes.map((r) => ({
+        entrance: r.entrance,
+        tiles: r.tiles.length,
+        checksum: r.tiles.reduce((h, t) => (h * 31 + TKEY(t.x, t.z)) % 1000003, 7),
+      })),
+      kills: this.towers.reduce((n, t) => n + t.kills, 0),
+      waitingToSpawn: this.spawns.reduce((n, p) => n + p.remaining, 0),
+      prestige: this.prestige,
+      era: eraForPrestige(this.prestige).name,
+      placing: this.placing,
+      stored: this.stored.map((s) => s.id),
+      towers: this.towers.map((t) => ({
+        id: t.def.id,
+        level: t.level,
+        kills: t.kills,
+        range: Math.round(rangeOf(t) * 100) / 100,
+        rate: Math.round(rateOf(t) * 100) / 100,
+        buffRange: Math.round(t.buffRange * 100) / 100,
+        buffRate: Math.round(t.buffRate * 100) / 100,
+      })),
+    };
+  }
+
+  /** Dev only: the first tile the build lane will accept a tower on. */
+  private firstBuildSlot(): Tile | null {
+    for (const key of this.buildable) {
+      const tile = { x: Math.floor(key / GRID_Z), z: key % GRID_Z };
+      if (this.canBuild(tile)) return tile;
+    }
+    return null;
+  }
+
+  /** Dev only: spend a gold budget on max-level towers spread along the route, so a run can be measured. */
+  private devSiege(opts: { gold?: number; prestige?: number; maxTowers?: number; level?: number } = {}): unknown {
+    const budget = opts.gold ?? 1_000_000;
+    const prestige = opts.prestige ?? 2;
+    const level = clamp(Math.round(opts.level ?? MAX_LEVEL), 1, MAX_LEVEL);
+
+    this.discardTowers();
+    this.prestige = prestige;
+    this.ui.setPrestige(prestige);
+    // jumping to a prestige that changes the battlefield needs a rebuilt page
+    if (this.mapIsStale()) {
+      this.persist();
+      window.location.reload();
+    }
+    this.gold = budget;
+    this.ui.setGold(budget);
+    this.lives = START_LIVES;
+    this.ui.setLives(this.lives);
+
+    // buildable tiles that touch the route, kept in the order monsters walk past them
+    const slots: Tile[] = [];
+    const seen = new Set<number>();
+    const seenPath = new Set<number>();
+    const orderedPath: Tile[] = [];
+    for (const route of this.routes) {
+      for (const tile of route.tiles) {
+        const pathKey = TKEY(tile.x, tile.z);
+        if (seenPath.has(pathKey)) continue;
+        seenPath.add(pathKey);
+        orderedPath.push(tile);
+      }
+    }
+    for (const cell of orderedPath) {
+      const x = cell.x;
+      const z = cell.z;
+      for (const [dx, dz] of [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ] as const) {
+        const tile: Tile = { x: x + dx, z: z + dz };
+        const tileKey = TKEY(tile.x, tile.z);
+        if (seen.has(tileKey) || !this.canBuild(tile)) continue;
+        seen.add(tileKey);
+        slots.push(tile);
+      }
+    }
+
+    // the strongest towers the game has, all at max level, alternating along the lane
+    const order: TowerId[] = [
+      'quantum',
+      'stormgen',
+      'singularity',
+      'accelerator',
+      'radar',
+      'laser',
+      'emp',
+      'drone',
+      'plasma',
+      'missile',
+      'sniper',
+      'ballista',
+    ];
+    const priceOf = (id: TowerId): number => {
+      const def = TOWER_BY_ID[id];
+      let total = def.cost;
+      for (let step = 1; step < level; step++) total += upgradeCost(def, step);
+      return total;
+    };
+    const avgPrice = order.reduce((n, id) => n + priceOf(id), 0) / order.length;
+    const affordable = Math.max(1, Math.min(opts.maxTowers ?? slots.length, Math.floor(budget / avgPrice)));
+
+    // spread the towers along the whole route instead of bunching them at the entrance
+    const picked: Tile[] = [];
+    if (slots.length <= affordable) {
+      picked.push(...slots);
+    } else {
+      const stride = Math.floor(slots.length / affordable);
+      for (let i = 0; i < affordable; i++) picked.push(slots[Math.min(slots.length - 1, i * stride)]);
+    }
+
+    let built = 0;
+    let spent = 0;
+    for (const tile of picked) {
+      const id = order[built % order.length];
+      const price = priceOf(id);
+      if (spent + price > budget) break;
+      const tower = this.createTower(id, [tile], level);
+      if (!tower) continue;
+      tower.invested = price;
+      this.towers.push(tower);
+      spent += price;
+      built += 1;
+    }
+    this.gold = budget - spent;
+    this.ui.setGold(this.gold);
+    this.world.setHidden(this.hiddenTiles());
+
+    return {
+      built,
+      spent,
+      left: this.gold,
+      slots: slots.length,
+      levels: this.towers.map((t) => `${t.def.short} L${t.level}`),
+    };
+  }
+
+  onProgress(listener: (data: SaveData) => void): void {
+    this.saveListeners.push(listener);
+  }
+
+  /** Prestige of the save currently loaded, for the mode menu's campaign summary. */
+  get prestigeLevel(): number {
+    return this.prestige;
+  }
+
+  /** Deepest endless wave on this save, for the mode menu's endless card. */
+  get endlessBestWave(): number {
+    return this.endlessBest;
+  }
+
+  /** Freezes the board while the mode menu is up, so a wave cannot run behind it. */
+  setMenuOpen(open: boolean): void {
+    if (this.menuOpen === open) return;
+    this.menuOpen = open;
+    if (open) {
+      this.cancelPlacement();
+      this.deselect();
+    }
+  }
+
+  notify(message: string, kind: 'good' | 'bad' | '' = ''): void {
+    this.ui.toast(message, kind);
+  }
+
+  private stashTowers(): void {
+    if (this.towers.length === 0) return;
+    const count = this.towers.length;
+    for (const tower of this.towers) {
+      this.stored.push({ id: tower.def.id, level: tower.level, invested: tower.invested });
+      for (const tile of tower.tiles) this.blocked[TKEY(tile.x, tile.z)] = 0;
+      this.towerLayer.remove(tower.group);
+      tower.group.traverse((obj) => {
+        if (obj instanceof THREE.Mesh) obj.geometry.dispose();
+      });
+    }
+    this.towers = [];
+    this.deselect();
+    this.cancelPlacement();
+    this.ui.setStorage(this.stored);
+    this.persist();
+    this.ui.toast(`${count} tower${count === 1 ? '' : 's'} moved to storage`, 'good');
+  }
+
+  private startWave(): void {
+    if (this.phase !== 'prep' || this.routes.length === 0) return;
+    this.phase = 'fight';
+    this.tracks = this.routes.map((r) => new PathTrack(r.tiles));
+    const spawnMul = this.spawnMultiplier();
+    this.spawns = this.waveGroupsNow().map((g, i) => ({
+      type: g.type,
+      remaining: g.count * spawnMul,
+      interval: g.interval,
+      timer: g.delay,
+      route: i,
+    }));
+    this.world.setPath(this.pathTiles, false);
+    this.ui.setFighting(this.wave, this.waveCount() * spawnMul);
+    if (this.betch && this.wave === Game.BETCH_TRAP_WAVE) this.ui.flashBetchWarning();
+    this.updateRemaining();
+    this.ui.toast(`Wave ${this.wave} is marching on the gate`, 'bad');
+  }
+
+  private updateSpawns(dt: number): void {
+    for (const plan of this.spawns) {
+      // saboteurs queue up instead of flooding the field: their group waits its turn
+      if (plan.type === 'infiltrator' && this.liveInfiltrators() >= Game.MAX_INFILTRATORS) {
+        continue;
+      }
+      plan.timer -= dt;
+      let guard = 0;
+      while (plan.timer <= 0 && plan.remaining > 0 && guard++ < 8) {
+        this.spawnEnemy(plan.type, plan.route++);
+        plan.remaining--;
+        plan.timer += plan.interval;
+      }
+    }
+    this.spawns = this.spawns.filter((p) => p.remaining > 0);
+  }
+
+  private spawnEnemy(type: EnemyId, route: number): void {
+    const track = this.tracks[route % Math.max(1, this.tracks.length)];
+    if (!track || track.total <= 0) return;
+    const def = ENEMIES[type];
+    const group = createEnemyMesh(type);
+    this.enemyLayer.add(group);
+
+    const isBoss = !!def.boss;
+    const visualSize = Number(group.userData.size) || 1;
+    const barOffset = visualSize * 0.55 + 0.35;
+    const bar = this.makeHealthBar(Math.max(0.85, visualSize * 0.62), isBoss);
+    // endless runs its own ladder: no prestige heat, and health that never levels off
+    const endless = this.mode === 'endless';
+    const heat = endless ? 1 : 1 + PRESTIGE_HP_STEP * this.prestige;
+    const baseHp = endless
+      ? def.hp * (isBoss ? endlessBossHpScale(this.wave) : endlessHpScale(this.wave))
+      : def.hp * (isBoss ? bossHpScale(this.wave) : hpScale(this.wave));
+    let hp = baseHp * heat * (this.betch ? 1.5 : 1);
+    // the bargain's trap wave: flat 15,000 health and no crowd control
+    const trapped = this.betch && this.wave === Game.BETCH_TRAP_WAVE;
+    if (trapped) hp = Game.BETCH_HP;
+    const speed = def.speed * Math.min(1.15, 1 + 0.004 * (this.wave - 1));
+    const reward = Math.round(def.reward * (1 + 0.06 * (this.wave - 1)));
+
+    const enemy: Enemy = {
+      def,
+      hp,
+      maxHp: hp,
+      reward,
+      speed,
+      track,
+      d: 0,
+      // spread the column a little so a wave does not stack into one blob
+      offset: (this.rng() - 0.5) * 0.7,
+      group,
+      body: group.getObjectByName('body') ?? null,
+      bar: bar.group,
+      barFill: bar.fill,
+      sprite: group.userData.sprite as THREE.Mesh,
+      visualSize,
+      barOffset,
+      pos: new THREE.Vector3(),
+      slowUntil: 0,
+      slowFactor: 1,
+      freezeUntil: 0,
+      ccImmune: trapped,
+      ccResist: isBoss || def.id === 'infiltrator' ? Game.BOSS_CC_RESIST : 0,
+      burnUntil: 0,
+      burnDps: 0,
+      pulseAt: type === 'infiltrator' ? this.time + Game.INFILTRATOR_FIRST_PULSE : Infinity,
+      dead: false,
+      phase: this.rng() * 6.28,
+      lastSource: null,
+    };
+    track.sample(0, this.sampleOut);
+    enemy.pos.set(this.sampleOut.x, 0.45 * def.scale, this.sampleOut.z);
+    group.position.set(this.sampleOut.x, 0, this.sampleOut.z);
+    group.rotation.y = Math.atan2(this.sampleOut.dx, this.sampleOut.dz);
+    bar.group.position.set(this.sampleOut.x, 1.5, this.sampleOut.z - barOffset);
+
+    this.enemies.push(enemy);
+    if (type === 'infiltrator') {
+      this.infiltratorsSpawned += 1;
+      this.infiltratorPeak = Math.max(this.infiltratorPeak, this.liveInfiltrators());
+    }
+    if (isBoss) {
+      this.boss = enemy;
+      this.lastBossKey = '';
+      this.ui.setBoss(def.name, 1);
+      this.ui.toast(`${def.name} enters the fray!`, 'bad');
+    }
+    this.updateRemaining();
+  }
+
+  private makeHealthBar(width: number, boss: boolean): { group: THREE.Group; fill: THREE.Mesh } {
+    const group = new THREE.Group();
+    const bg = new THREE.Mesh(this.barBgGeo, this.barBgMat);
+    const fill = new THREE.Mesh(this.barFillGeo, boss ? this.barBossMat : this.barFillMat);
+    fill.position.z = 0.02;
+    bg.renderOrder = 4;
+    fill.renderOrder = 6;
+    group.add(bg, fill);
+    group.scale.setScalar(width);
+    this.uiLayer.add(group);
+    return { group, fill };
+  }
+
+  private updateRemaining(): void {
+    let count = 0;
+    for (const e of this.enemies) if (!e.dead) count++;
+    for (const s of this.spawns) count += s.remaining;
+    if (count !== this.lastRemaining) {
+      this.lastRemaining = count;
+      this.ui.setRemaining(count);
+    }
+  }
+
+  private checkWaveEnd(): void {
+    if (this.phase !== 'fight') return;
+    if (this.spawns.length > 0) return;
+    if (this.enemies.some((e) => !e.dead)) return;
+    this.completeWave();
+  }
+
+  private completeWave(): void {
+    if (this.phase !== 'fight') return;
+    const bonus = 25 + this.wave * 12;
+    this.gold += bonus;
+    this.ui.setGold(this.gold);
+    this.ui.toast(`Wave ${this.wave} cleared! +${bonus} gold`, 'good');
+    this.boss = null;
+    this.ui.setBoss(null);
+    this.lastBossKey = '';
+    this.clearCombat();
+    if (this.mode === 'endless') {
+      // no finish line: bank the wave that was just survived, then send the next
+      this.recordEndlessWave(this.wave);
+      this.wave += 1;
+      this.prepareWave();
+      return;
+    }
+    if (this.wave >= totalWavesFor(this.prestige)) {
+      this.victory();
+      return;
+    }
+    this.wave++;
+    this.prepareWave();
+  }
+
+  /** Banks the deepest endless wave survived, so a lost run still leaves a record. */
+  private recordEndlessWave(wave: number): void {
+    if (wave <= this.endlessBest) return;
+    this.endlessBest = wave;
+    this.persist();
+  }
+
+  private victory(): void {
+    this.phase = 'victory';
+    this.clearCombat();
+    const heat = Math.round((1 + PRESTIGE_HP_STEP * (this.prestige + 1)) * 100);
+    const next = totalWavesFor(this.prestige + 1);
+    this.ui.showOverlay(
+      'Victory',
+      `All ${totalWavesFor(this.prestige)} waves have been broken against your walls. The gate still stands with ${this.lives} integrity and ${Math.floor(this.gold)} gold in the vault.` +
+        ` Prestige to run ${next} waves with every enemy at ${heat}% strength — your towers keep their levels.`,
+      true,
+    );
+  }
+
+  /** Play again from the overlay: endless starts over, a prestige run keeps going, else reload. */
+  private restart(): void {
+    if (this.mode === 'endless') {
+      this.beginEndless();
+      return;
+    }
+    if (this.prestige === 0) {
+      window.location.reload();
+      return;
+    }
+    this.beginRun(false);
+  }
+
+  /**
+   * Menu pick. Choosing the mode already on the board just hands it back —
+   * only a finished run or the other mode starts something new.
+   */
+  startMode(mode: GameMode): void {
+    const finished = this.phase === 'defeat' || this.phase === 'victory';
+    if (mode === this.mode && !finished) return;
+
+    // each mode is fought on its own board, and the board is built once per page
+    if (this.mapIsStaleFor(mode)) {
+      requestMode(mode);
+      window.location.reload();
+      return;
+    }
+
+    this.mode = mode;
+    this.ui.setMode(mode);
+    this.ui.hideOverlay();
+    this.discardTowers();
+
+    if (mode === 'endless') {
+      this.beginEndless();
+      return;
+    }
+    this.startCampaign('Campaign — hold the eastern gate');
+  }
+
+  /** Endless: same board reset as a fresh campaign, but the waves never end. */
+  private beginEndless(): void {
+    this.mode = 'endless';
+    this.ui.setMode('endless');
+    this.startCampaign('');
+    this.ui.toast(
+      this.endlessBest > 0
+        ? `Endless — the horde does not stop. Best: wave ${this.endlessBest}`
+        : 'Endless — the horde does not stop',
+      'good',
+    );
+  }
+
+  /** Restarts the campaign from 1-1, optionally raising the prestige level. */
+  private beginRun(prestigeGain: boolean): void {
+    if (prestigeGain) {
+      this.prestige += 1;
+      this.ui.setPrestige(this.prestige);
+      this.persist();
+      // prestige 3 opens the expanded battlefield, which is built once per page
+      if (this.mapIsStale()) {
+        window.location.reload();
+        return;
+      }
+    }
+
+    // built towers go back into the storage bin, keeping their upgrade levels
+    this.stashTowers();
+
+    this.startCampaign(
+      prestigeGain
+        ? `Prestige ${this.prestige} — the horde returns ${Math.round(PRESTIGE_HP_STEP * 100)}% stronger each level`
+        : 'A new campaign begins',
+    );
+  }
+
+  /** Wipes the board back to 1-1; prestige and the storage bin are left to the caller. */
+  private startCampaign(message: string): void {
+    this.clearCombat();
+    this.wave = 1;
+    this.stage = 1;
+    this.bannerStage = 0;
+    this.gold = START_GOLD;
+    this.lives = START_LIVES;
+    this.phase = 'prep';
+    this.paused = false;
+    this.speed = 1;
+    this.boss = null;
+    this.routes = [];
+    this.pathTiles = new Set();
+    this.spawns = [];
+    this.selected = null;
+    this.towerShutdownUntil = 0;
+    this.betch = false;
+    this.ui.setBetch(false);
+
+    this.deselect();
+    this.cancelPlacement();
+    this.ui.hideOverlay();
+    this.ui.setGold(this.gold);
+    this.ui.setLives(this.lives);
+    this.ui.setSpeed(1);
+    this.ui.setPaused(false);
+    this.ui.setBoss(null);
+    this.ui.setWave(this.wave);
+    this.ui.setStorage(this.stored);
+    this.prepareWave(true);
+    if (message) this.ui.toast(message, 'good');
+  }
+
+  private defeat(): void {
+    this.phase = 'defeat';
+    this.clearCombat();
+    // the bargain's trap wave gets its own epitaph: that wave was never meant to be survived
+    if (this.betch && this.wave === Game.BETCH_TRAP_WAVE) {
+      playTrapDefeatSting();
+      this.ui.showOverlay(
+        'Betches Dont Get To Win',
+        'You took the gold, and wave 49 was the bill. Fifteen thousand health apiece, not one of them willing to slow or freeze — and three times as many as any other wave. The Eastern Gate is ash. Start a new run; the button will be waiting.',
+        false,
+        'betch',
+      );
+      return;
+    }
+    if (this.mode === 'endless') {
+      this.ui.showOverlay(
+        'The Gate Has Fallen',
+        `The endless horde broke through on wave ${this.wave}. Your record stands at wave ${this.endlessBest}. Start again and see if the wall moves.`,
+        false,
+      );
+      return;
+    }
+    this.ui.showOverlay(
+      'The Gate Has Fallen',
+      `The horde broke through on wave ${this.wave}. Rebuild your defenses and try a different tower mix.`,
+      false,
+    );
+  }
+
+  private clearCombat(): void {
+    for (const enemy of this.enemies) this.removeEnemyVisual(enemy);
+    this.enemies = [];
+    for (const p of this.projectiles) this.fxLayer.remove(p.mesh);
+    this.projectiles = [];
+    for (const h of this.hazards) {
+      this.fxLayer.remove(h.mesh);
+      h.mesh.geometry.dispose();
+      (h.mesh.material as THREE.Material).dispose();
+    }
+    this.hazards = [];
+    for (const fx of this.effects) {
+      this.fxLayer.remove(fx.obj);
+      fx.cleanup?.();
+    }
+    this.effects = [];
+    this.lastRemaining = -1;
+  }
+
+  // -------------------------------------------------------------------------
+  // simulation
+  // -------------------------------------------------------------------------
+
+  private update(dt: number): void {
+    if (this.phase === 'victory' || this.phase === 'defeat') return;
+    this.time += dt;
+    this.updateSpawns(dt);
+    this.updateEnemies(dt);
+    this.updateTowers(dt);
+    this.updateProjectiles(dt);
+    this.updateHazards(dt);
+    this.updateEffects(dt);
+    this.cleanup();
+    this.checkWaveEnd();
+  }
+
+  private cleanup(): void {
+    if (this.enemies.some((e) => e.dead)) this.enemies = this.enemies.filter((e) => !e.dead);
+    this.updateRemaining();
+  }
+
+  private updateEnemies(dt: number): void {
+    for (const enemy of this.enemies) {
+      if (enemy.dead) continue;
+      if (enemy.burnUntil > this.time && enemy.burnDps > 0) {
+        this.damageEnemy(enemy, enemy.burnDps * dt, false, enemy.lastSource);
+      }
+      if (enemy.dead) continue;
+
+      if (enemy.slowUntil <= this.time) enemy.slowFactor = 1;
+      const frozen = enemy.freezeUntil > this.time;
+      const slow = enemy.slowUntil > this.time ? enemy.slowFactor : 1;
+      enemy.d += enemy.speed * (frozen ? 0 : slow) * dt;
+
+      if (enemy.d >= enemy.track.total) {
+        this.leakEnemy(enemy);
+        continue;
+      }
+
+      // infiltrators charge on a timer, not on contact: five seconds, then every fifteen
+      if (enemy.def.id === 'infiltrator' && this.time >= enemy.pulseAt) {
+        this.infiltratorPulse(enemy);
+        enemy.pulseAt = this.time + Game.INFILTRATOR_PULSE_EVERY;
+      }
+
+      enemy.track.sample(enemy.d, this.sampleOut);
+      const sx = this.sampleOut;
+      const x = sx.x - sx.dz * enemy.offset;
+      const z = sx.z + sx.dx * enemy.offset;
+      enemy.pos.set(x, 0.45 * enemy.def.scale, z);
+      enemy.group.position.set(x, 0, z);
+      enemy.group.rotation.y = Math.atan2(sx.dx, sx.dz);
+
+      if (enemy.body) {
+        const bob = frozen ? 1 : 1 + Math.sin(this.time * 9 + enemy.phase) * 0.035;
+        enemy.body.scale.set(bob, 1, bob);
+      }
+      const charging =
+        enemy.def.id === 'infiltrator' &&
+        enemy.pulseAt - this.time < 1.2 &&
+        Math.sin(this.time * 26) > 0;
+      const tint = charging ? 0xff6a4a : frozen ? 0x9fdcff : slow < 1 ? 0xcfe8ff : 0xffffff;
+      (enemy.sprite.material as THREE.MeshBasicMaterial).color.setHex(tint);
+
+      enemy.bar.position.set(x, 1.5, z - enemy.barOffset);
+      enemy.bar.quaternion.copy(this.camera.quaternion);
+      const ratio = clamp(enemy.hp / enemy.maxHp, 0, 1);
+      enemy.barFill.scale.x = ratio;
+      enemy.barFill.position.x = -(1 - ratio) * 0.5;
+    }
+  }
+
+  private updateTowers(dt: number): void {
+    // an infiltrator pulse cuts the power to every turret on the board
