@@ -1,0 +1,700 @@
+            return { placed: false, reason: 'tile refused', tile: slot };
+          }
+          this.confirmPlacement();
+          // leave build mode so the next call starts a fresh placement
+          this.cancelPlacement();
+          return { placed: true, id, tile: slot, gold: this.gold, towers: this.towers.length };
+        },
+        /** Dev only: recall a stored tower onto the first free tile. */
+        recall: (index: number) => {
+          this.beginRecall(index);
+          if (!this.placingStored) return { recalled: false, reason: 'not placing' };
+          const slot = this.firstBuildSlot();
+          if (!slot) {
+            this.cancelPlacement();
+            return { recalled: false, reason: 'no free build tile' };
+          }
+          this.hover = { x: slot.x, z: slot.z };
+          this.stagePlacement();
+          const ok = Boolean(this.pending);
+          if (ok) this.confirmPlacement();
+          this.cancelPlacement();
+          return { recalled: ok, towers: this.towers.length, stored: this.stored.length, gold: this.gold, tile: slot };
+        },
+        clear: () => {
+          this.discardTowers();
+          this.ui.setStorage(this.stored);
+          return { towers: this.towers.length, stored: this.stored.length };
+        },
+        sell: (index: number) => {
+          const tower = this.towers[index];
+          if (!tower) return null;
+          this.selectTower(tower);
+          this.sellSelected();
+          return { towers: this.towers.length, stored: this.stored.map((s) => s.id), gold: this.gold };
+        },
+      };
+    }
+    this.animate();
+  }
+
+  // -------------------------------------------------------------------------
+  // setup helpers
+  // -------------------------------------------------------------------------
+
+  private makeHighlight(): THREE.Mesh {
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.96, 0.96),
+      new THREE.MeshBasicMaterial({
+        color: 0x8fe07a,
+        transparent: true,
+        opacity: 0.4,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      }),
+    );
+    mesh.rotation.x = -Math.PI / 2;
+    mesh.position.y = 0.095;
+    mesh.visible = false;
+    return mesh;
+  }
+
+  private bindEvents(): void {
+    this.canvas.addEventListener('pointermove', this.onPointerMove);
+    this.canvas.addEventListener('pointerdown', this.onPointerDown);
+    this.canvas.addEventListener('pointerup', this.onPointerUp);
+    this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+    this.canvas.addEventListener('pointercancel', () => this.canvas.classList.remove('dragging'));
+    window.addEventListener('keydown', this.onKeyDown);
+    window.addEventListener('resize', this.onResize);
+    if (typeof ResizeObserver !== 'undefined') {
+      // the canvas is sized by CSS (play area above the dock), so track its box
+      new ResizeObserver(() => this.onResize()).observe(this.canvas);
+    }
+  }
+
+  private onResize = (): void => {
+    const w = this.canvas.clientWidth || window.innerWidth;
+    const h = this.canvas.clientHeight || window.innerHeight;
+    const aspect = w / h;
+    const fitHeight = Math.max(mapViewHeight(), mapViewWidth() / aspect);
+    this.camera.left = (-fitHeight * aspect) / 2;
+    this.camera.right = (fitHeight * aspect) / 2;
+    this.camera.top = fitHeight / 2;
+    this.camera.bottom = -fitHeight / 2;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(w, h, false);
+  };
+
+  private onKeyDown = (e: KeyboardEvent): void => {
+    if (e.key === 'Escape') {
+      this.cancelPlacement();
+      this.deselect();
+    } else if (e.code === 'Space') {
+      e.preventDefault();
+      this.play();
+    } else if (import.meta.env.DEV && e.key === 'F9') {
+      // dev only: the whole branch is dropped from production builds
+      e.preventDefault();
+      this.discardTowers();
+      this.startCampaign('');
+      this.betch = true;
+      this.ui.setBetch(true);
+      this.wave = Game.BETCH_TRAP_WAVE;
+      this.gold = 12000;
+      this.ui.setGold(this.gold);
+      this.ui.setWave(this.wave);
+      this.prepareWave(true);
+      this.ui.toast(`Dev: wave ${this.wave} — bargain active, slow and freeze do nothing`, 'good');
+    }
+  };
+
+  private onPointerDown = (e: PointerEvent): void => {
+    this.downX = e.clientX;
+    this.downY = e.clientY;
+    this.downButton = e.button;
+    if (!this.placing) this.canvas.classList.add('dragging');
+  };
+
+  private onPointerUp = (e: PointerEvent): void => {
+    this.canvas.classList.remove('dragging');
+    const moved = Math.hypot(e.clientX - this.downX, e.clientY - this.downY);
+    if (moved > 7) return;
+    if (e.button === 2) {
+      this.cancelPlacement();
+      this.deselect();
+      return;
+    }
+    if (e.button !== 0) return;
+    this.handleClick(e);
+  };
+
+  private onPointerMove = (e: PointerEvent): void => {
+    const rect = this.canvas.getBoundingClientRect();
+    this.ndc.set(
+      ((e.clientX - rect.left) / rect.width) * 2 - 1,
+      -((e.clientY - rect.top) / rect.height) * 2 + 1,
+    );
+    this.raycaster.setFromCamera(this.ndc, this.camera);
+    const hit = this.raycaster.intersectObject(this.world.pickPlane, false)[0];
+    if (!hit) {
+      this.hover = null;
+      this.updateGhost();
+      return;
+    }
+    const tile = worldToTile(hit.point.x, hit.point.z);
+    this.hover = inBounds(tile.x, tile.z) ? tile : null;
+    this.updateGhost();
+  };
+
+  private handleClick(e: PointerEvent): void {
+    if (this.phase === 'victory' || this.phase === 'defeat') return;
+    if (this.placing) {
+      this.stagePlacement();
+      return;
+    }
+    const rect = this.canvas.getBoundingClientRect();
+    this.ndc.set(
+      ((e.clientX - rect.left) / rect.width) * 2 - 1,
+      -((e.clientY - rect.top) / rect.height) * 2 + 1,
+    );
+    this.raycaster.setFromCamera(this.ndc, this.camera);
+    const hits = this.raycaster.intersectObjects(this.towerLayer.children, true);
+    for (const hit of hits) {
+      let obj: THREE.Object3D | null = hit.object;
+      while (obj) {
+        const tower = obj.userData.tower as Tower | undefined;
+        if (tower) {
+          this.selectTower(tower);
+          return;
+        }
+        obj = obj.parent;
+      }
+    }
+    this.deselect();
+  }
+
+  // -------------------------------------------------------------------------
+  // placement
+  // -------------------------------------------------------------------------
+
+  private beginPlacement(id: TowerId): void {
+    if (this.phase === 'victory' || this.phase === 'defeat') return;
+    // clicking the active shop card again leaves build mode
+    if (this.placing === id && !this.placingStored) {
+      this.cancelPlacement();
+      return;
+    }
+    const def = TOWER_BY_ID[id];
+    if (isShelved(id)) {
+      this.ui.toast('Artillery is coming in a future update', 'bad');
+      return;
+    }
+    const needed = towerUnlockPrestige(id);
+    if (this.prestige < needed) {
+      this.ui.toast(`${def.name} unlocks at prestige ${needed} (Era ${eraForPrestige(needed).name})`, 'bad');
+      return;
+    }
+    if (this.gold < def.cost) {
+      this.ui.toast(`Not enough gold for ${def.name}`, 'bad');
+      return;
+    }
+    this.placingStored = null;
+    this.startPlacement(id);
+  }
+
+  /** Places a tower taken back out of the storage bin — always free. */
+  private beginRecall(index: number): void {
+    if (this.phase === 'victory' || this.phase === 'defeat') return;
+    const stored = this.stored[index];
+    if (!stored) return;
+    if (this.placingStored === stored) {
+      this.cancelPlacement();
+      return;
+    }
+    this.placingStored = stored;
+    this.startPlacement(stored.id);
+  }
+
+  private startPlacement(id: TowerId): void {
+    const def = TOWER_BY_ID[id];
+    this.placing = id;
+    this.ui.setPlacing(id);
+    this.canvas.classList.add('building');
+    this.deselect();
+    this.clearGhost();
+
+    const group = new THREE.Group();
+    group.add(buildGhostModel(id));
+    this.ghost = group;
+    this.systemLayer.add(group);
+    this.updateGhost();
+    // the shop card is where the player picks a turret, so the description opens here
+    this.ui.showTowerPopup(def);
+  }
+
+  private cancelPlacement(): void {
+    this.ui.hideTowerPopup();
+    this.ui.hideBuildConfirm();
+    this.pending = null;
+    this.placingStored = null;
+    if (!this.placing) return;
+    this.placing = null;
+    this.ui.setPlacing(null);
+    this.canvas.classList.remove('building');
+    this.clearGhost();
+    this.hl1.visible = false;
+    this.hl2.visible = false;
+    this.rangeRing.visible = false;
+  }
+
+  /** Drops the staged tower without leaving build mode. */
+  private cancelPending(): void {
+    if (!this.pending) return;
+    this.pending = null;
+    this.ui.hideBuildConfirm();
+    this.updateGhost();
+  }
+
+  private clearGhost(): void {
+    if (this.ghost) {
+      this.systemLayer.remove(this.ghost);
+      this.ghost = null;
+    }
+  }
+
+  private updateGhost(): void {
+    if (!this.placing) return;
+    const def = TOWER_BY_ID[this.placing];
+    const ghost = this.ghost;
+    const staged = this.pending;
+    const at = staged ? staged.anchor : this.hover;
+    if (!ghost || !at) {
+      if (ghost) ghost.visible = false;
+      this.hl1.visible = false;
+      this.hl2.visible = false;
+      this.rangeRing.visible = false;
+      return;
+    }
+
+    const valid = staged ? true : this.canBuild(at);
+    ghost.visible = valid;
+    ghost.position.set(tileCenterX(at.x), 0, tileCenterZ(at.z));
+    ghost.rotation.y = 0;
+    this.setHighlight(this.hl1, at, valid);
+    this.hl2.visible = false;
+    this.rangeRing.visible = valid;
+    this.rangeRing.position.set(tileCenterX(at.x), 0.08, tileCenterZ(at.z));
+    this.rangeRing.scale.setScalar(def.range);
+  }
+
+  private setHighlight(mesh: THREE.Mesh, tile: Tile, valid: boolean): void {
+    mesh.visible = true;
+    mesh.position.set(tileCenterX(tile.x), 0.095, tileCenterZ(tile.z));
+    (mesh.material as THREE.MeshBasicMaterial).color.setHex(valid ? 0x8fe07a : 0xef5d4f);
+  }
+
+  /** The buildable strip: every tile within BUILD_LANE_RADIUS of the current route. */
+  private computeBuildLane(): Set<number> {
+    const lane = new Set<number>();
+    for (const key of this.pathTiles) {
+      const x = Math.floor(key / GRID_Z);
+      const z = key % GRID_Z;
+      for (let dx = -BUILD_LANE_RADIUS; dx <= BUILD_LANE_RADIUS; dx++) {
+        for (let dz = -BUILD_LANE_RADIUS; dz <= BUILD_LANE_RADIUS; dz++) {
+          const nx = x + dx;
+          const nz = z + dz;
+          if (!inBounds(nx, nz)) continue;
+          if (this.nearPortal({ x: nx, z: nz })) continue;
+          lane.add(TKEY(nx, nz));
+        }
+      }
+    }
+    return lane;
+  }
+
+  /** Warded ring of tiles around every spawn portal. */
+  private nearPortal(tile: Tile): boolean {
+    return this.portals.some(
+      (p) =>
+        Math.abs(tile.x - p.x) <= PORTAL_NO_BUILD_RADIUS &&
+        Math.abs(tile.z - p.z) <= PORTAL_NO_BUILD_RADIUS,
+    );
+  }
+
+  private portalZone(): Set<number> {
+    const zone = new Set<number>();
+    for (const portal of this.portals) {
+      for (let dx = -PORTAL_NO_BUILD_RADIUS; dx <= PORTAL_NO_BUILD_RADIUS; dx++) {
+        for (let dz = -PORTAL_NO_BUILD_RADIUS; dz <= PORTAL_NO_BUILD_RADIUS; dz++) {
+          const x = portal.x + dx;
+          const z = portal.z + dz;
+          if (inBounds(x, z)) zone.add(TKEY(x, z));
+        }
+      }
+    }
+    return zone;
+  }
+
+  /** Portals a stage is attacked from: the big field runs two. */
+  private portalCount(): number {
+    return this.prestige >= BIG_MAP_PRESTIGE ? 2 : 1;
+  }
+
+  private canBuild(tile: Tile): boolean {
+    if (!inBounds(tile.x, tile.z)) return false;
+    if (this.nearPortal(tile)) return false;
+    const key = TKEY(tile.x, tile.z);
+    if (!this.buildable.has(key)) return false;
+    if (this.pathTiles.has(key)) return false;
+    if (this.blocked[key]) return false;
+    return true;
+  }
+
+  /** What a tap on `at` would build, or null (with a reason toasted) if it cannot go there. */
+  private planPlacement(at: Tile): { tiles: Tile[]; anchor: Tile } | null {
+    const id = this.placing;
+    if (!id) return null;
+    if (!this.canBuild(at)) {
+      const warded = this.nearPortal(at);
+      const inLane = this.buildable.has(TKEY(at.x, at.z));
+      this.ui.toast(
+        warded
+          ? 'The portal is warded — build further from the spawn'
+          : inLane
+            ? 'You cannot build there'
+            : 'Towers must stand in the marked build lane',
+        'bad',
+      );
+      return null;
+    }
+    return { tiles: [at], anchor: at };
+  }
+
+  /** A map tap only stages the tower; the confirm button is what actually builds it. */
+  private stagePlacement(): void {
+    if (!this.placing || !this.hover) return;
+    const plan = this.planPlacement(this.hover);
+    if (!plan) return;
+    this.pending = plan;
+    this.updateGhost();
+    const def = TOWER_BY_ID[this.placing];
+    const stored = this.placingStored;
+    this.ui.showBuildConfirm({
+      name: def.name,
+      cost: def.cost,
+      recall: Boolean(stored),
+      affordable: Boolean(stored) || this.gold >= def.cost,
+    });
+  }
+
+  private confirmPlacement(): void {
+    const pending = this.pending;
+    const id = this.placing;
+    if (!pending || !id) return;
+    const def = TOWER_BY_ID[id];
+    const stored = this.placingStored;
+    if (!stored && this.gold < def.cost) {
+      this.ui.toast('Not enough gold', 'bad');
+      return;
+    }
+
+    const tower = this.createTower(id, pending.tiles, stored?.level ?? 1);
+    if (!tower) return;
+
+    this.pending = null;
+    this.ui.hideBuildConfirm();
+    this.towers.push(tower);
+    if (stored) {
+      // recalled towers keep their level and cost nothing
+      tower.invested = stored.invested;
+      this.stored = this.stored.filter((s) => s !== stored);
+      this.ui.setStorage(this.stored);
+      this.persist();
+      this.cancelPlacement();
+      this.ui.toast(`${def.name} recalled from storage`, 'good');
+    } else {
+      this.gold -= def.cost;
+      this.ui.setGold(this.gold);
+      this.ui.toast(`${def.name} built`, 'good');
+      if (this.gold < def.cost) this.cancelPlacement();
+      this.updateGhost();
+    }
+    this.world.setHidden(this.hiddenTiles());
+  }
+
+  private createTower(id: TowerId, tiles: Tile[], level = 1): Tower | null {
+    const def = TOWER_BY_ID[id];
+    // shelved content never reaches the board, whatever asked for it
+    if (!def || def.shelved) return null;
+    const center = new THREE.Vector3();
+    for (const tile of tiles) center.add(new THREE.Vector3(tileCenterX(tile.x), 0, tileCenterZ(tile.z)));
+    center.divideScalar(tiles.length);
+
+    // the stage route is fixed, so a tower can never seal it
+    for (const tile of tiles) this.blocked[TKEY(tile.x, tile.z)] = 1;
+
+    const group = new THREE.Group();
+    group.position.copy(center);
+    this.towerLayer.add(group);
+
+    const tower: Tower = {
+      def,
+      level,
+      group,
+      head: null,
+      headPos: new THREE.Vector3(),
+      center,
+      tiles,
+      cooldown: 0.3,
+      invested: def.cost,
+      kills: 0,
+      recoil: 0,
+      barrier: null,
+      powered: true,
+      buffRange: 1,
+      buffRate: 1,
+      auraStacks: 0,
+      spin: 0,
+    };
+    tower.group.userData.tower = tower;
+    this.buildTowerVisual(tower);
+    return tower;
+  }
+
+  private buildTowerVisual(tower: Tower): void {
+    const group = tower.group;
+    for (const child of [...group.children]) group.remove(child);
+
+    // a rebuilt tower starts with fresh, un-tinted sprites
+    tower.powered = true;
+    const model = buildTowerModel(tower.def.id, tower.level);
+    model.userData.tower = tower;
+    group.add(model);
+    const head = model.getObjectByName('head') ?? null;
+    tower.head = head;
+    if (head) tower.headPos.copy(head.position);
+  }
+
+  private hiddenTiles(): Set<number> {
+    const set = new Set<number>(this.pathTiles);
+    for (const key of this.buildable) set.add(key);
+    for (const tower of this.towers) {
+      for (const tile of tower.tiles) set.add(TKEY(tile.x, tile.z));
+    }
+    return set;
+  }
+
+  private selectTower(tower: Tower): void {
+    this.cancelPlacement();
+    this.selected = tower;
+    this.refreshTowerPanel();
+  }
+
+  private deselect(): void {
+    this.selected = null;
+    this.ui.hideTower();
+    this.selRing.visible = false;
+    this.rangeRing.visible = false;
+  }
+
+  private refreshTowerPanel(): void {
+    const tower = this.selected;
+    if (!tower) return;
+    const info: TowerPanelInfo = {
+      id: tower.def.id,
+      name: tower.def.name,
+      icon: tower.def.icon,
+      era: tower.def.era,
+      eraName: eraForPrestige(tower.def.era - 1).name,
+      ability: tower.def.ability,
+      level: tower.level,
+      damage: dmgOf(tower),
+      range: rangeOf(tower),
+      rate: rateOf(tower),
+      kills: tower.kills,
+      upgradeCost: tower.level >= MAX_LEVEL ? null : upgradeCost(tower.def, tower.level),
+      sellValue: Math.floor(tower.invested * SELL_RATE),
+    };
+    this.ui.showTower(info);
+    this.rangeRing.visible = true;
+    this.rangeRing.position.set(tower.center.x, 0.08, tower.center.z);
+    this.rangeRing.scale.setScalar(rangeOf(tower));
+    this.selRing.visible = true;
+    this.selRing.position.set(tower.center.x, 0.1, tower.center.z);
+  }
+
+  private upgradeSelected(): void {
+    const tower = this.selected;
+    if (!tower || tower.level >= MAX_LEVEL) return;
+    const cost = upgradeCost(tower.def, tower.level);
+    if (this.gold < cost) {
+      this.ui.toast('Not enough gold for that upgrade', 'bad');
+      return;
+    }
+    this.gold -= cost;
+    tower.invested += cost;
+    tower.level++;
+    this.buildTowerVisual(tower);
+    this.ui.setGold(this.gold);
+    this.refreshTowerPanel();
+    this.ui.toast(`${tower.def.name} upgraded to level ${tower.level}`, 'good');
+  }
+
+  private sellSelected(): void {
+    const tower = this.selected;
+    if (!tower) return;
+    const refund = Math.floor(tower.invested * SELL_RATE);
+    this.gold += refund;
+    for (const tile of tower.tiles) this.blocked[TKEY(tile.x, tile.z)] = 0;
+    this.towerLayer.remove(tower.group);
+    tower.group.traverse((obj) => {
+      if (obj instanceof THREE.Mesh) obj.geometry.dispose();
+    });
+    this.towers = this.towers.filter((t) => t !== tower);
+    this.ui.setGold(this.gold);
+    this.deselect();
+    this.world.setHidden(this.hiddenTiles());
+    this.ui.toast(`Tower sold for ${refund} gold`, 'good');
+  }
+
+  // -------------------------------------------------------------------------
+  // waves
+  // -------------------------------------------------------------------------
+
+  private prepareWave(first = false): void {
+    this.phase = 'prep';
+    this.boss = null;
+    this.ui.setBoss(null);
+    this.lastBossKey = '';
+    this.clearCombat();
+    this.spawns = [];
+    this.tracks = [];
+
+    const stage = stageOf(this.wave);
+    if (this.mode === 'campaign') {
+      if (stage !== this.stage) {
+        // a new stage re-plans the battlefield and takes every tower back into storage
+        this.stage = stage;
+        this.stashTowers();
+        this.routes = [];
+        this.pathTiles = new Set();
+      }
+
+      // the route is laid once and stays put for all ten waves of the stage
+      if (this.routes.length === 0) this.planStageRoutes(stage);
+    } else {
+      // endless holds one board: paths never move and towers are never taken back
+      this.stage = stage;
+      if (this.routes.length === 0) this.planStageRoutes(stage);
+      else this.openEndlessPortals();
+    }
+
+    this.buildable = this.computeBuildLane();
+    this.world.setPath(this.pathTiles, true);
+    this.world.setBuildable(this.buildable);
+    this.world.setNoBuild(this.portalZone());
+    this.world.setHidden(this.hiddenTiles());
+    this.world.setPortals(this.portals);
+    this.ui.setWave(this.wave);
+    this.ui.setPrep(this.wave, this.routes.length, this.waveCount() * this.spawnMultiplier());
+    if (this.selected) this.refreshTowerPanel();
+
+    // endless waves are numbered, not staged: no stage banner interrupts the run
+    if (this.mode === 'campaign' && this.bannerStage !== stage) {
+      this.bannerStage = stage;
+      this.ui.showStageBanner(stage, waveInStage(this.wave));
+    }
+
+    if (first) {
+      window.setTimeout(() => this.ui.toast('Build along the glowing route before the assault begins', 'good'), 500);
+    }
+  }
+
+  /** Lays the routes that stay in place for a whole stage. */
+  private planStageRoutes(stage: number): void {
+    // stage one is a single lane; from stage two the map splits into 1-3 paths
+    const lanes = stage === 1 ? 1 : 1 + Math.floor(this.rng() * 3);
+    const portals = this.portalCount();
+    let result = generateWavePaths(this.wave, this.blocked, this.rng, lanes, portals);
+    let tries = 0;
+    while (result.routes.length === 0 && tries < 24) {
+      result = generateWavePaths(this.wave, this.blocked, this.rng, lanes, portals);
+      tries++;
+    }
+
+    if (result.routes.length === 0) {
+      // Last-resort route directly through the board.
+      const entrances = reachableEntrances(this.blocked);
+      const entrance =
+        entrances[Math.floor(this.rng() * entrances.length)] ?? { x: 0, z: Math.floor(GRID_Z / 2) };
+      const tiles = findPath(entrance, GATE_TILE, this.blocked);
+      if (tiles) {
+        result = { routes: [{ tiles, entrance }], tiles: new Set(tiles.map((t) => TKEY(t.x, t.z))) };
+      }
+    }
+
+    this.routes = result.routes;
+    this.pathTiles = result.tiles;
+    // one portal mesh per entrance a lane leaves from, in route order
+    const seen = new Map<string, Tile>();
+    for (const route of this.routes) seen.set(`${route.entrance.x},${route.entrance.z}`, route.entrance);
+    this.portals = seen.size ? [...seen.values()] : [{ x: 0, z: Math.floor(GRID_Z / 2) }];
+  }
+
+  /** Endless opens one more portal on every tenth wave, up to its cap. */
+  private endlessPortalTarget(): number {
+    return Math.min(Game.ENDLESS_PORTAL_CAP, 1 + Math.floor(this.wave / 10));
+  }
+
+  /** Picks an unused western entrance, spreading the portals along the edge. */
+  private pickEndlessEntrance(): Tile | null {
+    const used = new Set(this.routes.map((r) => TKEY(r.entrance.x, r.entrance.z)));
+    const options = reachableEntrances(this.blocked).filter((t) => !used.has(TKEY(t.x, t.z)));
+    if (options.length === 0) return null;
+    if (this.routes.length === 0) return options[Math.floor(options.length / 2)];
+
+    let best = options[0];
+    let bestGap = -1;
+    for (const option of options) {
+      const gap = Math.min(...this.routes.map((r) => Math.abs(r.entrance.z - option.z)));
+      if (gap > bestGap) {
+        bestGap = gap;
+        best = option;
+      }
+    }
+    return best;
+  }
+
+  /**
+   * Adds the portal this wave has earned: a fresh entrance and a new lane that
+   * joins the board. The lanes already laid are never re-routed.
+   */
+  private openEndlessPortals(): void {
+    const target = this.endlessPortalTarget();
+    const before = this.routes.length;
+    if (before >= target) return;
+
+    while (this.routes.length < target) {
+      const entrance = this.pickEndlessEntrance();
+      if (!entrance) break;
+      const route = generateRoute(entrance, this.blocked, this.rng, this.pathTiles);
+      if (!route) break;
+      this.routes.push(route);
+      for (const tile of route.tiles) this.pathTiles.add(TKEY(tile.x, tile.z));
+    }
+
+    if (this.routes.length === before) return;
+
+    // one portal mesh per entrance, in route order
+    const seen = new Map<string, Tile>();
+    for (const route of this.routes) seen.set(`${route.entrance.x},${route.entrance.z}`, route.entrance);
+    this.portals = [...seen.values()];
+    this.world.setPortals(this.portals);
+    this.ui.toast(`A new portal opens — ${this.portals.length} lanes feed the horde`, 'bad');
+  }
+
+  /** At a stage change every built tower returns to the free storage bin. */
+  /** +10,000 gold now, 50% tougher monsters for the rest of the run, and a trap on wave 49. */
+  private pressBetch(): void {
+    // the bargain and its trap wave belong to the campaign; endless has no wave 49 to spring it on
