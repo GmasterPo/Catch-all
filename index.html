@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<title>Arcane Ascension — Idle Tower Defense</title>
+<meta name="description" content="Arcane Ascension is an idle tower defense game: an archmage at the heart of an enchanted arena, endless waves, twelve spells, ascension and offline rewards." />
+<meta name="theme-color" content="#0b0714" />
+<meta name="color-scheme" content="dark" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Arcane" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <header class="hud">
+    <div class="hud-row hud-main">
+      <div class="hud-wave">
+        <span class="lbl">WAVE</span>
+        <b id="wave-num">1</b>
+        <span id="wave-progress" class="sub">0/0</span>
+      </div>
+
+      <div class="hud-health">
+        <div class="bar"><i id="hp-fill"></i></div>
+        <span id="hp-text">100 / 100</span>
+      </div>
+
+      <div class="hud-actions">
+        <button class="speed active" data-speed="1">1×</button>
+        <button class="speed" data-speed="2">2×</button>
+        <button class="speed" data-speed="5">5×</button>
+        <button id="btn-pause" class="icon-btn" aria-label="Pause game">⏸</button>
+      </div>
+    </div>
+
+    <div class="hud-row hud-sub">
+      <span class="chip gold" title="Gold"><span class="glyph">◆</span><b id="gold">0</b></span>
+      <span class="chip crystal" title="Arcane crystals"><span class="glyph">✦</span><b id="crystals">0</b></span>
+      <span class="chip gem" title="Gems"><span class="glyph">❖</span><b id="gems">0</b></span>
+      <span class="chip" title="Enemies alive"><span class="glyph">⚔</span><b id="enemy-count">0</b></span>
+      <span class="chip mana" title="Mana"><span class="glyph">✧</span><b id="mana-text">100/100</b></span>
+      <span class="chip idle" title="Idle income per second">☾<b id="idle-rate">0</b><span class="unit">/s</span></span>
+    </div>
+
+    <div class="boss-bar" id="boss-bar" hidden>
+      <span id="boss-name">Boss</span>
+      <div class="bar boss"><i id="boss-fill"></i></div>
+    </div>
+  </header>
+
+  <main id="stage">
+    <canvas id="game" aria-label="Arcane Ascension battlefield"></canvas>
+
+    <div id="wave-banner" class="wave-banner" aria-live="polite"></div>
+
+    <button id="prestige-pill" class="prestige-pill" hidden>
+      <span>✦ Ascend</span><b id="prestige-pill-gain">+0</b>
+    </button>
+
+    <div id="paused-overlay" class="stage-overlay" hidden>
+      <div class="pause-card">
+        <h2>Paused</h2>
+        <p>The horde waits. Take your time.</p>
+        <button id="btn-resume" class="ascend">Resume</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="dock">
+    <div id="spell-strip" class="spell-strip" aria-label="Active spells"></div>
+    <nav class="tabs" aria-label="Menu">
+      <button class="tab" data-tab="upgrades"><span class="g">⚔</span><span>Upgrades</span></button>
+      <button class="tab" data-tab="spells"><span class="g">✦</span><span>Spells</span></button>
+      <button class="tab" data-tab="shop"><span class="g">🛒</span><span>Shop</span></button>
+      <button class="tab" data-tab="prestige"><span class="g">◈</span><span>Prestige</span></button>
+      <button class="tab" data-tab="settings"><span class="g">⚙</span><span>Settings</span></button>
+    </nav>
+  </footer>
+
+  <section id="sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <header class="sheet-head">
+      <h2 id="sheet-title">Upgrades</h2>
+      <div class="sheet-cats" id="sheet-cats"></div>
+      <button id="sheet-close" class="icon-btn" aria-label="Close panel">✕</button>
+    </header>
+    <div class="sheet-body" id="sheet-body"></div>
+  </section>
+
+  <div id="modal-root" class="modal-root"></div>
+  <div id="draw-root" class="draw-root" hidden></div>
+  <div id="toast-root" class="toast-root"></div>
+
+  <button id="btn-install" class="install-btn" hidden>⤓ Install app</button>
+</div>
+
+<noscript>
+  <p style="color:#e8ddff;font-family:Georgia,serif;padding:24px;text-align:center">
+    Arcane Ascension needs JavaScript enabled to summon the arena.
+  </p>
+</noscript>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

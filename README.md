@@ -1,34 +1,32 @@
-# Catch-all
+# Arcane Ascension — Idle Tower Defense
 
-A working repository of self-contained browser game projects and reusable game art.
+An idle tower-defense game that runs entirely in the browser: an archmage
+autocasts twelve spells against endless waves while upgrades, ascension prestige
+and offline rewards keep the numbers climbing. It installs as a PWA and plays
+offline after the first load.
 
-## Contents
+The game is served from the repository root, so this repository *is* the app:
 
-- **[`freebuff-assets/`](freebuff-assets/README.md)** — a reusable, license-verified
-  **CC0 1.0** 2D art library for HTML5 games: **58 assets**, **169 clips** (67
-  animations, 102 named sprites) from **16 sources**, with a browser-native loader,
-  index search and sprite animator. Summary and provenance live in
-  [FREEBUFF_ASSETS.md](FREEBUFF_ASSETS.md); API, layout and licences in
-  [freebuff-assets/README.md](freebuff-assets/README.md). Validate it with
-  `cd freebuff-assets && npm run check`.
-- **[`ogre-and-orc-siege/`](ogre-and-orc-siege/README.md)** — backup snapshot of the
-  Ogre & Orc Siege top-down tower-defense project (TypeScript + Three.js, built with
-  Vite, shipped as a web app, a single-file offline build and a Capacitor APK).
+| Path | What it is |
+| --- | --- |
+| `index.html` | Markup, HUD and overlays |
+| `css/style.css` | All styling |
+| `js/` | Game modules — `game.js`, `arena.js`, `wizard.js`, `enemies.js`, `waves.js`, `spells.js`, `state.js`, `save.js`, `ui.js` and the rest |
+| `manifest.json`, `sw.js`, `icons/` | Installability and the offline cache |
 
-There is no page at the repository root: each project lives in its own folder.
+Every path in the game is relative, so the same files work at a domain root, in
+a subfolder, or as an installed app.
 
-## Using the asset library
+## Run it locally
 
-```js
-import { FreebuffAssets } from './freebuff-assets/src/asset-loader.js';
-
-const assets = new FreebuffAssets({ basePath: './freebuff-assets/' });
-await assets.loadIndex();
-const { clip, image } = await assets.loadClip('hero-platformer-red', 'walk');
+```bash
+python3 -m http.server 3000
+# then open http://localhost:3000
 ```
 
-Every file in `freebuff-assets/` is CC0 1.0, with creator, source page and the
-pack's own licence notice recorded under `freebuff-assets/manifests/sources.json`
-and `freebuff-assets/licenses/`.
+## Other folders
 
-`.nojekyll` is kept so GitHub Pages serves these folders as-is.
+- `freebuff-assets/` — reusable, license-verified CC0 1.0 art library for HTML5
+  games; see [FREEBUFF_ASSETS.md](FREEBUFF_ASSETS.md).
+- `ogre-and-orc-siege/` — backup snapshot of the Ogre & Orc Siege tower-defense
+  project; see [its README](ogre-and-orc-siege/README.md).

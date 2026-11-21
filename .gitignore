@@ -3,3 +3,8 @@ appengine-generated/
 
 # local verification screenshots
 artifacts/
+
+# packaged deploy bundle and Freebuff Sites build output
+dist/
+freebuff-sites-build/
+.wrangler/
