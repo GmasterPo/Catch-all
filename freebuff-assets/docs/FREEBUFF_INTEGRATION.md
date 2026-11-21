@@ -63,12 +63,12 @@ game run: `placeholder` must stay `false`, and the validator enforces it.
    validator checks bounds/licenses/counts, and the loader tests must stay green.
 5. Update the counts in this repository's README if the totals changed.
 
-## 7. Do not disturb the host game
+## 7. Do not disturb existing pages
 
-The library is additive. In this repository, `index.html` (Ninja Kombat) is
-untouched by asset work: it draws procedurally and loads nothing from here. A
-new game should live in its own page and pull from `freebuff-assets/` without
-editing existing game files.
+The library is additive. Asset work never edits the pages that a repository
+already ships: a game lives in its own page and pulls from `freebuff-assets/`
+explicitly, so adding a source, an asset or a clip changes nothing that is
+already published.
 
 ## Minimal integration example
 

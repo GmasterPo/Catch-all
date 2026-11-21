@@ -1,8 +1,8 @@
 # Freebuff asset library
 
 `freebuff-assets/` is a reusable 2D game art library for HTML5/JavaScript
-projects. It is additive: `index.html` (Ninja Kombat) is untouched and draws
-everything procedurally.
+projects. It is additive: asset work never edits an existing page, and a page
+loads a clip only when it asks for one.
 
 - **58 assets**, **169 clips** (67 animations, 102 named sprites), **16 sources**, including
   eight CC0 stick-figure and martial-arts packs
